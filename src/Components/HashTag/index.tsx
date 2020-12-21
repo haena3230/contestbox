@@ -9,20 +9,42 @@ interface HashTagProps{
 }
 export const HashTag=({hashtag}:HashTagProps)=>{
     return(
-        <Box>
+        <View style={{
+            justifyContent:'center',
+            alignItems:'center',
+            borderRadius:15,
+            padding:5,
+            borderWidth:1,
+            borderColor:Color.l_color,
+            width:hashtag.length*20,
+            minWidth:40,
+            height:35,
+            margin:3,
+        }}>
             <BoxText>{hashtag}</BoxText>
-        </Box>
+        </View>
     )
 }
 
-const Box = styled.View`
-    justify-content:center;
-    align-items:center;
-    border-radius:15px;
-    padding:5px;
-    border-width:1px;
-    border-color:${Color.l_color};
-`
+export const HashTagButton=({hashtag}:HashTagProps)=>{
+    return(
+        <View style={{
+            justifyContent:'center',
+            alignItems:'center',
+            borderRadius:15,
+            padding:5,
+            borderWidth:1,
+            borderColor:Color.l_color,
+            width:hashtag.length*20,
+            minWidth:60,
+            height:35,
+            margin:3,
+        }}>
+            <BoxText>{hashtag}</BoxText>
+        </View>
+    )
+}
+
 const BoxText=styled.Text`
     ${Styles.s_font}
 `

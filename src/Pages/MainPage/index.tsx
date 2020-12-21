@@ -29,8 +29,13 @@ const MainPage = () => {
           <Title>
             <Text style={Styles.m_font}>카테고리</Text>
           </Title>
-          <View style={{height:'40%'}}>
+          <View style={{height:'40%', flexDirection:'row', flexWrap:'wrap'}}>
+            <HashTag hashtag={'낑깡낑깡'} />
             <HashTag hashtag={'test'} />
+            <HashTag hashtag={'gg'} />
+            <HashTag hashtag={'졸림'} />
+            <HashTag hashtag={'룰루'} />
+            <HashTag hashtag={'소프트웨어'} />
           </View>
         </Category>
         
@@ -42,7 +47,7 @@ const MainPage = () => {
 const SearchBar=()=>{
   const[searchText,setSearchText]=useState('');
   return(
-    <View style={{width:'90%', backgroundColor:Color.w_color,height:50,borderRadius:20, flexDirection:'row',alignItems:'center',marginBottom:30}}>
+    <View style={{width:'90%', backgroundColor:Color.w_color,borderRadius:25, flexDirection:'row',alignItems:'center',marginBottom:30}}>
       <View style={{paddingHorizontal:20}}>
         <Search height={20} width={20} color={Color.g_color}/>
       </View>
@@ -51,7 +56,7 @@ const SearchBar=()=>{
   )
 }
 
-const Container=styled.View`
+export const Container=styled.View`
   width:100%;
   height:100%;
   justify-content:center;
@@ -74,3 +79,4 @@ const Category=styled.View`
 
 
 export default MainPage;
+
