@@ -1,18 +1,23 @@
 {
     "[c]": {
-
         "editor.wordBasedSuggestions": false,
         "editor.suggest.insertMode": "replace",
         "editor.semanticHighlighting.enabled": true
     },
     "[json]": {
-
-        "editor.quickSuggestions": {
+            "editor.quickSuggestions": {
             "strings": true
         },
         "editor.suggest.insertMode": "replace",
         "editor.codeActionsOnSave": {
             "source.fixAll.eslint": true
         },
-    }
+    },
+    "workbench.settings.enableNaturalLanguageSearch": false,
+    "less.validate": false,
+    "scss.lint.argumentsInColorFunction": "ignore",
+    "scss.validate": false,
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": true
+    },
 }
