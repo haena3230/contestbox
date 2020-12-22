@@ -13,12 +13,11 @@ export const HashTag=({hashtag}:HashTagProps)=>{
             justifyContent:'center',
             alignItems:'center',
             borderRadius:15,
-            padding:5,
             borderWidth:1,
             borderColor:Color.l_color,
             width:hashtag.length*20,
             minWidth:40,
-            height:35,
+            height:25,
             margin:3,
         }}>
             <BoxText>{hashtag}</BoxText>
@@ -32,12 +31,11 @@ export const HashTagButton=({hashtag}:HashTagProps)=>{
             justifyContent:'center',
             alignItems:'center',
             borderRadius:15,
-            padding:5,
             borderWidth:1,
             borderColor:Color.l_color,
             width:hashtag.length*20,
             minWidth:60,
-            height:35,
+            height:30,
             margin:3,
         }}>
             <BoxText>{hashtag}</BoxText>

@@ -1,9 +1,10 @@
 // modal 
 import React, { useState } from "react";
-import {Alert,Modal, Text,TouchableOpacity,View} from "react-native";
+import {Alert, Text,TouchableOpacity,View} from "react-native";
 import styled from 'styled-components/native';
 import {Styles,Color}  from '~/Styles';
 import {HashTag} from '~/Components/HashTag';
+import Modal from 'react-native-modal';
 
 interface MadalProps{
     modalVisible:boolean;
@@ -15,12 +16,9 @@ interface MadalProps{
 const ModalComponent = ({modalVisible,title,tag,onPressConfirm,onPressCancle}:MadalProps) => {
   return (
         <Modal
-            animationType="slide"
-            transparent={true}
-            visible={modalVisible}
-            onRequestClose={() => {
-            Alert.alert("닫는다");
-            }}
+            isVisible={modalVisible}
+            backdropOpacity={0.6}
+            onBackdropPress={onPressCancle}
         >
             <View style={{ flex: 1,justifyContent: "center", alignItems: "center"}}>
                 <ModalView>
@@ -28,7 +26,9 @@ const ModalComponent = ({modalVisible,title,tag,onPressConfirm,onPressCancle}:Ma
                     <ModalTag>
                         {tag.map((tag)=>{
                             return(
-                                <HashTag hashtag={tag} />
+                                <View key = {tag}>
+                                    <HashTag hashtag={tag} />
+                                </View>
                             )
                         })}
                     </ModalTag>
@@ -64,6 +64,7 @@ const ModalConfirm=styled.View`
     width:100%;
     flex-direction:row;
     justify-content:flex-end;
+    padding-top:10px;
 `
 const Confirm=styled.Text`
     ${Styles.m_font};
