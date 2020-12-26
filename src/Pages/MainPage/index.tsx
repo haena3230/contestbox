@@ -18,7 +18,7 @@ const MainPage = () => {
   return (
     <View>
       <Header />
-      <Container>
+      <Container style={{justifyContent:'center'}}>
         <Title>
           <Text style={Styles.b_font}>어떤 </Text>
           <Point>대회</Point>

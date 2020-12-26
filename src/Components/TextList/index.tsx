@@ -1,6 +1,6 @@
 // 대회 리스트
-import React,{useEffect, useState} from 'react';
-import {View,Text} from 'react-native';
+import React from 'react';
+import {View} from 'react-native';
 import styled from 'styled-components/native'
 import {Recruit,NoRecruit} from '~/Components/Recruit';
 import {HashTag} from '~/Components/HashTag';
@@ -25,7 +25,7 @@ const TextList=({recruit,tags,title,viewcount}:TextListProps)=>{
             <View style={{flexDirection:'row', flexWrap:'wrap',marginVertical:10}}>
                 {tags.map((tag)=>{
                     return(
-                        <HashTag key={tag} hashtag={tag}/>
+                        <HashTag key={tag} hashtag={tag} picked={false}/>
                     )
                 })}
             </View>
@@ -35,10 +35,10 @@ const TextList=({recruit,tags,title,viewcount}:TextListProps)=>{
 
 const Container = styled.View`
     width:100%;
-    height:140px;
     background-color:white;
     border-radius:10px;
     padding:20px;
+    margin-vertical:5px;
 `
 const Title=styled.Text`
     margin-top:10px;

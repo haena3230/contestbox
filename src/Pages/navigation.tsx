@@ -36,23 +36,23 @@ function MainTabNavi() {
             if (route.name === '홈') {
               return (
                 focused?<Home height={IconSize.icon} width={IconSize.icon} fill={Color.p_color} />
-                :<Home height={IconSize.icon} width={IconSize.icon} fill={Color.g3_color} />
+                :<Home height={IconSize.icon} width={IconSize.icon} fill={Color.g4_color} />
                 );
             } else if (route.name === '대회') {
               return (
                 focused?<Flame height={IconSize.icon} width={IconSize.icon} color={Color.p_color} />
-                :<Flame height={IconSize.icon} width={IconSize.icon} color={Color.g3_color} />
+                :<Flame height={IconSize.icon} width={IconSize.icon} color={Color.g4_color} />
               
               );
             } else if (route.name === '커뮤니티') {
               return (
               focused?<Chatbox height={IconSize.icon} width={IconSize.icon} fill={Color.p_color} />
-              :<Chatbox height={IconSize.icon} width={IconSize.icon} fill={Color.g3_color} />
+              :<Chatbox height={IconSize.icon} width={IconSize.icon} fill={Color.g4_color} />
               );
             } else if (route.name === '공지') {
               return (
               focused?<AlertCircle height={IconSize.icon} width={IconSize.icon} fill={Color.p_color} />
-              :<AlertCircle height={IconSize.icon} width={IconSize.icon} fill={Color.g3_color} />
+              :<AlertCircle height={IconSize.icon} width={IconSize.icon} fill={Color.g4_color} />
               );
             }
           },

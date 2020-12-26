@@ -4,7 +4,7 @@ import {View, Text} from 'react-native';
 import Flame from '~/Assets/fire-solid.svg';
 import Search from '~/Assets/search-solid.svg';
 import Person from '~/Assets/user-solid.svg';
-import Setting from '~/Assets/Settings.svg';
+import Setting from '~/Assets/cog-solid.svg';
 import {Color,Styles,IconSize} from '~/Styles'
 import styled from 'styled-components/native';
 
@@ -20,13 +20,13 @@ const Header=()=>{
                 <Text style={Styles.m_font}>Contest Box</Text>
             </Title>
             <Small>
-                <Search height={IconSize.icon} width={IconSize.icon} color={Color.g2_color} />
+                <Search height={IconSize.icon} width={IconSize.icon} color={Color.g3_color} />
             </Small>
             <Small>
-                <Person height={IconSize.icon} width={IconSize.icon} color={Color.g2_color} />
+                <Person height={IconSize.icon} width={IconSize.icon} color={Color.g3_color} />
             </Small>
             <Small>
-                <Setting height={IconSize.icon} width={IconSize.icon} fill={Color.g2_color} />
+                <Setting height={IconSize.icon} width={IconSize.icon} color={Color.g3_color} />
             </Small>
         </HeaderContainer>
     )

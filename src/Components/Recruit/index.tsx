@@ -12,7 +12,7 @@ export const Recruit=()=>{
 
 export const NoRecruit=()=>{
     return(
-        <View style={{width:60,height:15, backgroundColor:Color.g_color,borderRadius:10,justifyContent:'center',alignItems:'center'}}>
+        <View style={{width:60,height:15, backgroundColor:Color.g4_color,borderRadius:10,justifyContent:'center',alignItems:'center'}}>
             <Text style={{color:Color.w_color,fontSize:10}}>접수마감</Text>
         </View>
     )

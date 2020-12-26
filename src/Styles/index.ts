@@ -15,8 +15,9 @@ export const Color = {
   w_color: '#FFFFFF',
   l_color: '#F8F9FA',
   g1_color: '#E4E5E6',
-  g2_color: '#9E9E9E',
-  g3_color: '#505050',
+  g2_color: '#DADADA',
+  g3_color: '#9E9E9E',
+  g4_color: '#505050',
   b_color: '#000000',
   p_color: '#3A9BFF',
   p_l_color:'#F0FAFF',
@@ -31,7 +32,7 @@ export const Styles = StyleSheet.create({
     fontSize: DWidth > 480 ? 16 : 12,
   },
   m_font: {
-    fontSize: DWidth > 480 ? 20 : 16,
+    fontSize: DWidth > 480 ? 18 : 14,
   },
   b_font: {
     fontSize: DWidth > 480 ? 22 : 18,
@@ -42,7 +43,6 @@ export const Styles = StyleSheet.create({
  export const Container=styled.View`
   width:100%;
   height:100%;
-  justify-content:center;
   align-items:center;
   padding:${DWidth > 480 ? '50px' : '10px'};
   background-color:${Color.l_color};
