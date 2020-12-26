@@ -1,11 +1,11 @@
 // 헤더 
 import React from 'react';
 import {View, Text} from 'react-native';
-import Flame from '~/Assets/Flame.svg';
-import Search from '~/Assets/Search.svg';
-import Person from '~/Assets/Person.svg';
+import Flame from '~/Assets/fire-solid.svg';
+import Search from '~/Assets/search-solid.svg';
+import Person from '~/Assets/user-solid.svg';
 import Setting from '~/Assets/Settings.svg';
-import {Color,Styles} from '~/Styles'
+import {Color,Styles,IconSize} from '~/Styles'
 import styled from 'styled-components/native';
 
 
@@ -14,19 +14,19 @@ const Header=()=>{
     return(
         <HeaderContainer>
             <Small>
-                <Flame height={20} width={20} fill={Color.p_color} />
+                <Flame height={IconSize.icon} width={IconSize.icon} color={Color.p_color} />
             </Small>
             <Title>
                 <Text style={Styles.m_font}>Contest Box</Text>
             </Title>
             <Small>
-                <Search height={20} width={20} color={Color.g_color} />
+                <Search height={IconSize.icon} width={IconSize.icon} color={Color.g2_color} />
             </Small>
             <Small>
-                <Person height={20} width={20} fill={Color.g_color} />
+                <Person height={IconSize.icon} width={IconSize.icon} color={Color.g2_color} />
             </Small>
             <Small>
-                <Setting height={20} width={20} fill={Color.g_color} />
+                <Setting height={IconSize.icon} width={IconSize.icon} fill={Color.g2_color} />
             </Small>
         </HeaderContainer>
     )
@@ -37,6 +37,7 @@ const HeaderContainer=styled.View`
     height:50px;
     flex-direction:row;
     align-items:center;
+    background-color:${Color.l_color};
 `
 const Small=styled.View`
     width:10%;

@@ -1,48 +1,42 @@
 // hashtag components
 import React from 'react';
-import {View,Text} from 'react-native';
 import styled from 'styled-components/native';
-import {Styles,Color} from '~/Styles';
+import {Styles,Color,DWidth} from '~/Styles';
 
 interface HashTagProps{
     hashtag:string;
+    picked:boolean;
 }
-export const HashTag=({hashtag}:HashTagProps)=>{
+export const HashTag=({hashtag,picked}:HashTagProps)=>{
     return(
-        <View style={{
-            justifyContent:'center',
-            alignItems:'center',
-            borderRadius:15,
-            borderWidth:1,
-            borderColor:Color.l_color,
-            width:hashtag.length*20,
-            minWidth:40,
-            height:25,
-            margin:3,
-        }}>
-            <BoxText>{hashtag}</BoxText>
-        </View>
-    )
-}
-
-export const HashTagButton=({hashtag}:HashTagProps)=>{
-    return(
-        <View style={{
-            justifyContent:'center',
-            alignItems:'center',
-            borderRadius:15,
-            borderWidth:1,
-            borderColor:Color.l_color,
-            width:hashtag.length*20,
-            minWidth:60,
-            height:30,
-            margin:3,
-        }}>
-            <BoxText>{hashtag}</BoxText>
-        </View>
+        picked?(
+            <HashTagContainer backgroundColor={Color.g2_color}>
+                <BoxText>{hashtag}</BoxText>
+            </HashTagContainer>
+        ):(
+            <HashTagContainer backgroundColor={Color.w_color}>
+                <BoxText>{hashtag}</BoxText>
+            </HashTagContainer>
+        )
+        
     )
 }
 
 const BoxText=styled.Text`
-    ${Styles.s_font}
+    ${Styles.s_font};
+    padding:${DWidth>480? '25px':'15px'};
+`
+interface ContainerProps{
+    backgroundColor:string;
+}
+const HashTagContainer=styled.View`
+    justify-content:center;
+    align-items:center;
+    border-radius:15px;
+    border-width:1px;
+    border-color:${Color.g1_color};
+    min-width:40px;
+    height:${DWidth>480? '35px':'25px'};
+    margin:3px;
+    background-color:${(props:ContainerProps)=>props.backgroundColor?props.backgroundColor:Color.w_color};
 `

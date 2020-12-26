@@ -9,11 +9,11 @@ import CommunityPage from './CommunityPage';
 import NoticePage from './NoticePage';
 // icon
 import Home from '~/Assets/Home.svg';
-import Flame from '~/Assets/Flame.svg';
+import Flame from '~/Assets/fire-solid.svg';
 import Chatbox from '~/Assets/ChatboxEllipses.svg';
 import AlertCircle from '~/Assets/AlertCircle.svg'
 // style
-import {Color} from '~/Styles';
+import {Color,IconSize,DWidth} from '~/Styles';
 
 
 const Tab = createBottomTabNavigator();
@@ -22,32 +22,37 @@ function MainTabNavi() {
   return (
       <Tab.Navigator
         initialRouteName="홈"
+        
         tabBarOptions={{
           activeBackgroundColor: Color.p_l_color,
           keyboardHidesTabBar:true,
+          style:{
+            height:DWidth>480? 80:50,
+            width:DWidth>480? 480:DWidth,   
+          },
         }}
         screenOptions={({ route }) => ({
           tabBarIcon: ({focused}) => {
             if (route.name === '홈') {
               return (
-                focused?<Home height={20} width={20} fill={Color.p_color} />
-                :<Home height={20} width={20} fill={Color.g_color} />
+                focused?<Home height={IconSize.icon} width={IconSize.icon} fill={Color.p_color} />
+                :<Home height={IconSize.icon} width={IconSize.icon} fill={Color.g3_color} />
                 );
             } else if (route.name === '대회') {
               return (
-                focused?<Flame height={20} width={20} fill={Color.p_color} />
-                :<Flame height={20} width={20} fill={Color.g_color} />
+                focused?<Flame height={IconSize.icon} width={IconSize.icon} color={Color.p_color} />
+                :<Flame height={IconSize.icon} width={IconSize.icon} color={Color.g3_color} />
               
               );
             } else if (route.name === '커뮤니티') {
               return (
-              focused?<Chatbox height={20} width={20} fill={Color.p_color} />
-              :<Chatbox height={20} width={20} fill={Color.g_color} />
+              focused?<Chatbox height={IconSize.icon} width={IconSize.icon} fill={Color.p_color} />
+              :<Chatbox height={IconSize.icon} width={IconSize.icon} fill={Color.g3_color} />
               );
             } else if (route.name === '공지') {
               return (
-              focused?<AlertCircle height={20} width={20} fill={Color.p_color} />
-              :<AlertCircle height={20} width={20} fill={Color.g_color} />
+              focused?<AlertCircle height={IconSize.icon} width={IconSize.icon} fill={Color.p_color} />
+              :<AlertCircle height={IconSize.icon} width={IconSize.icon} fill={Color.g3_color} />
               );
             }
           },
