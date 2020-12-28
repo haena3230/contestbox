@@ -1,50 +1,90 @@
 // 헤더 
 import React from 'react';
-import {View, Text} from 'react-native';
+import {Text,View} from 'react-native';
+// icon
 import Flame from '~/Assets/fire-solid.svg';
 import Search from '~/Assets/search-solid.svg';
 import Person from '~/Assets/user-solid.svg';
 import Setting from '~/Assets/cog-solid.svg';
+import FilterIcon from '~/Assets/filter-solid.svg';
+// style
 import {Color,Styles,IconSize} from '~/Styles'
 import styled from 'styled-components/native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 
 
 const Header=()=>{
     return(
-        <HeaderContainer>
-            <Small>
-                <Flame height={IconSize.icon} width={IconSize.icon} color={Color.p_color} />
-            </Small>
-            <Title>
-                <Text style={Styles.m_font}>Contest Box</Text>
-            </Title>
-            <Small>
-                <Search height={IconSize.icon} width={IconSize.icon} color={Color.g3_color} />
-            </Small>
-            <Small>
-                <Person height={IconSize.icon} width={IconSize.icon} color={Color.g3_color} />
-            </Small>
-            <Small>
-                <Setting height={IconSize.icon} width={IconSize.icon} color={Color.g3_color} />
-            </Small>
+        <HeaderContainer backgroundColor={Color.l_color}>
+            <Box>
+                <Item>
+                    <Flame height={IconSize.icon} width={IconSize.icon} color={Color.p_color} />
+                </Item>
+                <Item>
+                    <Text style={Styles.b_font}>Contest Box</Text>
+                </Item>
+            </Box>
+            <Box>
+                <Item>
+                    <Search height={IconSize.icon} width={IconSize.icon} color={Color.g3_color} />
+                </Item>
+                <Item>
+                    <Person height={IconSize.icon} width={IconSize.icon} color={Color.g3_color} />
+                </Item>
+                <Item>
+                    <Setting height={IconSize.icon} width={IconSize.icon} color={Color.g3_color} />
+                </Item>
+            </Box>
+        </HeaderContainer>
+    )
+}
+interface FilterHeaderProps{
+    onPress:()=>void;
+}
+export const FilterHeader = ({onPress}:FilterHeaderProps)=>{
+    return(
+        <HeaderContainer backgroundColor={Color.w_color}>
+            <Box>
+                <Item>
+                    <FilterIcon width={IconSize.icon} height={IconSize.icon} color={Color.g4_color} />
+                </Item>
+                <Item>
+                    <Text style={Styles.m_font}>필터</Text>
+                </Item>
+            </Box>
+            <Box>
+                <Item>
+                    <TouchableOpacity onPress={onPress}>
+                        <Exit>닫기</Exit>
+                    </TouchableOpacity>
+                </Item>
+            </Box>
         </HeaderContainer>
     )
 }
 
+interface HeaderContainerProps{
+    backgroundColor:string;
+}
 const HeaderContainer=styled.View`
     width:100%;
-    height:50px;
+    padding-Vertical:10px;
     flex-direction:row;
     align-items:center;
-    background-color:${Color.l_color};
+    justify-content:space-between;
+    background-color:${(props:HeaderContainerProps)=>props.backgroundColor};
 `
-const Small=styled.View`
-    width:10%;
+const Box = styled.View`
+    flex-direction:row;
     align-items:center;
 `
-const Title=styled.View`
-    width:60%;
+const Item=styled.View`
+    padding-horizontal:10px;
+`
+const Exit=styled.Text`
+    ${Styles.m_font};
+    color:${Color.g3_color};
 `
 
 export default Header

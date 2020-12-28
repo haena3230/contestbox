@@ -2,9 +2,12 @@
 import React from 'react';
 import {Text} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import { createStackNavigator } from '@react-navigation/stack';
+
 // page
 import MainPage from './MainPage';
 import ListPage from './ListPage';
+import FilterPage from './ListPage/FilterPage';
 import CommunityPage from './CommunityPage';
 import NoticePage from './NoticePage';
 // icon
@@ -15,7 +18,7 @@ import AlertCircle from '~/Assets/AlertCircle.svg'
 // style
 import {Color,IconSize,DWidth} from '~/Styles';
 
-
+const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
 function MainTabNavi() {
@@ -80,4 +83,16 @@ function MainTabNavi() {
   );
 }
 
-export default MainTabNavi;
+const MainStackNavi=()=>{
+  return(
+    <Stack.Navigator
+      screenOptions={{
+        headerShown:false,
+      }}>
+        <Stack.Screen name="MainTabNavi" component={MainTabNavi} />
+        <Stack.Screen name="FilterPage" component={FilterPage} />
+    </Stack.Navigator>
+  )
+}
+
+export default MainStackNavi;

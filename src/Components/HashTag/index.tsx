@@ -1,7 +1,8 @@
 // hashtag components
 import React from 'react';
 import styled from 'styled-components/native';
-import {Styles,Color,DWidth} from '~/Styles';
+import {Styles,Color,DWidth,IconSize} from '~/Styles';
+import CheckIcon from '~/Assets/check-solid.svg';
 
 interface HashTagProps{
     hashtag:string;
@@ -11,6 +12,7 @@ export const HashTag=({hashtag,picked}:HashTagProps)=>{
     return(
         picked?(
             <HashTagContainer backgroundColor={Color.g2_color}>
+                <CheckIcon height={IconSize.icon} width={IconSize.sicon} color={Color.g4_color}/>
                 <BoxText>{hashtag}</BoxText>
             </HashTagContainer>
         ):(
@@ -24,7 +26,7 @@ export const HashTag=({hashtag,picked}:HashTagProps)=>{
 
 const BoxText=styled.Text`
     ${Styles.s_font};
-    padding:${DWidth>480? '25px':'15px'};
+    padding-horizontal:3px;
 `
 interface ContainerProps{
     backgroundColor:string;
@@ -32,6 +34,7 @@ interface ContainerProps{
 const HashTagContainer=styled.View`
     justify-content:center;
     align-items:center;
+    flex-direction:row;
     border-radius:15px;
     border-width:1px;
     border-color:${Color.g1_color};
@@ -39,4 +42,5 @@ const HashTagContainer=styled.View`
     height:${DWidth>480? '35px':'25px'};
     margin:3px;
     background-color:${(props:ContainerProps)=>props.backgroundColor?props.backgroundColor:Color.w_color};
+    padding:${DWidth>480? '20px':'10px'};
 `

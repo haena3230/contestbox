@@ -4,7 +4,7 @@ import {View} from 'react-native';
 import styled from 'styled-components/native'
 import {Recruit,NoRecruit} from '~/Components/Recruit';
 import {HashTag} from '~/Components/HashTag';
-import {Styles} from '~/Styles';
+import {Styles,Color} from '~/Styles';
 
 interface TextListProps{
     recruit:boolean;
@@ -37,6 +37,8 @@ const Container = styled.View`
     width:100%;
     background-color:white;
     border-radius:10px;
+    border-width:1px;
+    border-color:${Color.g1_color};
     padding:20px;
     margin-vertical:5px;
 `

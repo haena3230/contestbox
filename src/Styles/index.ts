@@ -1,5 +1,5 @@
 // 스타일 모음
-import {StyleSheet} from 'react-native';
+import {PixelRatio, StyleSheet} from 'react-native';
 import styled from 'styled-components/native';
 
   
@@ -43,13 +43,12 @@ export const Styles = StyleSheet.create({
  export const Container=styled.View`
   width:100%;
   height:100%;
-  align-items:center;
-  padding:${DWidth > 480 ? '50px' : '10px'};
   background-color:${Color.l_color};
 `
 
 // 아이콘 사이즈
 export const IconSize={
   icon:DWidth>480?25:20,
+  sicon:DWidth>480?20:15,
 }
 

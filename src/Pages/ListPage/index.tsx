@@ -1,56 +1,55 @@
 // 두번째 메인 탭 ListPage.tsx
-import React,{useEffect, useState} from 'react';
+import React,{useEffect, useState,useRef} from 'react';
 import {ScrollView,View,TouchableOpacity,Text,StyleSheet} from 'react-native';
 import styled from 'styled-components/native';
-import {Color,Container, IconSize, Styles,DHeight,DWidth} from '~/Styles';
+import {Color,Container, IconSize, Styles} from '~/Styles';
+import {useNavigation} from '@react-navigation/native';
 
 // components
 import Header from '~/Components/Header';
-import MenuIcon from '~/Assets/list-outline.svg';
 import MapIcon from '~/Assets/map-marked-alt-solid.svg';
 import ListIcon from '~/Assets/list-ul-solid.svg';
 import SortDown from '~/Assets/sort-down-solid.svg';
-import FilterIcon from '~/Assets/options-outline.svg';
+import FilterIcon from '~/Assets/filter-solid.svg';
 import TextList from '~/Components/TextList';
 import SortComponent from '~/Components/Sort';
+import ToTop from '~/Components/ToTop';
 
-const onetag=['경시','공모','경진']
-const twotag=['AI','IT','창의력','아이디어','UCC','포스터']
-const threetag=['제한없음','초등학생','중학생','고등학생','청소년','대학생','성인','마이스터고']
+// data
+// import { useQuery, gql } from '@apollo/client';
+// import { template } from '@babel/core';
 
-const listdata=[
-  {
-    id:1,
-    title:'test제목임다',
-    recruit:false,
-    tags:['AI','IT','창의력'],
-    viewcount:4,
-  },
-   {
-    id:2,
-    title:'fnfnfn',
-    recruit:true,
-    tags:['AI','IT','창의력'],
-    viewcount:3,
-  },
-   {
-    id:3,
-    title:'test제목임다',
-    recruit:false,
-    tags:['AI','IT','창의력'],
-    viewcount:4,
-  },
-   {
-    id:4,
-    title:'test제목임다',
-    recruit:false,
-    tags:['AI','IT','창의력'],
-    viewcount:4,
-  },
-]
+// const GET_CATEGORIES = gql`
+//   query {
+//     getCategories {
+//       label
+//     }
+//   }
+// `;
+
 
 const ListPage = () => {
+  const navigation=useNavigation();
+
+  // totop
+  const scrollRef=useRef<ScrollView>();
+  const onPressToTop=()=>{
+    scrollRef.current.scrollTo({
+          y: 0,
+          animated: true,
+    })
+  };
   // list data
+  // const { loading, error, data } = useQuery(GET_CATEGORIES);
+  // let template=``;
+  // if (loading) return <Text>Loading...</Text>;
+  // if (error) return <Text>Error</Text>;
+  // if(data&&data.getCategories){
+  //   template=data.getCategories.map((data)=>
+  //     <Text>{data.label}</Text>
+  //   )
+  // }
+
   const[list,setList]=useState<Array<any>>([])
   const[load,setLoad]=useState<boolean>(false);
   
@@ -90,24 +89,23 @@ const ListPage = () => {
     setMap(!map);
   }
   // filter
-  const[filter,setFilter]=useState(false);
   const onPressFilter=()=>{
-    setFilter(!filter);
+    navigation.navigate('FilterPage');
   }
   useEffect(()=>{
     setList(listdata);
     setLoad(true)
   },[])
   return (
-    <View>
-      <Header />
-      <Container style={{height:DHeight-110}}>
-        <ScrollView style={{width:'100%'}}>
+      <Container>
+        <Header />
+        {/* <View>{template}</View> */}
+        <ScrollView style={{width:'100%', paddingHorizontal:5}} ref={scrollRef}>
           <Bar>
             <TouchableOpacity onPress={onPressSort} style={{flexDirection:'row',alignItems:'center'}}>
               <Text style={Styles.s_font}>{sortState}</Text>
-              <View style={{padding:5}}>
-                <SortDown width={IconSize.icon} height={IconSize.icon} color={Color.g3_color}/>
+              <View style={{padding:5,marginBottom:3}}>
+                <SortDown width={IconSize.sicon} height={IconSize.sicon} color={Color.g3_color}/>
               </View>
             </TouchableOpacity>
             <View style={{flexDirection:'row'}}>
@@ -116,31 +114,29 @@ const ListPage = () => {
               </TouchableOpacity>
               <TouchableOpacity onPress={onPressMap} style={style.IconBorder}>
               {map?(
-                  <MapIcon width={IconSize.icon} height={IconSize.icon} color={Color.g4_color} />
-              ):(
                   <ListIcon width={IconSize.icon} height={IconSize.icon} color={Color.g4_color} />
+              ):(
+                  <MapIcon width={IconSize.icon} height={IconSize.icon} color={Color.g4_color} />
               )}
               </TouchableOpacity>
             </View>
           </Bar>
           {map?(
-            <View>
+              <View>
+                <Text>지도</Text>
+              </View>
+          ):(
+              <View>
                 {list.map((list)=>{
                   return(
                     <TextList key = {list.id.toString()} recruit={list.recruit} tags={list.tags} title={list.title} viewcount={list.viewcount}/>
                   )
                 })}
             </View>
-          ):(
-              <View>
-                <Text>지도</Text>
-              </View>
           )}
           
         </ScrollView>
-        
-      </Container>
-      <SortComponent 
+        <SortComponent 
         onPressCancle={onPressSort} 
         modalVisible={sort} 
         one={one}
@@ -150,7 +146,8 @@ const ListPage = () => {
         onPressTagTwo={onPressTagTwo}
         onPressTagThree={onPressTagThree}
         />
-    </View>
+        <ToTop onPressToTop={onPressToTop}/>
+      </Container>
   );
 };
 
@@ -160,6 +157,8 @@ const ListPage = () => {
   width:100%;
   flex-direction:row;
   justify-content:space-between;
+  margin-top:20px;
+  padding-horizontal:5px;
  `
 
  const style=StyleSheet.create({
@@ -173,3 +172,35 @@ const ListPage = () => {
  })
 
 export default ListPage;
+
+
+const listdata=[
+  {
+    id:1,
+    title:'test제목임다',
+    recruit:false,
+    tags:['AI','IT','창의력'],
+    viewcount:4,
+  },
+   {
+    id:2,
+    title:'fnfnfn',
+    recruit:true,
+    tags:['AI','IT','창의력'],
+    viewcount:3,
+  },
+   {
+    id:3,
+    title:'test제목임다',
+    recruit:false,
+    tags:['AI','IT','창의력'],
+    viewcount:4,
+  },
+   {
+    id:4,
+    title:'test제목임다',
+    recruit:false,
+    tags:['AI','IT','창의력'],
+    viewcount:4,
+  },
+]
