@@ -14,18 +14,28 @@ import FilterIcon from '~/Assets/filter-solid.svg';
 import TextList from '~/Components/TextList';
 import SortComponent from '~/Components/Sort';
 import ToTop from '~/Components/ToTop';
+import {HashTag} from '~/Components/HashTag';
 
 // data
-// import { useQuery, gql } from '@apollo/client';
-// import { template } from '@babel/core';
+import { useQuery, gql } from '@apollo/client';
 
-// const GET_CATEGORIES = gql`
-//   query {
-//     getCategories {
-//       label
-//     }
-//   }
-// `;
+const GET_LISTS= gql`
+  query {
+    contests {
+      edges{
+        node{
+          id
+          title
+          hits
+          categories{
+            id
+            label
+          }
+        }
+      }
+    }
+  }
+`;
 
 
 const ListPage = () => {
@@ -39,19 +49,6 @@ const ListPage = () => {
           animated: true,
     })
   };
-  // list data
-  // const { loading, error, data } = useQuery(GET_CATEGORIES);
-  // let template=``;
-  // if (loading) return <Text>Loading...</Text>;
-  // if (error) return <Text>Error</Text>;
-  // if(data&&data.getCategories){
-  //   template=data.getCategories.map((data)=>
-  //     <Text>{data.label}</Text>
-  //   )
-  // }
-
-  const[list,setList]=useState<Array<any>>([])
-  const[load,setLoad]=useState<boolean>(false);
   
   // 정렬 버튼
   const[sortState,setSortState]=useState<string>('추천순');
@@ -92,10 +89,30 @@ const ListPage = () => {
   const onPressFilter=()=>{
     navigation.navigate('FilterPage');
   }
-  useEffect(()=>{
-    setList(listdata);
-    setLoad(true)
-  },[])
+
+  // list data
+  const { loading, error, data } = useQuery(GET_LISTS);
+  let template=``;
+  if (loading) return <Text>Loading...</Text>;
+  if (error) return <Text>Error</Text>;
+  if(data&&data.contests.edges){
+    template=data.contests.edges.map((data)=>
+    <ListBox key = {data.node.id.toString()} onPress={()=>navigation.navigate('DetailPage')}>
+      <TextList 
+        recruit={false} 
+        title={data.node.title} 
+        viewcount={data.node.hits}
+        />
+        {data.node.categories!==null?(
+          <TagBox>
+            {data.node.categories.map((tag)=>
+              <HashTag key={tag.id.toString()} hashtag={tag.label} picked={false}/>
+            )}
+          </TagBox>
+        ):null}
+      </ListBox>
+    )
+  }
   return (
       <Container>
         <Header />
@@ -127,11 +144,7 @@ const ListPage = () => {
               </View>
           ):(
               <View>
-                {list.map((list)=>{
-                  return(
-                    <TextList key = {list.id.toString()} recruit={list.recruit} tags={list.tags} title={list.title} viewcount={list.viewcount}/>
-                  )
-                })}
+                {template}
             </View>
           )}
           
@@ -160,6 +173,20 @@ const ListPage = () => {
   margin-top:20px;
   padding-horizontal:5px;
  `
+const ListBox = styled.TouchableOpacity`
+    background-color:white;
+    border-radius:10px;
+    border-width:1px;
+    border-color:${Color.g1_color};
+    padding:20px;
+    margin-vertical:5px;
+`
+
+const TagBox=styled.View`
+  flex-direction:row;
+  flex-wrap:wrap;
+  margin-top:5px;
+`
 
  const style=StyleSheet.create({
     IconBorder:{
@@ -172,35 +199,3 @@ const ListPage = () => {
  })
 
 export default ListPage;
-
-
-const listdata=[
-  {
-    id:1,
-    title:'test제목임다',
-    recruit:false,
-    tags:['AI','IT','창의력'],
-    viewcount:4,
-  },
-   {
-    id:2,
-    title:'fnfnfn',
-    recruit:true,
-    tags:['AI','IT','창의력'],
-    viewcount:3,
-  },
-   {
-    id:3,
-    title:'test제목임다',
-    recruit:false,
-    tags:['AI','IT','창의력'],
-    viewcount:4,
-  },
-   {
-    id:4,
-    title:'test제목임다',
-    recruit:false,
-    tags:['AI','IT','창의력'],
-    viewcount:4,
-  },
-]

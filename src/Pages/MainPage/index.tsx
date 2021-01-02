@@ -9,12 +9,32 @@ import Search from '~/Assets/search-solid.svg';
 // style 
 import {Color,Styles,Container,IconSize,DWidth} from '~/Styles';
 import { TextInput } from 'react-native-gesture-handler';
-
-
+// data
+import { useQuery, gql } from '@apollo/client';
+const GET_CATEGORIES = gql`
+  query {
+    categories {
+      id
+      label
+    }
+  }
+`;
 
 
 const MainPage = () => {
-  
+  // catrgory data
+  const { loading, error, data } = useQuery(GET_CATEGORIES);
+  let template=``;
+
+  if (loading) return <Text>Loading...</Text>;
+  if (error) return <Text>Error</Text>;
+  if(data&&data.categories){
+    // max 10개
+    let max = data.categories.slice(0,10);
+    template=max.map((data)=>
+      <HashTag key = {data.id.toString()} hashtag={data.label} picked={false}/>
+    )
+  }
   return (
       <Container>
         <Header />
@@ -32,12 +52,7 @@ const MainPage = () => {
               <Text style={Styles.m_font}>카테고리</Text>
             </Title>
             <View style={{flexDirection:'row', flexWrap:'wrap',marginVertical:20}}>
-              <HashTag hashtag={'낑깡낑깡'} picked={false}/>
-              <HashTag hashtag={'test'} picked={false}/>
-              <HashTag hashtag={'gg'} picked={false}/>
-              <HashTag hashtag={'졸림'} picked={false}/>
-              <HashTag hashtag={'룰루'} picked={false}/>
-              <HashTag hashtag={'소프트웨어'} picked={false}/>
+              {template}
             </View>
           </Category>
         </MainContainer>

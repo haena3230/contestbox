@@ -3,18 +3,16 @@ import React from 'react';
 import {View} from 'react-native';
 import styled from 'styled-components/native'
 import {Recruit,NoRecruit} from '~/Components/Recruit';
-import {HashTag} from '~/Components/HashTag';
-import {Styles,Color} from '~/Styles';
+import {Styles} from '~/Styles';
 
 interface TextListProps{
     recruit:boolean;
-    tags:Array<string>;
     title:string;
     viewcount:number;
 }
-const TextList=({recruit,tags,title,viewcount}:TextListProps)=>{
+const TextList=({recruit,title,viewcount}:TextListProps)=>{
     return(
-        <Container>
+        <View>
             {recruit?(
                 <Recruit />
             ):(
@@ -22,26 +20,10 @@ const TextList=({recruit,tags,title,viewcount}:TextListProps)=>{
             )}
             <Title>{title}</Title>
             <ViewCount>조회수 {viewcount}</ViewCount>
-            <View style={{flexDirection:'row', flexWrap:'wrap',marginVertical:10}}>
-                {tags.map((tag)=>{
-                    return(
-                        <HashTag key={tag} hashtag={tag} picked={false}/>
-                    )
-                })}
-            </View>
-        </Container>
+        </View>
     )
 }
 
-const Container = styled.View`
-    width:100%;
-    background-color:white;
-    border-radius:10px;
-    border-width:1px;
-    border-color:${Color.g1_color};
-    padding:20px;
-    margin-vertical:5px;
-`
 const Title=styled.Text`
     margin-top:10px;
     ${Styles.s_font};

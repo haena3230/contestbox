@@ -66,7 +66,7 @@ export const CategoryList=({title,subTitle}:CategoryListProps)=>{
                 <View style={{alignItems:'flex-end'}}>
                     {subTitle.map((data)=>{
                         return(
-                            <CategoryListSe subTitle={data}/>
+                            <CategoryListSe key = {data} subTitle={data}/>
                         )
                     })}
                 </View>

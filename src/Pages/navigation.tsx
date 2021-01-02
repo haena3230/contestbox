@@ -7,6 +7,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 // page
 import MainPage from './MainPage';
 import ListPage from './ListPage';
+import DetailPage from './ListPage/DetailPage';
 import FilterPage from './ListPage/FilterPage';
 import CommunityPage from './CommunityPage';
 import NoticePage from './NoticePage';
@@ -21,6 +22,7 @@ import {Color,IconSize,DWidth} from '~/Styles';
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
+// main bottom tab
 function MainTabNavi() {
   return (
       <Tab.Navigator
@@ -76,13 +78,27 @@ function MainTabNavi() {
         })}
       >
         <Tab.Screen name="홈" component={MainPage} />
-        <Tab.Screen name="대회" component={ListPage} />
+        <Tab.Screen name="대회" component={ListStackNavi} />
         <Tab.Screen name="커뮤니티" component={CommunityPage} />
         <Tab.Screen name="공지" component={NoticePage} />
     </Tab.Navigator>
   );
 }
 
+// listpage stack
+const ListStackNavi=()=>{
+  return(
+    <Stack.Navigator
+      screenOptions={{
+        headerShown:false,
+      }}>
+        <Stack.Screen name="ListPage" component={ListPage} />
+        <Stack.Screen name="DetailPage" component={DetailPage} />
+    </Stack.Navigator>
+  )
+}
+
+// main stack
 const MainStackNavi=()=>{
   return(
     <Stack.Navigator
