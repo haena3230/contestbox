@@ -1,5 +1,5 @@
   // 첫번째 메인 탭 MainPage.tsx
-import React,{useState} from 'react';
+import React,{useEffect, useState} from 'react';
 import {View, Text} from 'react-native';
 import styled from 'styled-components/native';
 // Component
@@ -22,7 +22,7 @@ const GET_CATEGORIES = gql`
 
 
 const MainPage = () => {
-  // catrgory data
+  // // catrgory data
   const { loading, error, data } = useQuery(GET_CATEGORIES);
   let template=``;
 
@@ -35,6 +35,10 @@ const MainPage = () => {
       <HashTag key = {data.id.toString()} hashtag={data.label} picked={false}/>
     )
   }
+  // const [test,setTest]=useState<Array<any>>([]);
+  // useEffect(()=>{
+  //   setTest(testdata);
+  // },[])
   return (
       <Container>
         <Header />
@@ -53,6 +57,13 @@ const MainPage = () => {
             </Title>
             <View style={{flexDirection:'row', flexWrap:'wrap',marginVertical:20}}>
               {template}
+              {/* {
+                test.map((data)=>{
+                  return(
+                    <HashTag key = {data.id.toString()} hashtag={data.label} picked={false}/>
+                  )
+                })
+              } */}
             </View>
           </Category>
         </MainContainer>
@@ -104,3 +115,30 @@ const Category=styled.View`
 
 export default MainPage;
 
+const testdata=[
+  {
+    id:1,
+    label:'test',
+  },
+  {
+    id:2,
+    label:'test',
+  },
+  {
+    id:3,
+    label:'test',
+  },
+  {
+    id:4,
+    label:'test',
+  },
+  {
+    id:5,
+    label:'test',
+  },
+  {
+    id:6,
+    label:'test',
+  },
+
+]

@@ -1,9 +1,11 @@
 // 두번째 메인 탭 ListPage.tsx
-import React,{useEffect, useState,useRef} from 'react';
+import React,{useState,useRef} from 'react';
 import {ScrollView,View,TouchableOpacity,Text,StyleSheet} from 'react-native';
 import styled from 'styled-components/native';
 import {Color,Container, IconSize, Styles} from '~/Styles';
+// navi
 import {useNavigation} from '@react-navigation/native';
+import {ListPageNavigationProp} from '~/Types';
 
 // components
 import Header from '~/Components/Header';
@@ -39,7 +41,7 @@ const GET_LISTS= gql`
 
 
 const ListPage = () => {
-  const navigation=useNavigation();
+  const navigation=useNavigation<ListPageNavigationProp>();
 
   // totop
   const scrollRef=useRef<ScrollView>();
@@ -97,7 +99,9 @@ const ListPage = () => {
   if (error) return <Text>Error</Text>;
   if(data&&data.contests.edges){
     template=data.contests.edges.map((data)=>
-    <ListBox key = {data.node.id.toString()} onPress={()=>navigation.navigate('DetailPage')}>
+    <ListBox key = {data.node.id.toString()} onPress={()=>navigation.navigate('DetailPage',{
+      listId:data.node.id,
+    })}>
       <TextList 
         recruit={false} 
         title={data.node.title} 
@@ -116,7 +120,6 @@ const ListPage = () => {
   return (
       <Container>
         <Header />
-        {/* <View>{template}</View> */}
         <ScrollView style={{width:'100%', paddingHorizontal:5}} ref={scrollRef}>
           <Bar>
             <TouchableOpacity onPress={onPressSort} style={{flexDirection:'row',alignItems:'center'}}>

@@ -11,6 +11,19 @@ export const LongBtn =()=>{
     )
 }
 
+interface ShortBtnProps{
+    text:string;
+    onPress:()=>void;
+}
+export const ShortBtn=({text,onPress}:ShortBtnProps)=>{
+    return(
+        <SContainer onPress={onPress}>
+            <SText>{text}</SText>
+        </SContainer>
+    )
+}
+
+// long
 const Container=styled.TouchableOpacity`
     justify-content:center;
     align-items:center;
@@ -20,6 +33,20 @@ const Container=styled.TouchableOpacity`
 `
 const Text=styled.Text`
     ${Styles.m_font};
+    color:${Color.w_color};
+    padding:8px;
+`
+
+// short
+const SContainer=styled.TouchableOpacity`
+    justify-content:center;
+    align-items:center;
+    background-color:${Color.g4_color};
+    border-radius:10px;
+`
+const SText=styled.Text`
+    ${Styles.m_font};
+    font-weight:bold;
     color:${Color.w_color};
     padding:8px;
 `
