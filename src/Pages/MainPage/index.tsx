@@ -1,5 +1,5 @@
   // 첫번째 메인 탭 MainPage.tsx
-import React,{useEffect, useState} from 'react';
+import React,{useState} from 'react';
 import {View, Text} from 'react-native';
 import styled from 'styled-components/native';
 // Component
@@ -13,9 +13,10 @@ import { TextInput } from 'react-native-gesture-handler';
 import { useQuery } from '@apollo/client';
 import {GET_CATEGORIES} from '~/queries';
 
+import NewModuleButton from '~/Components/Map';
 
 const MainPage = () => {
-  // // catrgory data
+  // catrgory data
   const { loading, error, data } = useQuery(GET_CATEGORIES);
   let template=``;
 
@@ -35,6 +36,7 @@ const MainPage = () => {
   return (
       <Container>
         <Header />
+        <NewModuleButton />
         <MainContainer>
           <Title>
             <Text style={Styles.b_font}>어떤 </Text>
