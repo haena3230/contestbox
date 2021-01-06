@@ -6,7 +6,6 @@ import {Color,Container, IconSize, Styles} from '~/Styles';
 // navi
 import {useNavigation} from '@react-navigation/native';
 import {ListPageNavigationProp} from '~/Types';
-
 // components
 import Header from '~/Components/Header';
 import MapIcon from '~/Assets/map-marked-alt-solid.svg';
@@ -17,27 +16,10 @@ import TextList from '~/Components/TextList';
 import SortComponent from '~/Components/Sort';
 import ToTop from '~/Components/ToTop';
 import {HashTag} from '~/Components/HashTag';
-
 // data
-import { useQuery, gql } from '@apollo/client';
+import { useQuery } from '@apollo/client';
+import {GET_LISTS} from '~/queries';
 
-const GET_LISTS= gql`
-  query {
-    contests {
-      edges{
-        node{
-          id
-          title
-          hits
-          categories{
-            id
-            label
-          }
-        }
-      }
-    }
-  }
-`;
 
 
 const ListPage = () => {

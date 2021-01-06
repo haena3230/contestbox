@@ -16,12 +16,15 @@ interface ShortBtnProps{
     onPress:()=>void;
 }
 export const ShortBtn=({text,onPress}:ShortBtnProps)=>{
+    
     return(
         <SContainer onPress={onPress}>
             <SText>{text}</SText>
         </SContainer>
     )
 }
+
+
 
 // long
 const Container=styled.TouchableOpacity`

@@ -10,15 +10,8 @@ import Search from '~/Assets/search-solid.svg';
 import {Color,Styles,Container,IconSize,DWidth} from '~/Styles';
 import { TextInput } from 'react-native-gesture-handler';
 // data
-import { useQuery, gql } from '@apollo/client';
-const GET_CATEGORIES = gql`
-  query {
-    categories {
-      id
-      label
-    }
-  }
-`;
+import { useQuery } from '@apollo/client';
+import {GET_CATEGORIES} from '~/queries';
 
 
 const MainPage = () => {

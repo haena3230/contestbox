@@ -1,6 +1,6 @@
 // list detail Page
-import React,{useRef} from 'react';
-import {View,Text} from 'react-native';
+import React,{useCallback, useRef} from 'react';
+import {View,Text, Linking, Alert} from 'react-native';
 // style
 import {Color,Container, Styles} from '~/Styles';
 import styled from 'styled-components/native';
@@ -15,7 +15,8 @@ import { useRoute } from '@react-navigation/native';
 import {ListScreenRouteProp} from '~/Types';
 
 // data
-import { useQuery, gql } from '@apollo/client';
+import { useQuery } from '@apollo/client';
+import {GET_DETAILS} from '~/queries';
 
 const DetailPage =()=>{
     // totop
@@ -28,55 +29,102 @@ const DetailPage =()=>{
     };
     // data
     const route=useRoute<ListScreenRouteProp>();
-    const GET_DETAILS= gql`
-    query {
-        contest(id:${JSON.stringify(route.params.listId)}) {
-            posterURL
-            title
-            hits
-            categories{
-                id
-                label
+    const { loading, error, data } = useQuery(GET_DETAILS,{
+        variables:{id:route.params.listId},
+    });
+    // link
+    const OpenURLButton = ({ url, children }) => {
+        const handlePress = useCallback(async () => {
+            const supported = await Linking.canOpenURL(url);
+            if (supported) {
+            await Linking.openURL(url);
+            } else {
+            Alert.alert(`Don't know how to open this URL: ${url}`);
             }
-            types{
-                id
-                label
-            }
-            applicationPeriodStartAt
-            applicationPeriodEndAt
-            siteURL
+        }, [url]);
+        
+    return <ShortBtn text={children} onPress={handlePress}/>;
+    };
+    // period
+    const PeriodSplit=(At)=>{
+        let am;
+        let hour;
+        let Period =At.split('T');
+        let Date=Period[0].split('-');
+        let Time=Period[1].split(':',2);
+        if(Time[0]>'12'){
+            am=false;
+            hour=parseInt(Time[0])-12;
         }
+        else {
+            am= true;
+            hour=parseInt(Time[0]);
+        }
+        return[Date,Time,am,hour];
     }
-    `;
-    const { loading, error, data } = useQuery(GET_DETAILS);
+    let Start = PeriodSplit(data.contest.applicationPeriodStartAt);
+    let End = PeriodSplit(data.contest.applicationPeriodEndAt);
     if (loading) return <Text>Loading...</Text>;
     if (error) return <Text>Error</Text>;
     if(data&&data.contest)
     return(
         <Container>
             <Header />
-            <Text>{typeof(route.params.listId)}</Text>
+            
             <Box>
                 <ScrollView ref={scrollRef}>
-                    <Poster source={require('~/Assets/poster.png')}/>    
-                    <Title>2020/21 한국 어학올림피아드</Title>
+                    {data.contest.posterURL!==""?(
+                        <Poster source={{uri:data.contest.posterURL}}/>    
+                    ):(
+                        // <Poster source={require('~/Assets/poster.png')}/>
+                        null      
+                    )}
+                    
+                    <Title>{data.contest.title}</Title>
                     <TextBox>
-                        <Text style={Styles.s_font}>조회수 0</Text>
+                        <Text style={Styles.s_font}>조회수 {data.contest.hits}</Text>
                     </TextBox>
-                    <ContentTitle>카테고리</ContentTitle>
-                    <TagBox>
-                        <HashTag hashtag={'test'} picked={false}/>
-                    </TagBox>
-                    <ContentTitle>참여조건</ContentTitle>
-                    <TagBox>
-                        <HashTag hashtag={'test'} picked={false}/>
-                    </TagBox>
-                    <Period />
-                    <View style={{width:'100%',alignItems:'flex-end'}}>
-                        <View style={{width:'30%'}}>
-                            <ShortBtn text={'홈페이지'} onPress={()=>null}/>
+                    {data.contest.categories!==null?(
+                        <View>
+                            <ContentTitle>카테고리</ContentTitle>
+                            <TagBox>
+                            {data.contest.categories.map((data)=>{
+                                return(
+                                    <HashTag key= {data.id} hashtag={data.label} picked={false}/>
+                                )
+                            })}
+                            </TagBox>
                         </View>
-                    </View>
+                    ):(
+                        null
+                    )}
+                    {data.contest.types!==null?(
+                        <View>
+                            <ContentTitle>참여조건</ContentTitle>
+                            <TagBox>
+                                {data.contest.types.map((data)=>{
+                                    return(
+                                        <HashTag key = {data.id} hashtag={data.label} picked={false}/>
+                                    )
+                                })}
+                            </TagBox>
+                        </View>
+                    ):(
+                        null
+                    )}
+                    <Period 
+                        sY={Start[0][0]} sM={Start[0][1]} sD={Start[0][2]} sH={Start[3]} sm={Start[1][1]} sam={Start[2]}
+                        eY={End[0][0]} eM={End[0][1]} eD={End[0][2]} eH={End[3]} em={End[1][1]} eam={End[2]}
+                    />
+                    {data.contest.siteURL!==""?(
+                        <View style={{width:'100%',alignItems:'flex-end'}}>
+                            <View style={{width:'30%'}}>
+                                <OpenURLButton url={data.contest.siteURL}>홈페이지</OpenURLButton>
+                            </View>
+                        </View>
+                    ):(
+                       null
+                    )}
                     <ContentTitle>상세내용</ContentTitle>
                     
                     <ContentTitle>대회 장소</ContentTitle>
@@ -87,18 +135,49 @@ const DetailPage =()=>{
     )
 }
 
-const Period = ()=>{
+interface PeriodProps{
+    sam:boolean;
+    eam:boolean;
+    sY:string;
+    sM:string;
+    sD:string;
+    sH:string;
+    sm:string;
+    eY:string;
+    eM:string;
+    eD:string;
+    eH:string;
+    em:string;
+}
+const Period = ({sY,sM,sD,sH,sm,eY,eM,eD,eH,em,sam,eam}:PeriodProps)=>{
     return(
         <PeriodContainer>
             <View style={{alignItems:'center'}}>
                 <Text>접수시작</Text>
-                <Title>10월 20일 (화)</Title>
-                <Text style={Styles.ss_font}>2020년   오전 12:00</Text>
+                <Title>{sM}월 {sD}일 (화)</Title>
+                <Time>
+                    <TimeText>{sY}년</TimeText>
+                    {sam?(
+                        <TimeText>오전</TimeText>
+                    ):(
+                        <TimeText>오후</TimeText>
+                    )}
+                    <TimeText>{sH}:{sm}</TimeText>
+                </Time>
+                
             </View>
             <View style={{alignItems:'center'}}>
                 <Text>접수마감</Text>
-                <Title>11월 20일 (금)</Title>
-                <Text style={Styles.ss_font}>2020년   오후 11:59</Text>
+                <Title>{eM}월 {eD}일 (금)</Title>
+                <Time>
+                    <TimeText>{eY}년</TimeText>
+                    {eam?(
+                        <TimeText>오전</TimeText>
+                    ):(
+                        <TimeText>오후</TimeText>
+                    )}
+                    <TimeText>{eH}:{em}</TimeText>
+                </Time>
             </View>
         </PeriodContainer>
     )
@@ -148,5 +227,13 @@ const PeriodContainer=styled.View`
     border-radius:10px;
     padding:10px;
     margin-vertical:20px;
+`
+const Time=styled.View`
+    flex-direction:row;
+`
+const TimeText =styled.Text`
+    ${Styles.ss_font};
+    margin-horizontal:3px;
+
 `
 export default DetailPage;
