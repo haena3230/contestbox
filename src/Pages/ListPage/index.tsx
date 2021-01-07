@@ -16,12 +16,10 @@ import TextList from '~/Components/TextList';
 import SortComponent from '~/Components/Sort';
 import ToTop from '~/Components/ToTop';
 import {HashTag} from '~/Components/HashTag';
+import Map from '~/Components/Map';
 // data
 import { useQuery } from '@apollo/client';
 import {GET_LISTS} from '~/queries';
-
-
-
 const ListPage = () => {
   const navigation=useNavigation<ListPageNavigationProp>();
 
@@ -102,49 +100,56 @@ const ListPage = () => {
   return (
       <Container>
         <Header />
-        <ScrollView style={{width:'100%', paddingHorizontal:5}} ref={scrollRef}>
-          <Bar>
-            <TouchableOpacity onPress={onPressSort} style={{flexDirection:'row',alignItems:'center'}}>
-              <Text style={Styles.s_font}>{sortState}</Text>
-              <View style={{padding:5,marginBottom:3}}>
-                <SortDown width={IconSize.sicon} height={IconSize.sicon} color={Color.g3_color}/>
-              </View>
-            </TouchableOpacity>
-            <View style={{flexDirection:'row'}}>
-              <TouchableOpacity onPress={onPressFilter} style={style.IconBorder}>
-                  <FilterIcon width={IconSize.icon} height={IconSize.icon} color={Color.g4_color} />
+        {map?(
+          <View style={{height:'80%'}}>
+            <Bar>
+                <View />
+                <View style={{flexDirection:'row'}}>
+                  <TouchableOpacity onPress={onPressFilter} style={style.IconBorder}>
+                      <FilterIcon width={IconSize.icon} height={IconSize.icon} color={Color.g4_color} />
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={onPressMap} style={style.IconBorder}>
+                      <ListIcon width={IconSize.icon} height={IconSize.icon} color={Color.g4_color} />
+                  </TouchableOpacity>
+                </View>
+            </Bar>
+              <Map />
+          </View>
+        ):(
+          <ScrollView style={{width:'100%', paddingHorizontal:5}} ref={scrollRef}>
+            <Bar>
+              <TouchableOpacity onPress={onPressSort} style={{flexDirection:'row',alignItems:'center'}}>
+                <Text style={Styles.s_font}>{sortState}</Text>
+                <View style={{padding:5,marginBottom:3}}>
+                  <SortDown width={IconSize.sicon} height={IconSize.sicon} color={Color.g3_color}/>
+                </View>
               </TouchableOpacity>
-              <TouchableOpacity onPress={onPressMap} style={style.IconBorder}>
-              {map?(
-                  <ListIcon width={IconSize.icon} height={IconSize.icon} color={Color.g4_color} />
-              ):(
-                  <MapIcon width={IconSize.icon} height={IconSize.icon} color={Color.g4_color} />
-              )}
-              </TouchableOpacity>
-            </View>
-          </Bar>
-          {map?(
-              <View>
-                <Text>지도</Text>
+              <View style={{flexDirection:'row'}}>
+                <TouchableOpacity onPress={onPressFilter} style={style.IconBorder}>
+                    <FilterIcon width={IconSize.icon} height={IconSize.icon} color={Color.g4_color} />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={onPressMap} style={style.IconBorder}>
+                    <MapIcon width={IconSize.icon} height={IconSize.icon} color={Color.g4_color} />
+                </TouchableOpacity>
               </View>
-          ):(
+            </Bar>
               <View>
-                {template}
-            </View>
-          )}
-          
-        </ScrollView>
-        <SortComponent 
-        onPressCancle={onPressSort} 
-        modalVisible={sort} 
-        one={one}
-        two={two}
-        three={three}
-        onPressTagOne={onPressTagOne}
-        onPressTagTwo={onPressTagTwo}
-        onPressTagThree={onPressTagThree}
-        />
-        <ToTop onPressToTop={onPressToTop}/>
+                  {template}
+              </View>
+              <SortComponent 
+              onPressCancle={onPressSort} 
+              modalVisible={sort} 
+              one={one}
+              two={two}
+              three={three}
+              onPressTagOne={onPressTagOne}
+              onPressTagTwo={onPressTagTwo}
+              onPressTagThree={onPressTagThree}
+              />
+              <ToTop onPressToTop={onPressToTop}/>
+          </ScrollView>
+        )}
+        
       </Container>
   );
 };

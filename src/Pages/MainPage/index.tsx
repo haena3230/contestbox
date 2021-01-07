@@ -13,8 +13,6 @@ import { TextInput } from 'react-native-gesture-handler';
 import { useQuery } from '@apollo/client';
 import {GET_CATEGORIES} from '~/queries';
 
-import NewModuleButton from '~/Components/Map';
-
 const MainPage = () => {
   // catrgory data
   const { loading, error, data } = useQuery(GET_CATEGORIES);
@@ -36,7 +34,6 @@ const MainPage = () => {
   return (
       <Container>
         <Header />
-        <NewModuleButton />
         <MainContainer>
           <Title>
             <Text style={Styles.b_font}>어떤 </Text>

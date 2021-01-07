@@ -1,6 +1,7 @@
 // list detail Page
 import React,{useCallback, useRef} from 'react';
 import {View,Text, Linking, Alert} from 'react-native';
+import moment from 'moment';
 // style
 import {Color,Container, Styles} from '~/Styles';
 import styled from 'styled-components/native';
@@ -10,9 +11,11 @@ import ToTop from '~/Components/ToTop';
 import { ScrollView } from 'react-native-gesture-handler';
 import {HashTag} from '~/Components/HashTag';
 import {ShortBtn} from '~/Components/Btn';
+
 // navi
 import { useRoute } from '@react-navigation/native';
 import {ListScreenRouteProp} from '~/Types';
+import {SndMap} from '~/Components/Map';
 
 // data
 import { useQuery } from '@apollo/client';
@@ -47,26 +50,17 @@ const DetailPage =()=>{
     };
     // period
     const PeriodSplit=(At)=>{
-        let am;
-        let hour;
         let Period =At.split('T');
         let Date=Period[0].split('-');
+        let Day = moment(Period[0]).day();
         let Time=Period[1].split(':',2);
-        if(Time[0]>'12'){
-            am=false;
-            hour=parseInt(Time[0])-12;
-        }
-        else {
-            am= true;
-            hour=parseInt(Time[0]);
-        }
-        return[Date,Time,am,hour];
+        let New = Date.concat(Day,Time);
+        return New
     }
-    let Start = PeriodSplit(data.contest.applicationPeriodStartAt);
-    let End = PeriodSplit(data.contest.applicationPeriodEndAt);
     if (loading) return <Text>Loading...</Text>;
     if (error) return <Text>Error</Text>;
     if(data&&data.contest)
+    
     return(
         <Container>
             <Header />
@@ -112,10 +106,8 @@ const DetailPage =()=>{
                     ):(
                         null
                     )}
-                    <Period 
-                        sY={Start[0][0]} sM={Start[0][1]} sD={Start[0][2]} sH={Start[3]} sm={Start[1][1]} sam={Start[2]}
-                        eY={End[0][0]} eM={End[0][1]} eD={End[0][2]} eH={End[3]} em={End[1][1]} eam={End[2]}
-                    />
+                    
+                    <Period Start={PeriodSplit(data.contest.applicationPeriodStartAt)} End={PeriodSplit(data.contest.applicationPeriodEndAt)}/>
                     {data.contest.siteURL!==""?(
                         <View style={{width:'100%',alignItems:'flex-end'}}>
                             <View style={{width:'30%'}}>
@@ -128,6 +120,9 @@ const DetailPage =()=>{
                     <ContentTitle>상세내용</ContentTitle>
                     
                     <ContentTitle>대회 장소</ContentTitle>
+                    <MapBox>
+                        <SndMap latitude={37.565051} longitude={126.978567}/>
+                    </MapBox>
                 </ScrollView>
             </Box>
             <ToTop onPressToTop={onPressToTop}/>
@@ -136,47 +131,47 @@ const DetailPage =()=>{
 }
 
 interface PeriodProps{
-    sam:boolean;
-    eam:boolean;
-    sY:string;
-    sM:string;
-    sD:string;
-    sH:string;
-    sm:string;
-    eY:string;
-    eM:string;
-    eD:string;
-    eH:string;
-    em:string;
+    Start:Array<any>;
+    End:Array<any>;
 }
-const Period = ({sY,sM,sD,sH,sm,eY,eM,eD,eH,em,sam,eam}:PeriodProps)=>{
+// 연/월/일/요일/시간/분
+const Period = ({Start,End}:PeriodProps)=>{
+    const day=(num)=>{
+        if(num===0) return '일';
+        if(num===1)return '월';
+        if(num===2)return '화';
+        if(num===3)return '수';
+        if(num===4)return '목';
+        if(num===5)return '금';
+        if(num===6)return '토';
+    }
+    const ampm=(time)=>{
+        if(parseInt(time)>12)   return '오후';
+        else return '오전';
+    }
+    const hour=(time)=>{
+        if(parseInt(time)>12)   return parseInt(time)-12;
+        else return time;
+    }
     return(
         <PeriodContainer>
             <View style={{alignItems:'center'}}>
                 <Text>접수시작</Text>
-                <Title>{sM}월 {sD}일 (화)</Title>
+                <Title>{Start[1]}월 {Start[2]}일 ({day(Start[3])})</Title>
                 <Time>
-                    <TimeText>{sY}년</TimeText>
-                    {sam?(
-                        <TimeText>오전</TimeText>
-                    ):(
-                        <TimeText>오후</TimeText>
-                    )}
-                    <TimeText>{sH}:{sm}</TimeText>
+                    <TimeText>{Start[0]}년</TimeText>
+                    <TimeText>{ampm(Start[4])}</TimeText>                
+                    <TimeText>{hour(Start[4])}:{Start[5]}</TimeText>
                 </Time>
                 
             </View>
             <View style={{alignItems:'center'}}>
                 <Text>접수마감</Text>
-                <Title>{eM}월 {eD}일 (금)</Title>
+                <Title>{End[1]}월 {End[2]}일 ({day(End[3])})</Title>
                 <Time>
-                    <TimeText>{eY}년</TimeText>
-                    {eam?(
-                        <TimeText>오전</TimeText>
-                    ):(
-                        <TimeText>오후</TimeText>
-                    )}
-                    <TimeText>{eH}:{em}</TimeText>
+                    <TimeText>{End[0]}년</TimeText>
+                    <TimeText>{ampm(End[4])}</TimeText>
+                    <TimeText>{hour(End[4])}:{End[5]}</TimeText>
                 </Time>
             </View>
         </PeriodContainer>
@@ -217,6 +212,16 @@ const Title=styled.Text`
     ${Styles.b_font};
     font-weight:bold;
     margin-vertical:10px;
+`
+
+const MapBox=styled.View`
+    border-width:1px;
+    border-radius:10px;
+    border-color:${Color.g1_color};
+    overflow:hidden;
+    height:200px;
+    margin-top:10px;
+    margin-bottom:30px;
 `
 
 // period
