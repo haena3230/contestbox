@@ -17,6 +17,7 @@ import SortComponent from '~/Components/Sort';
 import ToTop from '~/Components/ToTop';
 import {HashTag} from '~/Components/HashTag';
 import Map from '~/Components/Map';
+import Loading from '~/Components/Loading';
 // data
 import { useQuery } from '@apollo/client';
 import {GET_LISTS} from '~/queries';
@@ -75,7 +76,7 @@ const ListPage = () => {
   // list data
   const { loading, error, data } = useQuery(GET_LISTS);
   let template=``;
-  if (loading) return <Text>Loading...</Text>;
+  if (loading) return <Loading />;
   if (error) return <Text>Error</Text>;
   if(data&&data.contests.edges){
     template=data.contests.edges.map((data)=>
@@ -116,40 +117,41 @@ const ListPage = () => {
               <Map />
           </View>
         ):(
-          <ScrollView style={{width:'100%', paddingHorizontal:5}} ref={scrollRef}>
-            <Bar>
-              <TouchableOpacity onPress={onPressSort} style={{flexDirection:'row',alignItems:'center'}}>
-                <Text style={Styles.s_font}>{sortState}</Text>
-                <View style={{padding:5,marginBottom:3}}>
-                  <SortDown width={IconSize.sicon} height={IconSize.sicon} color={Color.g3_color}/>
+          <View style={{height:'92%'}}>
+            <ScrollView style={{width:'100%', paddingHorizontal:5}} ref={scrollRef}>
+              <Bar>
+                <TouchableOpacity onPress={onPressSort} style={{flexDirection:'row',alignItems:'center'}}>
+                  <Text style={Styles.s_font}>{sortState}</Text>
+                  <View style={{padding:5,marginBottom:3}}>
+                    <SortDown width={IconSize.sicon} height={IconSize.sicon} color={Color.g3_color}/>
+                  </View>
+                </TouchableOpacity>
+                <View style={{flexDirection:'row'}}>
+                  <TouchableOpacity onPress={onPressFilter} style={style.IconBorder}>
+                      <FilterIcon width={IconSize.icon} height={IconSize.icon} color={Color.g4_color} />
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={onPressMap} style={style.IconBorder}>
+                      <MapIcon width={IconSize.icon} height={IconSize.icon} color={Color.g4_color} />
+                  </TouchableOpacity>
                 </View>
-              </TouchableOpacity>
-              <View style={{flexDirection:'row'}}>
-                <TouchableOpacity onPress={onPressFilter} style={style.IconBorder}>
-                    <FilterIcon width={IconSize.icon} height={IconSize.icon} color={Color.g4_color} />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={onPressMap} style={style.IconBorder}>
-                    <MapIcon width={IconSize.icon} height={IconSize.icon} color={Color.g4_color} />
-                </TouchableOpacity>
-              </View>
-            </Bar>
-              <View>
-                  {template}
-              </View>
-              <SortComponent 
-              onPressCancle={onPressSort} 
-              modalVisible={sort} 
-              one={one}
-              two={two}
-              three={three}
-              onPressTagOne={onPressTagOne}
-              onPressTagTwo={onPressTagTwo}
-              onPressTagThree={onPressTagThree}
-              />
-              <ToTop onPressToTop={onPressToTop}/>
-          </ScrollView>
+              </Bar>
+                <View>
+                    {template}
+                </View>
+                <SortComponent 
+                onPressCancle={onPressSort} 
+                modalVisible={sort} 
+                one={one}
+                two={two}
+                three={three}
+                onPressTagOne={onPressTagOne}
+                onPressTagTwo={onPressTagTwo}
+                onPressTagThree={onPressTagThree}
+                />
+            </ScrollView>
+            <ToTop onPressToTop={onPressToTop}/>
+          </View>
         )}
-        
       </Container>
   );
 };

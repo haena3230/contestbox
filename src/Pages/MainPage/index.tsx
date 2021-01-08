@@ -6,6 +6,7 @@ import styled from 'styled-components/native';
 import Header from '~/Components/Header';
 import {HashTag} from '~/Components/HashTag';
 import Search from '~/Assets/search-solid.svg';
+import Loading from '~/Components/Loading';
 // style 
 import {Color,Styles,Container,IconSize,DWidth} from '~/Styles';
 import { TextInput } from 'react-native-gesture-handler';
@@ -13,12 +14,13 @@ import { TextInput } from 'react-native-gesture-handler';
 import { useQuery } from '@apollo/client';
 import {GET_CATEGORIES} from '~/queries';
 
+
 const MainPage = () => {
   // catrgory data
   const { loading, error, data } = useQuery(GET_CATEGORIES);
   let template=``;
 
-  if (loading) return <Text>Loading...</Text>;
+  if (loading) return <Loading />
   if (error) return <Text>Error</Text>;
   if(data&&data.categories){
     // max 10개

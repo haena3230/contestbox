@@ -11,7 +11,7 @@ import ToTop from '~/Components/ToTop';
 import { ScrollView } from 'react-native-gesture-handler';
 import {HashTag} from '~/Components/HashTag';
 import {ShortBtn} from '~/Components/Btn';
-
+import Loading from '~/Components/Loading';
 // navi
 import { useRoute } from '@react-navigation/native';
 import {ListScreenRouteProp} from '~/Types';
@@ -57,7 +57,7 @@ const DetailPage =()=>{
         let New = Date.concat(Day,Time);
         return New
     }
-    if (loading) return <Text>Loading...</Text>;
+    if (loading) return <Loading />;
     if (error) return <Text>Error</Text>;
     if(data&&data.contest)
     
