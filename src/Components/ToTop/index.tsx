@@ -26,6 +26,7 @@ const Btn=styled.TouchableOpacity`
     padding:5px;
     background-color:${Color.p_color};
     border-radius:20px;
+    z-index:2;
 `
 
 

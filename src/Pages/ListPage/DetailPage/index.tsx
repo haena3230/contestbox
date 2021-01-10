@@ -33,7 +33,7 @@ const DetailPage =()=>{
     // data
     const route=useRoute<ListScreenRouteProp>();
     const { loading, error, data } = useQuery(GET_DETAILS,{
-        variables:{id:route.params.listId},
+        variables:{id:route.params.listId}
     });
     // link
     const OpenURLButton = ({ url, children }) => {
@@ -63,8 +63,7 @@ const DetailPage =()=>{
     
     return(
         <Container>
-            <Header />
-            
+            <Header />            
             <Box>
                 <ScrollView ref={scrollRef}>
                     {data.contest.posterURL!==""?(
@@ -107,7 +106,7 @@ const DetailPage =()=>{
                         null
                     )}
                     
-                    <Period Start={PeriodSplit(data.contest.applicationPeriodStartAt)} End={PeriodSplit(data.contest.applicationPeriodEndAt)}/>
+                    <Period Start={PeriodSplit(data.contest.application.period.startAt)} End={PeriodSplit(data.contest.application.period.endAt)}/>
                     {data.contest.siteURL!==""?(
                         <View style={{width:'100%',alignItems:'flex-end'}}>
                             <View style={{width:'30%'}}>
@@ -179,8 +178,9 @@ const Period = ({Start,End}:PeriodProps)=>{
 }
 
 // detail page
-const Box=styled.ScrollView`
+const Box=styled.View`
     margin:10px;
+    margin-bottom:50px;
     background-color:${Color.w_color};
     border-radius:7px;
     padding-horizontal:10px;

@@ -21,6 +21,7 @@ export const Color = {
   b_color: '#000000',
   p_color: '#3A9BFF',
   p_l_color:'#F0FAFF',
+  r_color:'#C13259',
 };
 
 // 텍스트 스타일

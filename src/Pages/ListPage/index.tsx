@@ -1,5 +1,5 @@
 // 두번째 메인 탭 ListPage.tsx
-import React,{useState,useRef} from 'react';
+import React,{useState,useRef, useEffect} from 'react';
 import {ScrollView,View,TouchableOpacity,Text,StyleSheet} from 'react-native';
 import styled from 'styled-components/native';
 import {Color,Container, IconSize, Styles} from '~/Styles';
@@ -72,7 +72,6 @@ const ListPage = () => {
   const onPressFilter=()=>{
     navigation.navigate('FilterPage');
   }
-
   // list data
   const { loading, error, data } = useQuery(GET_LISTS);
   let template=``;
@@ -84,14 +83,20 @@ const ListPage = () => {
       listId:data.node.id,
     })}>
       <TextList 
-        recruit={false} 
+        recruit={data.node.application.status} 
+        deadline={data.node.application.period.endAt}
         title={data.node.title} 
         viewcount={data.node.hits}
         />
         {data.node.categories!==null?(
           <TagBox>
-            {data.node.categories.map((tag)=>
+            {data.node.categories.slice(0,3).map((tag)=>
               <HashTag key={tag.id.toString()} hashtag={tag.label} picked={false}/>
+            )}
+            {data.node.categories.length>3?(
+              <HashTag hashtag={'+'+ (data.node.categories.length-3)} picked={false}/>
+            ):(
+              null
             )}
           </TagBox>
         ):null}

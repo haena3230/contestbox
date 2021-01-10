@@ -9,10 +9,23 @@ import Search from '~/Assets/search-solid.svg';
 import Loading from '~/Components/Loading';
 // style 
 import {Color,Styles,Container,IconSize,DWidth} from '~/Styles';
-import { TextInput } from 'react-native-gesture-handler';
+import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
 // data
-import { useQuery } from '@apollo/client';
+import { useQuery,useMutation } from '@apollo/client';
 import {GET_CATEGORIES} from '~/queries';
+
+// test
+import {ADD_CONTEST} from '~/queries';
+function Add(){
+  const[addContest]=useMutation(ADD_CONTEST);
+  return(
+    <TouchableOpacity onPress={()=>{
+      addContest();
+    }}>
+      <Text>test</Text>
+    </TouchableOpacity>
+  )
+}
 
 
 const MainPage = () => {
@@ -36,6 +49,7 @@ const MainPage = () => {
   return (
       <Container>
         <Header />
+        <Add />
         <MainContainer>
           <Title>
             <Text style={Styles.b_font}>어떤 </Text>
