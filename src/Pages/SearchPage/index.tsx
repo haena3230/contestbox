@@ -28,7 +28,7 @@ function Add(){
 }
 
 
-const MainPage = () => {
+const SearchPage = () => {
   // catrgory data
   const { loading, error, data } = useQuery(GET_CATEGORIES);
   let template=``;
@@ -121,7 +121,7 @@ const Category=styled.View`
 `
 
 
-export default MainPage;
+export default SearchPage;
 
 const testdata=[
   {

@@ -2,7 +2,7 @@
 import React from 'react';
 import {View, Text} from 'react-native';
 
-const CommunityPage = () => {
+const HomePage = () => {
   return (
     <View>
       <Text>메인3</Text>
@@ -10,4 +10,4 @@ const CommunityPage = () => {
   );
 };
 
-export default CommunityPage;
+export default HomePage;

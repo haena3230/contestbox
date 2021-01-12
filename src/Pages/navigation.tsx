@@ -6,17 +6,16 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 
 // page
-import MainPage from './MainPage';
+import SearchPage from './SearchPage';
 import ListPage from './ListPage';
 import DetailPage from './ListPage/DetailPage';
 import FilterPage from './ListPage/FilterPage';
-import CommunityPage from './CommunityPage';
-import NoticePage from './NoticePage';
+import HomePage from './HomePage';
 // icon
 import Home from '~/Assets/Home.svg';
 import Flame from '~/Assets/fire-solid.svg';
-import Chatbox from '~/Assets/ChatboxEllipses.svg';
-import AlertCircle from '~/Assets/AlertCircle.svg'
+import Search from '~/Assets/compass-regular.svg';
+
 // style
 import {Color,IconSize,DWidth} from '~/Styles';
 
@@ -39,49 +38,41 @@ function MainTabNavi() {
         }}
         screenOptions={({ route }) => ({
           tabBarIcon: ({focused}) => {
-            if (route.name === '홈') {
+            if (route.name === '검색') {
+              return (
+                focused?<Search height={IconSize.icon} width={IconSize.icon} fill={Color.p_color} />
+              :<Search height={IconSize.icon} width={IconSize.icon} fill={Color.g4_color} />
+                );
+            } else if (route.name === '홈') {
               return (
                 focused?<Home height={IconSize.icon} width={IconSize.icon} fill={Color.p_color} />
                 :<Home height={IconSize.icon} width={IconSize.icon} fill={Color.g4_color} />
-                );
+              
+              );
             } else if (route.name === '대회') {
               return (
                 focused?<Flame height={IconSize.icon} width={IconSize.icon} color={Color.p_color} />
                 :<Flame height={IconSize.icon} width={IconSize.icon} color={Color.g4_color} />
-              
               );
-            } else if (route.name === '커뮤니티') {
-              return (
-              focused?<Chatbox height={IconSize.icon} width={IconSize.icon} fill={Color.p_color} />
-              :<Chatbox height={IconSize.icon} width={IconSize.icon} fill={Color.g4_color} />
-              );
-            } else if (route.name === '공지') {
-              return (
-              focused?<AlertCircle height={IconSize.icon} width={IconSize.icon} fill={Color.p_color} />
-              :<AlertCircle height={IconSize.icon} width={IconSize.icon} fill={Color.g4_color} />
-              );
-            }
+            } 
           },
           tabBarLabel: ({ focused}) => {
             let label;
             switch (route.name) {
+              case '검색':
+                return label = focused ? <Text style={{ color:Color.p_color }}>검색</Text> : null
               case '홈':
                 return label = focused ? <Text style={{ color:Color.p_color }}>홈</Text> : null
               case '대회':
                 return label = focused ? <Text style={{ color:Color.p_color }}>대회</Text> : null
-              case '커뮤니티':
-                return label = focused ? <Text style={{ color:Color.p_color }}>커뮤니티</Text> : null
-              case '공지':
-                return label = focused ? <Text style={{ color:Color.p_color }}>공지</Text> : null
             }
             return label
           }
         })}
       >
-        <Tab.Screen name="홈" component={MainPage} />
+        <Tab.Screen name="검색" component={SearchPage} />
+        <Tab.Screen name="홈" component={HomePage} />
         <Tab.Screen name="대회" component={ListStackNavi} />
-        <Tab.Screen name="커뮤니티" component={CommunityPage} />
-        <Tab.Screen name="공지" component={NoticePage} />
     </Tab.Navigator>
   );
 }

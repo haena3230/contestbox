@@ -1,11 +1,9 @@
 // 헤더 
 import React from 'react';
-import {Text,View} from 'react-native';
+import {Text} from 'react-native';
 // icon
 import Flame from '~/Assets/fire-solid.svg';
 import Search from '~/Assets/search-solid.svg';
-import Person from '~/Assets/user-solid.svg';
-import Setting from '~/Assets/cog-solid.svg';
 import FilterIcon from '~/Assets/filter-solid.svg';
 // style
 import {Color,Styles,IconSize} from '~/Styles'
@@ -23,17 +21,6 @@ const Header=()=>{
                 </Item>
                 <Item>
                     <Text style={Styles.b_font}>Contest Box</Text>
-                </Item>
-            </Box>
-            <Box>
-                <Item>
-                    <Search height={IconSize.icon} width={IconSize.icon} color={Color.g3_color} />
-                </Item>
-                <Item>
-                    <Person height={IconSize.icon} width={IconSize.icon} color={Color.g3_color} />
-                </Item>
-                <Item>
-                    <Setting height={IconSize.icon} width={IconSize.icon} color={Color.g3_color} />
                 </Item>
             </Box>
         </HeaderContainer>
@@ -71,8 +58,8 @@ const HeaderContainer=styled.View`
     width:100%;
     padding-Vertical:10px;
     flex-direction:row;
-    align-items:center;
     justify-content:space-between;
+    align-items:center;
     background-color:${(props:HeaderContainerProps)=>props.backgroundColor};
 `
 const Box = styled.View`

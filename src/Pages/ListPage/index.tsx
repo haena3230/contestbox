@@ -1,5 +1,5 @@
 // 두번째 메인 탭 ListPage.tsx
-import React,{useState,useRef, useEffect} from 'react';
+import React,{useState,useRef} from 'react';
 import {ScrollView,View,TouchableOpacity,Text,StyleSheet} from 'react-native';
 import styled from 'styled-components/native';
 import {Color,Container, IconSize, Styles} from '~/Styles';
@@ -7,7 +7,6 @@ import {Color,Container, IconSize, Styles} from '~/Styles';
 import {useNavigation} from '@react-navigation/native';
 import {ListPageNavigationProp} from '~/Types';
 // components
-import Header from '~/Components/Header';
 import MapIcon from '~/Assets/map-marked-alt-solid.svg';
 import ListIcon from '~/Assets/list-ul-solid.svg';
 import SortDown from '~/Assets/sort-down-solid.svg';
@@ -18,6 +17,7 @@ import ToTop from '~/Components/ToTop';
 import {HashTag} from '~/Components/HashTag';
 import Map from '~/Components/Map';
 import Loading from '~/Components/Loading';
+
 // data
 import { useQuery } from '@apollo/client';
 import {GET_LISTS} from '~/queries';
@@ -66,7 +66,7 @@ const ListPage = () => {
   // map,list view
   const[map,setMap]=useState(false);
   const onPressMap=()=>{
-    setMap(!map);
+      setMap(!map);
   }
   // filter
   const onPressFilter=()=>{
@@ -105,7 +105,6 @@ const ListPage = () => {
   }
   return (
       <Container>
-        <Header />
         {map?(
           <View style={{height:'80%'}}>
             <Bar>
@@ -122,7 +121,7 @@ const ListPage = () => {
               <Map />
           </View>
         ):(
-          <View style={{height:'92%'}}>
+          <View>
             <ScrollView style={{width:'100%', paddingHorizontal:5}} ref={scrollRef}>
               <Bar>
                 <TouchableOpacity onPress={onPressSort} style={{flexDirection:'row',alignItems:'center'}}>
