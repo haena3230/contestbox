@@ -11,6 +11,7 @@ import {HashTag} from '~/Components/HashTag';
 import NaverMapView, {Marker} from "react-native-nmap";
 import Geolocation from 'react-native-geolocation-service';
 
+
 // 위치정보 수집 권한 요청
 export async function requestPermission() { 
     try { 

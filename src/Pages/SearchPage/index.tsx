@@ -49,7 +49,7 @@ const SearchPage = () => {
   return (
       <Container>
         <Header />
-        <Add />
+        {/* <Add /> */}
         <MainContainer>
           <Title>
             <Text style={Styles.b_font}>어떤 </Text>

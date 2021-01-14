@@ -16,7 +16,7 @@ interface MadalProps{
     onPressTagTwo:()=>void;
     onPressTagThree:()=>void;
 }
-const SortComponent = ({modalVisible,onPressCancle,one,two,three,onPressTagOne,onPressTagTwo,onPressTagThree}:MadalProps) => {
+export const SortComponent = ({modalVisible,onPressCancle,one,two,three,onPressTagOne,onPressTagTwo,onPressTagThree}:MadalProps) => {
   return (
         <Modal
             isVisible={modalVisible}
@@ -28,7 +28,6 @@ const SortComponent = ({modalVisible,onPressCancle,one,two,three,onPressTagOne,o
                     <Sort hashtag={'추천순'} picked={one} onPressTag={onPressTagOne}/>
                     <Sort hashtag={'조회순'} picked={two} onPressTag={onPressTagTwo} />         
                     <Sort hashtag={'등록순'} picked={three} onPressTag={onPressTagThree}/>
-                    
                 </Tag>
                 <TouchableOpacity onPress={onPressCancle}>
                     <Exit>닫기</Exit>

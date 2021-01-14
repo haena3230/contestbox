@@ -1,10 +1,11 @@
 import React,{useState} from 'react';
-import {View,Text} from 'react-native';
+import {View,StyleSheet} from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import styled from 'styled-components/native';
 import {Styles,Color,IconSize,DWidth} from '~/Styles';
+
 import SortDown from '~/Assets/sort-down-solid.svg';
 import SortUp from '~/Assets/sort-up-solid.svg';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 
 interface FilterListProps{
     title:string;
@@ -139,3 +140,14 @@ const CheckBoxStyle=styled.View`
     border-width:1px;
     border-color:${Color.g1_color};
 `
+
+
+ const style=StyleSheet.create({
+    IconBorder:{
+      borderWidth:1,
+      borderColor:Color.g1_color,
+      borderRadius:5,
+      padding:5,
+      margin:2,
+    },
+ })

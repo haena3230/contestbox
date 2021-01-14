@@ -17,6 +17,14 @@ const ToTop=({onPressToTop}:ToTopProps)=>{
     )
 }
 
+//  const scrollRef=useRef<ScrollView>();
+//   const onPressToTop=()=>{
+//     scrollRef.current.scrollTo({
+//           y: 0,
+//           animated: true,
+//     })
+//   };
+
 const Btn=styled.TouchableOpacity`
     justify-content:center;
     align-items:center;
