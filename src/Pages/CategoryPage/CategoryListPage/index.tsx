@@ -2,14 +2,12 @@ import React,{useState,useRef} from 'react';
 import {View,Text} from 'react-native';
 import styled from 'styled-components/native';
 import {Styles,Color,Container} from '~/Styles';
-import { ScrollView } from 'react-native-gesture-handler';
-
-import {useNavigation} from '@react-navigation/native';
+import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 
 import { useQuery } from '@apollo/client';
 import {GET_LISTS} from '~/queries';
 import { useRoute } from '@react-navigation/native';
-import {CategoryRouteProp} from '~/Types';
+import {CategoryListPageProps} from '~/Types';
 
 // component
 import {SortComponent} from '~/Components/Sort'
@@ -20,11 +18,8 @@ import {HashTag} from '~/Components/HashTag';
 import ToTop from '~/Components/ToTop';
 
 
-const CategoryListPage=()=>{
-    // navi
-    const navigation =useNavigation();
-    const route=useRoute<CategoryRouteProp>();
-    const {title}:any= route.params.category;
+const CategoryListPage=(props:CategoryListPageProps)=>{
+    const {category}=props.route.params;
 
     // totop
     const scrollRef=useRef<ScrollView>();
@@ -70,42 +65,42 @@ const CategoryListPage=()=>{
     const [map,setMap]=useState(false);
 
     // list data
-    const { loading, error, data } = useQuery(GET_LISTS);
-    let template=``;
-    if (loading) return <Loading />;
-    if (error) return <Text>Error</Text>;
-    if(data&&data.contests.edges){
-        template=data.contests.edges.map((data)=>
-        <ListBox key = {data.node.id.toString()} onPress={()=>navigation.navigate('DetailPage',{
-        listId:data.node.id,
-        })}>
-        <TextList 
-            recruit={data.node.application.status} 
-            deadline={data.node.application.period.endAt}
-            title={data.node.title} 
-            viewcount={data.node.hits}
-            />
-            {data.node.categories!==null?(
-            <TagBox>
-                {data.node.categories.slice(0,3).map((tag)=>
-                <HashTag key={tag.id.toString()} hashtag={tag.label} picked={false}/>
-                )}
-                {data.node.categories.length>3?(
-                <HashTag hashtag={'+'+ (data.node.categories.length-3)} picked={false}/>
-                ):(
-                null
-                )}
-            </TagBox>
-            ):null}
-        </ListBox>
-        )
-    }
+    // const { loading, error, data } = useQuery(GET_LISTS);
+    // let template=``;
+    // if (loading) return <Loading />;
+    // if (error) return <Text>Error</Text>;
+    // if(data&&data.contests.edges){
+    //     template=data.contests.edges.map((data)=>
+    //     <ListBox key = {data.node.id.toString()} onPress={()=>props.navigation.navigate('DetailPage',{
+    //         listId:data.node.id,
+    //     })}>
+    //     <TextList 
+    //         recruit={data.node.application.status} 
+    //         deadline={data.node.application.period.endAt}
+    //         title={data.node.title} 
+    //         viewcount={data.node.hits}
+    //         />
+    //         {data.node.categories!==null?(
+    //         <TagBox>
+    //             {data.node.categories.slice(0,3).map((tag)=>
+    //             <HashTag key={tag.id.toString()} hashtag={tag.label} picked={false}/>
+    //             )}
+    //             {data.node.categories.length>3?(
+    //             <HashTag hashtag={'+'+ (data.node.categories.length-3)} picked={false}/>
+    //             ):(
+    //             null
+    //             )}
+    //         </TagBox>
+    //         ):null}
+    //     </ListBox>
+    //     )
+    // }
     return(
         <Container>
             {map?(
                 <View>
                     <CategoryBox>
-                        <Category># 카테고리</Category>
+                        <Category># {category}</Category>
                     </CategoryBox>
                     <Bar>
                         <View />
@@ -122,8 +117,9 @@ const CategoryListPage=()=>{
                 <View>
                 <ScrollView style={{padding:5}} ref={scrollRef}>
                     <CategoryBox>
-                        <Category># 카테고리</Category>
+                        <Category># {category}</Category>
                     </CategoryBox>
+                    <Categories />
                     <Bar>
                         <SortBtn onPressSort={onPressSort} state={sortState}/>
                         <View style={{flexDirection:'row'}}>
@@ -132,7 +128,29 @@ const CategoryListPage=()=>{
                         </View>
                     </Bar>
                     <View style={{marginBottom:10}}>
-                        {template}
+                        <ListBox onPress={()=>props.navigation.navigate('DetailPage',{
+                            listId:'5ffb27fe37d0abdc19c3209d',
+                        })}>
+                        <TextList 
+                            recruit={'NOTSTARTED'} 
+                            deadline={'2020-12-12T12:12:12Z'}
+                            title={'title'} 
+                            viewcount={5}
+                            />
+                            {/* {data.node.categories!==null?(
+                            <TagBox>
+                                {data.node.categories.slice(0,3).map((tag)=>
+                                <HashTag key={tag.id.toString()} hashtag={tag.label} picked={false}/>
+                                )}
+                                {data.node.categories.length>3?(
+                                <HashTag hashtag={'+'+ (data.node.categories.length-3)} picked={false}/>
+                                ):(
+                                null
+                                )}
+                            </TagBox>
+                            ):null} */}
+                        </ListBox>
+                        {/* {template} */}
                     </View>
                     <SortComponent 
                     onPressCancle={onPressSort} 
@@ -149,6 +167,17 @@ const CategoryListPage=()=>{
                 </View>
             )}
         </Container>
+    )
+}
+
+// 카테고리 선택
+const Categories=()=>{
+    return(
+        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+            <TouchableOpacity>
+                <HashTag hashtag='test' picked={false}/>
+            </TouchableOpacity>
+        </ScrollView>
     )
 }
 

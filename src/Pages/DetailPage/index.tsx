@@ -13,15 +13,14 @@ import {HashTag} from '~/Components/HashTag';
 import {ShortBtn} from '~/Components/Btn';
 import Loading from '~/Components/Loading';
 // navi
-import { useRoute } from '@react-navigation/native';
-import {ListScreenRouteProp} from '~/Types';
+import {DetailPageProps} from '~/Types';
 import {SndMap} from '~/Components/Map';
 
 // data
 import { useQuery } from '@apollo/client';
 import {GET_DETAILS} from '~/queries';
 
-const DetailPage =()=>{
+const DetailPage =(props:DetailPageProps)=>{
     // totop
     const scrollRef=useRef<ScrollView>();
     const onPressToTop=()=>{
@@ -31,9 +30,9 @@ const DetailPage =()=>{
         })
     };
     // data
-    const route=useRoute<ListScreenRouteProp>();
+    const {listId}=props.route.params;
     const { loading, error, data } = useQuery(GET_DETAILS,{
-        variables:{id:route.params.listId}
+        variables:{id:listId}
     });
     // link
     const OpenURLButton = ({ url, children }) => {

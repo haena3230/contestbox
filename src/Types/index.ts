@@ -11,11 +11,22 @@ type StackParamList={
 
 };
 
-export type ListScreenRouteProp=RouteProp<StackParamList,'DetailPage'>;
+export interface CategoryPageProps{
+  navigation:StackNavigationProp<StackParamList,'CategoryPage'>
+}
 
-export type ListPageNavigationProp=StackNavigationProp<
-  StackParamList,
-  'DetailPage'
->;
+
+export interface CategoryListPageProps {
+  navigation: StackNavigationProp<StackParamList, 'DetailPage'>;
+  route: RouteProp<StackParamList, 'CategoryListPage'>;
+}
+
+export interface DetailPageProps {
+  route: RouteProp<StackParamList, 'DetailPage'>;
+}
+
+
+
+
 
 
