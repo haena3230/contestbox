@@ -56,11 +56,10 @@ export const ListBtn=({onPressMap}:MapBtnProps)=>{
 }
 
 // filter btn
-export const FilterBtn =()=>{
-    const navigation=useNavigation()
-    const onPressFilter=()=>{
-        navigation.navigate('FilterPage');
-    }
+interface FilterBtnProps{
+    onPressFilter:()=>void;
+}
+export const FilterBtn =({onPressFilter}:FilterBtnProps)=>{
     return(
         <IconBorder onPress={onPressFilter}>
             <FilterIcon width={IconSize.icon} height={IconSize.icon} color={Color.g4_color} />

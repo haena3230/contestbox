@@ -4,17 +4,28 @@ import { StackNavigationProp } from '@react-navigation/stack';
 
 // navigation
 type StackParamList={
+  SearchPage:undefined;
+  SearchListPage:{search:string};
+  SearchFilterPage:undefined;
   CategoryPage:undefined;
   CategoryListPage:{category:string}
+  CategoryFilterPage:undefined;
   FilterPage:undefined;
   DetailPage:{listId:string};
-
 };
+
+export interface SearchPageProps{
+  navigation:StackNavigationProp<StackParamList,'SearchPage'>
+}
+
+export interface SearchListPageProps{
+  navigation:StackNavigationProp<StackParamList,'SearchPage'>
+  route:RouteProp<StackParamList,'SearchListPage'>
+}
 
 export interface CategoryPageProps{
   navigation:StackNavigationProp<StackParamList,'CategoryPage'>
 }
-
 
 export interface CategoryListPageProps {
   navigation: StackNavigationProp<StackParamList, 'DetailPage'>;

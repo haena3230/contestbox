@@ -105,7 +105,7 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
                     <Bar>
                         <View />
                         <View style={{flexDirection:'row'}}>
-                            <FilterBtn />
+                            <FilterBtn onPressFilter={()=>null}/>
                             <ListBtn onPressMap={()=>setMap(!map)}/>
                         </View>
                     </Bar>
@@ -123,7 +123,7 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
                     <Bar>
                         <SortBtn onPressSort={onPressSort} state={sortState}/>
                         <View style={{flexDirection:'row'}}>
-                            <FilterBtn />
+                            <FilterBtn onPressFilter={()=>props.navigation.navigate('CategoryFilterPage')}/>
                             <MapBtn onPressMap={()=>setMap(!map)}/>
                         </View>
                     </Bar>

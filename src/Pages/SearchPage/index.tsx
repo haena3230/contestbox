@@ -5,14 +5,15 @@ import styled from 'styled-components/native';
 // Component
 import Header from '~/Components/Header';
 import {HashTag} from '~/Components/HashTag';
-import Search from '~/Assets/search-solid.svg';
+import {SearchBar} from '~/Components/SearchBar';
 import Loading from '~/Components/Loading';
 // style 
-import {Color,Styles,Container,IconSize,DWidth} from '~/Styles';
-import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
+import {Color,Styles,Container,DWidth} from '~/Styles';
+import {TouchableOpacity } from 'react-native-gesture-handler';
 // data
 import { useQuery,useMutation } from '@apollo/client';
 import {GET_CATEGORIES} from '~/queries';
+import {SearchPageProps} from '~/Types';
 
 // test
 import {ADD_CONTEST} from '~/queries';
@@ -28,7 +29,7 @@ function Add(){
 }
 
 
-const SearchPage = () => {
+const SearchPage = ({navigation}:SearchPageProps) => {
   // catrgory data
   const { loading, error, data } = useQuery(GET_CATEGORIES);
   let template=``;
@@ -57,7 +58,9 @@ const SearchPage = () => {
             <Text style={Styles.b_font}>를 찾고계신가요?</Text>
           </Title>
           <View style={{alignItems:'center'}}>
-            <SearchBar />
+            <SearchBar onPress={()=>navigation.navigate('SearchListPage',{
+              search:'test'
+            })} />
           </View>
           <Category>
             <Title>
@@ -79,17 +82,6 @@ const SearchPage = () => {
   );
 };
 
-const SearchBar=()=>{
-  const[searchText,setSearchText]=useState('');
-  return(
-    <SearchBarStyle>
-      <View style={{paddingHorizontal:15}}>
-        <Search height={IconSize.icon} width={IconSize.icon} color={Color.g3_color}/>
-      </View>
-      <TextInput style={Styles.m_font} placeholder={'2020 인공지능 온라인 경진대회'} value={searchText} onChangeText={(text)=>{setSearchText(text)}} />
-    </SearchBarStyle>
-  )
-}
 
 const MainContainer=styled.View`
   height:100%;
@@ -100,16 +92,7 @@ const Title=styled.View`
   width:100%;
   flex-direction:row; 
 `
-const SearchBarStyle=styled.View`
-  width:95%;
-  background-color:${Color.w_color};
-  border-radius:25px;
-  flex-direction:row;
-  align-items:center;
-  margin-vertical:20px;
-  border-width:1px;
-  border-color:${Color.g1_color};
-`
+
 const Point = styled.Text`
   ${Styles.b_font};
   color:${Color.p_color};

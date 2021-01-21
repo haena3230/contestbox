@@ -7,8 +7,11 @@ import { createStackNavigator } from '@react-navigation/stack';
 // page
 import HomePage from './HomePage';
 import SearchPage from './SearchPage';
+import SearchListPage from './SearchPage/SearchListPage';
+import SearchFilterPage from './SearchPage/SearchFilterPage';
 import CategoryPage from './CategoryPage';
 import CategoryListPage from './CategoryPage/CategoryListPage';
+import CategoryFilterPage from './CategoryPage/CategoryFilterPage';
 import DetailPage from './DetailPage';
 
 // icon
@@ -74,13 +77,25 @@ function MainTabNavi() {
           }
         })}
       >
-        <Tab.Screen name="검색" component={SearchPage} />
+        <Tab.Screen name="검색" component={SearchStackNavi} />
         <Tab.Screen name="홈" component={HomePage} />
         <Tab.Screen name="카테고리" component={CategoryStackNavi} />
     </Tab.Navigator>
   );
 }
 
+const SearchStackNavi=()=>{
+  return(
+    <Stack.Navigator
+      screenOptions={{
+        headerShown:false,
+      }}>
+        <Stack.Screen name="SearchPage" component={SearchPage} />
+        <Stack.Screen name="SearchListPage" component={SearchListPage} />
+        <Stack.Screen name="DetailPage" component={DetailPage} />
+    </Stack.Navigator>
+  )
+}
 const CategoryStackNavi=()=>{
   return(
     <Stack.Navigator
@@ -102,7 +117,8 @@ const MainStackNavi=()=>{
         headerShown:false,
       }}>
         <Stack.Screen name="MainTabNavi" component={MainTabNavi} />
-        {/* <Stack.Screen name="FilterPage" component={FilterPage} /> */}
+        <Stack.Screen name="CategoryFilterPage" component={CategoryFilterPage} />
+        <Stack.Screen name="SearchFilterPage" component={SearchFilterPage} />
     </Stack.Navigator>
   )
 }
