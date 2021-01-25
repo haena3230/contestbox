@@ -16,6 +16,7 @@ import Loading from '~/Components/Loading';
 import TextList,{TagBox,ListBox} from '~/Components/TextList';
 import {HashTag} from '~/Components/HashTag';
 import ToTop from '~/Components/ToTop';
+import Map from '~/Components/Map';
 
 
 const CategoryListPage=(props:CategoryListPageProps)=>{
@@ -109,12 +110,11 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
                             <ListBtn onPressMap={()=>setMap(!map)}/>
                         </View>
                     </Bar>
-                    <View style={{marginBottom:10}}>
-                        <Text>dd</Text>
+                    <View style={{width:'100%',height:'60%'}}>
+                        <Map />
                     </View>
                 </View>
             ):(
-                <View>
                 <ScrollView style={{padding:5}} ref={scrollRef}>
                     <CategoryBox>
                         <Category># {category}</Category>
@@ -163,9 +163,8 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
                     onPressTagThree={onPressTagThree}
                     />
                 </ScrollView>
-                <ToTop onPressToTop={onPressToTop}/>
-                </View>
             )}
+            <ToTop onPressToTop={onPressToTop}/>
         </Container>
     )
 }

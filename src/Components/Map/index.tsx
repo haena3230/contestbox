@@ -50,8 +50,8 @@ const Map=()=> {
         } });
     }, []);
     return (
-        <View>
-            <View style={{margin:5,borderWidth:1,borderRadius:10,borderColor:Color.g1_color,overflow:'hidden'}}>
+        <View style={{width:'100%',height:'100%'}}>
+            <MapContainer>
                 {permission?(
                     <NaverMapView style={{width: '100%', height: '100%'}}
                         showsMyLocationButton={true}
@@ -71,8 +71,7 @@ const Map=()=> {
                         <Marker coordinate={P1} pinColor="blue" onClick={() => setMenu(true)}/>
                     </NaverMapView>
                 )}
-                
-            </View>
+            </MapContainer>
             {menu?(
                 <MenuContainer>
                 <Title>2020/21 한국언어학올림피아드</Title>
@@ -105,7 +104,15 @@ export const SndMap=({latitude,longitude}:SndMapProps)=>{
     </NaverMapView>
     )
 }
-
+const MapContainer = styled.View`
+    width:100%;
+    height:100%;
+    margin:5px;
+    border-width:1px;
+    border-radius:10px;
+    border-color:${Color.g1_color};
+    overflow:hidden;
+`
 const MenuContainer=styled.View`
     position:absolute;
     bottom:0;

@@ -24,11 +24,12 @@ export const LongBtn =()=>{
 interface ShortBtnProps{
     text:string;
     onPress:()=>void;
+    color:string;
 }
-export const ShortBtn=({text,onPress}:ShortBtnProps)=>{
+export const ShortBtn=({text,onPress,color}:ShortBtnProps)=>{
     
     return(
-        <SContainer onPress={onPress}>
+        <SContainer onPress={onPress} color={color}>
             <SText>{text}</SText>
         </SContainer>
     )
@@ -92,6 +93,14 @@ export const SortDownBtn=()=>{
     )
 }
 
+export const SortUpBtn=()=>{
+    return(
+        <View style={{padding:5,marginTop:3}}>
+            <SortUp width={IconSize.sicon} height={IconSize.sicon} color={Color.g3_color}/>
+        </View>
+    )
+}
+
 
 
 // long
@@ -109,11 +118,15 @@ const LText=styled.Text`
 `
 
 // short
+interface SContainerProps{
+    color:string;
+}
 const SContainer=styled.TouchableOpacity`
     justify-content:center;
     align-items:center;
-    background-color:${Color.g4_color};
+    background-color:${(props:SContainerProps)=>props.color};
     border-radius:10px;
+    padding-horizontal:15px;
 `
 const SText=styled.Text`
     ${Styles.m_font};

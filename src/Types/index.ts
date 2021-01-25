@@ -23,6 +23,7 @@ export interface SearchListPageProps{
   route:RouteProp<StackParamList,'SearchListPage'>
 }
 
+
 export interface CategoryPageProps{
   navigation:StackNavigationProp<StackParamList,'CategoryPage'>
 }
