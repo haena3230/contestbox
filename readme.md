@@ -6,7 +6,7 @@
 
 ```
 git clone https://github.com/contestbox/android.git
-cd contestbox
+cd android
 yarn
 react-native run-android
 ```

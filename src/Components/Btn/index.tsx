@@ -4,7 +4,6 @@ import styled from 'styled-components/native';
 import {Color,Styles,IconSize} from '~/Styles';
 import {View,TouchableOpacity,Text} from 'react-native';
 
-import {useNavigation} from '@react-navigation/native';
 
 // icon
 import FilterIcon from '~/Assets/filter-solid.svg';
