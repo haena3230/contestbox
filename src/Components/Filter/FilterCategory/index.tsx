@@ -10,6 +10,7 @@ import {Color,Styles} from '~/Styles';
 // component
 import {SortDownBtn,SortUpBtn} from '~/Components/Btn';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import Category from '~/Components/Category';
 
 export const FilterCategory=()=>{
     return(
@@ -47,7 +48,9 @@ const SecondView=()=>{
     return(
         <TouchableOpacity>
             <ViewBox>
-                
+                <CategoryText>
+                    test
+                </CategoryText>
             </ViewBox>
         </TouchableOpacity>
     )
