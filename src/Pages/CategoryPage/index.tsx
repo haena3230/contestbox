@@ -7,7 +7,6 @@ import styled from 'styled-components/native';
 
 // component
 import Category from '~/Components/Category';
-
 import {CategoryPageProps} from '~/Types';
 
 const CategoryPage =({navigation}:CategoryPageProps)=>{

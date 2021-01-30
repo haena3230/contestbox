@@ -8,6 +8,7 @@ import {useNavigation} from '@react-navigation/native';
 import {FilterBtn, ShortBtn, SortDownBtn, SortUpBtn} from  '~/Components/Btn';
 import {HashTag} from '~/Components/HashTag';
 import {SortBtn} from '~/Components/Btn';
+import {FilterCategory} from '~/Components/Filter/FilterCategory';
 
 // 필터페이지 헤더
 export const FilterHeader=()=>{
@@ -94,9 +95,9 @@ export const FilterMenuCategory=()=>{
                 }
             </MenuBox>
             {menu?(
-                <Type>
-                    <TagState />
-                </Type>
+                <CategoryBox>
+                    <FilterCategory />
+                </CategoryBox>
             ):null}
         </MenuContainer>
     )
@@ -158,7 +159,10 @@ const Type = styled.View`
     flex-wrap:wrap;
     padding:15px;
 `
-
+// 카테고리
+const CategoryBox =styled.View`
+    padding:15px;
+`
 // bottom
 const BottomContainer=styled.View`
     width:100%;
