@@ -1,5 +1,5 @@
   // 첫번째 메인 탭 MainPage.tsx
-import React,{useState} from 'react';
+import React,{useState,useEffect} from 'react';
 import {View, Text} from 'react-native';
 import styled from 'styled-components/native';
 // Component
@@ -31,22 +31,22 @@ function Add(){
 
 const SearchPage = ({navigation}:SearchPageProps) => {
   // catrgory data
-  const { loading, error, data } = useQuery(GET_CATEGORIES);
-  let template=``;
+  // const { loading, error, data } = useQuery(GET_CATEGORIES);
+  // let template=``;
 
-  if (loading) return <Loading />
-  if (error) return <Text>Error</Text>;
-  if(data&&data.categories){
-    // max 10개
-    let max = data.categories.slice(0,10);
-    template=max.map((data)=>
-      <HashTag key = {data.id.toString()} hashtag={data.label} picked={false}/>
-    )
-  }
-  // const [test,setTest]=useState<Array<any>>([]);
-  // useEffect(()=>{
-  //   setTest(testdata);
-  // },[])
+  // if (loading) return <Loading />
+  // if (error) return <Text>Error</Text>;
+  // if(data&&data.categories){
+  //   // max 10개
+  //   let max = data.categories.slice(0,10);
+  //   template=max.map((data)=>
+  //     <HashTag key = {data.id.toString()} hashtag={data.label} picked={false}/>
+  //   )
+  // }
+  const [test,setTest]=useState<Array<any>>([]);
+  useEffect(()=>{
+    setTest(testdata);
+  },[])
   return (
       <Container>
         <Header />
@@ -67,14 +67,14 @@ const SearchPage = ({navigation}:SearchPageProps) => {
               <Text style={Styles.m_font}>카테고리</Text>
             </Title>
             <View style={{flexDirection:'row', flexWrap:'wrap',marginVertical:20}}>
-              {template}
-              {/* {
+              {/* {template} */}
+              {
                 test.map((data)=>{
                   return(
                     <HashTag key = {data.id.toString()} hashtag={data.label} picked={false}/>
                   )
                 })
-              } */}
+              }
             </View>
           </Category>
         </MainContainer>
