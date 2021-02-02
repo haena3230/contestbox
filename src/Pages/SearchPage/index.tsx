@@ -15,38 +15,48 @@ import { useQuery,useMutation } from '@apollo/client';
 import {GET_CATEGORIES} from '~/queries';
 import {SearchPageProps} from '~/Types';
 
+
 // test
-import {ADD_CONTEST} from '~/queries';
-function Add(){
-  const[addContest]=useMutation(ADD_CONTEST);
-  return(
-    <TouchableOpacity onPress={()=>{
-      addContest();
-    }}>
-      <Text>test</Text>
-    </TouchableOpacity>
-  )
-}
+// import {ADD_CONTEST} from '~/queries';
+// function Add(){
+//   const[addContest]=useMutation(ADD_CONTEST);
+//   return(
+//     <TouchableOpacity onPress={()=>{
+//       addContest();
+//     }}>
+//       <Text>test</Text>
+//     </TouchableOpacity>
+//   )
+// }
 
 
 const SearchPage = ({navigation}:SearchPageProps) => {
   // catrgory data
-  // const { loading, error, data } = useQuery(GET_CATEGORIES);
-  // let template=``;
 
-  // if (loading) return <Loading />
-  // if (error) return <Text>Error</Text>;
-  // if(data&&data.categories){
-  //   // max 10개
-  //   let max = data.categories.slice(0,10);
-  //   template=max.map((data)=>
-  //     <HashTag key = {data.id.toString()} hashtag={data.label} picked={false}/>
-  //   )
-  // }
-  const [test,setTest]=useState<Array<any>>([]);
-  useEffect(()=>{
-    setTest(testdata);
-  },[])
+  const { loading, error, data } = useQuery(GET_CATEGORIES);
+  let template=``;
+  if(error){
+    console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+    console.log(error.networkError.message)
+    console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+  }
+
+  if(data&&data.categories){
+    // max 10개
+    template=data.categories.map((cate)=>
+    <TouchableOpacity  key = {cate.id.toString()} onPress={()=>
+        navigation.navigate('CategoryListPage',{
+          category:cate.label,
+        })}>
+      <HashTag hashtag={cate.label} picked={false}/>
+    </TouchableOpacity>
+    )
+  }
+
+  // const [test,setTest]=useState<Array<any>>([]);
+  // useEffect(()=>{
+  //   setTest(testdata);
+  // },[])
   return (
       <Container>
         <Header />
@@ -66,8 +76,18 @@ const SearchPage = ({navigation}:SearchPageProps) => {
             <Title>
               <Text style={Styles.m_font}>카테고리</Text>
             </Title>
-            <View style={{flexDirection:'row', flexWrap:'wrap',marginVertical:20}}>
-              {/* {template} */}
+            {loading?(
+              <Loading />
+            ):data&&data.categories?(
+                <View style={{flexDirection:'row', flexWrap:'wrap',marginVertical:20}}>
+                  {template}
+                </View>    
+              ):
+              <View>
+                <Text>err</Text>
+              </View>
+              }
+            {/* <View style={{flexDirection:'row', flexWrap:'wrap',marginVertical:20}}>
               {
                 test.map((data)=>{
                   return(
@@ -75,7 +95,7 @@ const SearchPage = ({navigation}:SearchPageProps) => {
                   )
                 })
               }
-            </View>
+            </View> */}
           </Category>
         </MainContainer>
       </Container>

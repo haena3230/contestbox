@@ -1,6 +1,5 @@
 // CategoryFilterPage
 import React from 'react';
-import {View,Text} from 'react-native';
 import {Container} from '~/Styles';
 // component
 import {FilterHeader,FilterMenuType,FilterBottom} from '~/Components/Filter';

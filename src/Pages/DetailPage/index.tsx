@@ -45,7 +45,7 @@ const DetailPage =(props:DetailPageProps)=>{
             }
         }, [url]);
         
-    return <ShortBtn text={children} onPress={handlePress}/>;
+    return <ShortBtn text={children} onPress={handlePress} color={Color.p_color}/>;
     };
     // period
     const PeriodSplit=(At)=>{

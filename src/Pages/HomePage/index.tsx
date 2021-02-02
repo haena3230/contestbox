@@ -8,15 +8,20 @@ import Header from '~/Components/Header';
 import {Container,Styles,Color} from '~/Styles';
 import Swiper from 'react-native-swiper';
 import {HashTag} from '~/Components/HashTag';
+// navi
+import {HomaPageProps} from '~/Types';
 
-const HomePage = () => {
+const HomePage = ({navigation}:HomaPageProps) => {
   return (
     <Container>
       <Header />
       <BannerBox>
         <Banner />
       </BannerBox>
-      <Category />
+      <Category onPressCategory={()=>
+        navigation.navigate('CategoryListPage',{
+          category:'test'
+        })}/>
       <BestContest />
     </Container>
   );
@@ -46,14 +51,17 @@ const Banner = ()=>{
   )
 }
 
-const Category=()=>{
+interface CategoryProps{
+  onPressCategory:()=>void;
+}
+const Category=({onPressCategory}:CategoryProps)=>{
   return(
     <CategoryContainer>
       <Title>
         카테고리
       </Title>
       <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={{paddingVertical:10}}>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={onPressCategory}>
           <HashTag hashtag={'test'} picked={false}/>
         </TouchableOpacity>
       </ScrollView>
