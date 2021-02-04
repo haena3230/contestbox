@@ -67,9 +67,7 @@ const SearchPage = ({navigation}:SearchPageProps) => {
             <Text style={Styles.b_font}>를 찾고계신가요?</Text>
           </Title>
           <View style={{alignItems:'center'}}>
-            <SearchBar onPress={()=>navigation.navigate('SearchListPage',{
-              search:'test'
-            })} />
+            <SearchBar navigation={navigation}/>
           </View>
           <Category>
             <Title>

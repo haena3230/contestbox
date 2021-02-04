@@ -34,7 +34,11 @@ const HomePage = ({navigation}:HomaPageProps) => {
   }
   if(data.contests){
     hotData=data.contests.edges.map((contest)=>
-    <PosterContainer key = {contest.node.id.toString()} onPress={()=>null}>
+    <PosterContainer key = {contest.node.id.toString()} onPress={()=>
+      navigation.navigate('DetailPage',{
+        listId:contest.node.id
+      })
+    }>
       <PosterBox>
         <Poster source={require('~/Assets/poster.png')}/>
       </PosterBox>

@@ -1,17 +1,20 @@
 // SearchListPage
 import React,{useState,useRef} from 'react';
-import {View,ScrollView} from 'react-native';
+import {View,ScrollView, Text} from 'react-native';
 import {Container,Styles,Color} from '~/Styles';
 import styled from 'styled-components/native';
 // data
 import {SearchListPageProps} from '~/Types';
+import {GET_SEARCH_LISTS} from '~/queries';
+import {useQuery} from '@apollo/client';
 // components
 import {SearchBarSmall} from '~/Components/SearchBar';
 import {SortBtn,FilterBtn,MapBtn} from  '~/Components/Btn';
 import {SortComponent} from '~/Components/Sort';
-import TextList,{ListBox} from '~/Components/TextList';
+import TextList,{TagBox,ListBox} from '~/Components/TextList';
 import {HashTag} from '~/Components/HashTag';
 import ToTop from '~/Components/ToTop';
+import Loading from '~/Components/Loading';
 
 const SearchListPage =(props:SearchListPageProps)=>{
     const {search} = props.route.params;
@@ -28,23 +31,45 @@ const SearchListPage =(props:SearchListPageProps)=>{
         })
     };
 
+    // list data
+    const {loading,error,data}=useQuery(GET_SEARCH_LISTS,{
+        variables:{search:search}
+    })
+    let listData='';
+    if(loading) return <Loading />
+    if(error) return <Text>err</Text>
+    if(data&&data.contests)
+    listData=data.contests.edges.map((data)=>
+        <ListBox key = {data.node.id.toString()} onPress={()=>props.navigation.navigate('DetailPage',{
+            listId:data.node.id,
+        })}>
+        <TextList 
+            recruit={data.node.application.status} 
+            deadline={data.node.application.period.endAt}
+            title={data.node.title} 
+            viewcount={data.node.hits}
+            />
+            {data.node.categories!==null?(
+            <TagBox>
+                {data.node.categories.slice(0,3).map((tag)=>
+                <HashTag key={tag.id.toString()} hashtag={tag.label} picked={false}/>
+                )}
+                {data.node.categories.length>3?(
+                <HashTag hashtag={'+'+ (data.node.categories.length-3)} picked={false}/>
+                ):(
+                null
+                )}
+            </TagBox>
+            ):null}
+        </ListBox>
+    )
     return(
         <Container>
             <ScrollView ref={scrollRef}>
-                <SearchBarSmall onPressSearch={()=>null} onPressBack={()=>props.navigation.goBack()}/>
-                <SearchListBar  search={search}  count={4} onPressFilter={onPressFilter}/>
+                <SearchBarSmall navigation={props.navigation}/>
+                <SearchListBar  search={search}  count={data.contests.edges.length} onPressFilter={onPressFilter}/>
                 <View style={{padding:5}}>
-                    <ListBox onPress={()=>props.navigation.navigate('DetailPage',{
-                        listId:'5ffb27fe37d0abdc19c3209d',
-                    })}>
-                        <TextList 
-                        recruit={'NOTSTARTED'} 
-                        deadline={'2020-12-12T12:12:12Z'}
-                        title={'title'} 
-                        viewcount={5}
-                        />
-                    </ListBox>
-                    
+                    {listData}
                 </View>
             </ScrollView>
             <ToTop onPressToTop={onPressToTop}/>

@@ -41,6 +41,29 @@ export const GET_LISTS= gql`
     }
   }
 `;
+export const GET_SEARCH_LISTS= gql`
+  query ($search:String){
+    contests(search:$search) {
+      edges{
+        node{
+          id
+          title
+          hits
+          categories{
+            id
+            label
+          }
+          application{
+            status
+            period{
+              endAt
+            }
+          }
+        }
+      }
+    }
+  }
+`;
 
  export const GET_DETAILS= gql`
     query ($id:ID!){
