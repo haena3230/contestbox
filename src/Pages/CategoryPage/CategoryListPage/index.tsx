@@ -1,12 +1,12 @@
 import React,{useState,useRef} from 'react';
 import {View,Text} from 'react-native';
 import styled from 'styled-components/native';
-import {Styles,Color,Container} from '~/Styles';
+import {Styles,Container} from '~/Styles';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 
+// data
 import { useQuery } from '@apollo/client';
 import {GET_LISTS} from '~/queries';
-import { useRoute } from '@react-navigation/native';
 import {CategoryListPageProps} from '~/Types';
 
 // component
@@ -20,7 +20,7 @@ import Map from '~/Components/Map';
 
 
 const CategoryListPage=(props:CategoryListPageProps)=>{
-    const {category}=props.route.params;
+    const {category,categoryId}=props.route.params;
 
     // totop
     const scrollRef=useRef<ScrollView>();
@@ -30,7 +30,6 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
             animated: true,
         })
     };
-
 
      // 정렬 버튼
     const[sortState,setSortState]=useState<string>('추천순');
@@ -66,36 +65,42 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
     const [map,setMap]=useState(false);
 
     // list data
-    // const { loading, error, data } = useQuery(GET_LISTS);
-    // let template=``;
-    // if (loading) return <Loading />;
-    // if (error) return <Text>Error</Text>;
-    // if(data&&data.contests.edges){
-    //     template=data.contests.edges.map((data)=>
-    //     <ListBox key = {data.node.id.toString()} onPress={()=>props.navigation.navigate('DetailPage',{
-    //         listId:data.node.id,
-    //     })}>
-    //     <TextList 
-    //         recruit={data.node.application.status} 
-    //         deadline={data.node.application.period.endAt}
-    //         title={data.node.title} 
-    //         viewcount={data.node.hits}
-    //         />
-    //         {data.node.categories!==null?(
-    //         <TagBox>
-    //             {data.node.categories.slice(0,3).map((tag)=>
-    //             <HashTag key={tag.id.toString()} hashtag={tag.label} picked={false}/>
-    //             )}
-    //             {data.node.categories.length>3?(
-    //             <HashTag hashtag={'+'+ (data.node.categories.length-3)} picked={false}/>
-    //             ):(
-    //             null
-    //             )}
-    //         </TagBox>
-    //         ):null}
-    //     </ListBox>
-    //     )
-    // }
+    const { loading, error, data } = useQuery(GET_LISTS,{
+        variables:{categories:[categoryId]}
+    });
+    let template=``;
+    if (loading) return <Loading />;
+    if (error){
+        console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
+        console.log(error.graphQLErrors)
+        console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
+    }
+    if(data&&data.contests.edges){
+        template=data.contests.edges.map((data)=>
+        <ListBox key = {data.node.id.toString()} onPress={()=>props.navigation.navigate('DetailPage',{
+            listId:data.node.id,
+        })}>
+        <TextList 
+            recruit={data.node.application.status} 
+            deadline={data.node.application.period.endAt}
+            title={data.node.title} 
+            viewcount={data.node.hits}
+            />
+            {data.node.categories!==null?(
+            <TagBox>
+                {data.node.categories.slice(0,3).map((tag)=>
+                <HashTag key={tag.id.toString()} hashtag={tag.label} picked={false}/>
+                )}
+                {data.node.categories.length>3?(
+                <HashTag hashtag={'+'+ (data.node.categories.length-3)} picked={false}/>
+                ):(
+                null
+                )}
+            </TagBox>
+            ):null}
+        </ListBox>
+        )
+    }
     return(
         <Container>
             {map?(
@@ -103,13 +108,7 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
                     <CategoryBox>
                         <Category># {category}</Category>
                     </CategoryBox>
-                    <Bar>
-                        <View />
-                        <View style={{flexDirection:'row'}}>
-                            <FilterBtn onPressFilter={()=>null}/>
-                            <ListBtn onPressMap={()=>setMap(!map)}/>
-                        </View>
-                    </Bar>
+                    <BarBox onPressMap={()=>setMap(!map)}/>
                     <View style={{width:'100%',height:'60%'}}>
                         <Map />
                     </View>
@@ -120,37 +119,9 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
                         <Category># {category}</Category>
                     </CategoryBox>
                     <Categories />
-                    <Bar>
-                        <SortBtn onPressSort={onPressSort} state={sortState}/>
-                        <View style={{flexDirection:'row'}}>
-                            <FilterBtn onPressFilter={()=>props.navigation.navigate('CategoryFilterPage')}/>
-                            <MapBtn onPressMap={()=>setMap(!map)}/>
-                        </View>
-                    </Bar>
+                     <BarBox onPressMap={()=>setMap(!map)}/>
                     <View style={{marginBottom:10}}>
-                        <ListBox onPress={()=>props.navigation.navigate('DetailPage',{
-                            listId:'5ffb27fe37d0abdc19c3209d',
-                        })}>
-                        <TextList 
-                            recruit={'NOTSTARTED'} 
-                            deadline={'2020-12-12T12:12:12Z'}
-                            title={'title'} 
-                            viewcount={5}
-                            />
-                            {/* {data.node.categories!==null?(
-                            <TagBox>
-                                {data.node.categories.slice(0,3).map((tag)=>
-                                <HashTag key={tag.id.toString()} hashtag={tag.label} picked={false}/>
-                                )}
-                                {data.node.categories.length>3?(
-                                <HashTag hashtag={'+'+ (data.node.categories.length-3)} picked={false}/>
-                                ):(
-                                null
-                                )}
-                            </TagBox>
-                            ):null} */}
-                        </ListBox>
-                        {/* {template} */}
+                        {template}
                     </View>
                     <SortComponent 
                     onPressCancle={onPressSort} 
@@ -166,6 +137,22 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
             )}
             <ToTop onPressToTop={onPressToTop}/>
         </Container>
+    )
+}
+
+// category && btn
+interface HeaderBoxProps{
+    onPressMap:()=>void;
+}
+const BarBox=({onPressMap}:HeaderBoxProps)=>{
+    return(
+        <Bar>
+            <View />
+            <View style={{flexDirection:'row'}}>
+                <FilterBtn onPressFilter={()=>null}/>
+                <ListBtn onPressMap={onPressMap}/>
+            </View>
+        </Bar>
     )
 }
 

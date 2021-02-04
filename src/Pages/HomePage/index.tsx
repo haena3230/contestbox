@@ -1,6 +1,6 @@
 // main home page
 import React from 'react';
-import {View, Text, TouchableOpacity, Image,StyleSheet} from 'react-native';
+import {View, TouchableOpacity, Text} from 'react-native';
 import styled from 'styled-components/native';
 import { ScrollView } from 'react-native-gesture-handler';
 // component
@@ -8,21 +8,64 @@ import Header from '~/Components/Header';
 import {Container,Styles,Color} from '~/Styles';
 import Swiper from 'react-native-swiper';
 import {HashTag} from '~/Components/HashTag';
-// navi
+import Loading from '~/Components/Loading';
+// data
+import {useQuery} from '@apollo/client';
+import {GET_HOTS} from '~/queries';
 import {HomaPageProps} from '~/Types';
 
 const HomePage = ({navigation}:HomaPageProps) => {
+  // catrgory && hot data
+  const { loading, error, data } = useQuery(GET_HOTS);
+  let categoriesData=``;
+  let hotData=``;
+  if(loading) return <Loading />
+  if(error)return <Text>err</Text>
+  if(data.categories){
+    categoriesData=data.categories.map((cate)=>
+    <TouchableOpacity  key = {cate.id.toString()} onPress={()=>
+        navigation.navigate('CategoryListPage',{
+          category:cate.label,
+          categoryId:cate.id
+        })}>
+      <HashTag hashtag={cate.label} picked={false}/>
+    </TouchableOpacity>
+    )
+  }
+  if(data.contests){
+    hotData=data.contests.edges.map((contest)=>
+    <PosterContainer key = {contest.node.id.toString()} onPress={()=>null}>
+      <PosterBox>
+        <Poster source={require('~/Assets/poster.png')}/>
+      </PosterBox>
+      <View style={{width:120}}>
+        <PosterText numberOfLines={1} ellipsizeMode="tail">{contest.node.title}</PosterText>
+      </View>
+    </PosterContainer>
+    )
+  }
   return (
     <Container>
       <Header />
       <BannerBox>
         <Banner />
       </BannerBox>
-      <Category onPressCategory={()=>
-        navigation.navigate('CategoryListPage',{
-          category:'test'
-        })}/>
-      <BestContest />
+      <CategoryContainer>
+        <Title>
+          카테고리
+        </Title>
+        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={{paddingVertical:10}}>
+          {categoriesData}
+        </ScrollView>
+      </CategoryContainer>
+      <View style={{padding:10,height:'50%'}}>
+        <Title>
+          인기대회
+        </Title>
+        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+          {hotData}
+        </ScrollView>
+      </View>
     </Container>
   );
 };
@@ -51,53 +94,6 @@ const Banner = ()=>{
   )
 }
 
-interface CategoryProps{
-  onPressCategory:()=>void;
-}
-const Category=({onPressCategory}:CategoryProps)=>{
-  return(
-    <CategoryContainer>
-      <Title>
-        카테고리
-      </Title>
-      <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={{paddingVertical:10}}>
-        <TouchableOpacity onPress={onPressCategory}>
-          <HashTag hashtag={'test'} picked={false}/>
-        </TouchableOpacity>
-      </ScrollView>
-    </CategoryContainer>
-  )
-}
-
-const BestContest=()=>{
-  return(
-    <View style={{padding:10,height:'50%'}}>
-      <Title>
-        인기대회
-      </Title>
-      <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-        <PosterContainer>
-          <PosterBox>
-            <Poster source={require('~/Assets/poster.png')}/>
-          </PosterBox>
-          <PosterText>이름입니다</PosterText>
-        </PosterContainer>
-        <PosterContainer>
-          <PosterBox>
-            <Poster source={require('~/Assets/poster.png')}/>
-          </PosterBox>
-          <PosterText>이름입니다</PosterText>
-        </PosterContainer>
-        <PosterContainer>
-          <PosterBox>
-            <Poster source={require('~/Assets/poster.png')}/>
-          </PosterBox>
-          <PosterText>이름입니다</PosterText>
-        </PosterContainer>
-      </ScrollView>
-    </View>
-  )
-}
 // banner
 const BannerBox=styled.View`
   height:80px;

@@ -1,17 +1,26 @@
 import { gql } from '@apollo/client';
 
-export const GET_CATEGORIES = gql`
+export const GET_HOTS = gql`
   query {
     categories {
       id
       label
     }
+    contests{
+      edges{
+        node{
+          id
+          hits
+          title
+        }
+      }
+    }
   }
 `;
 
 export const GET_LISTS= gql`
-  query{
-    contests {
+  query ($categories:[ID!]){
+    contests(categories:$categories) {
       edges{
         node{
           id

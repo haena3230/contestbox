@@ -12,7 +12,7 @@ import {Color,Styles,Container,DWidth} from '~/Styles';
 import {TouchableOpacity } from 'react-native-gesture-handler';
 // data
 import { useQuery,useMutation } from '@apollo/client';
-import {GET_CATEGORIES} from '~/queries';
+import {GET_HOTS} from '~/queries';
 import {SearchPageProps} from '~/Types';
 
 
@@ -32,21 +32,20 @@ import {SearchPageProps} from '~/Types';
 
 const SearchPage = ({navigation}:SearchPageProps) => {
   // catrgory data
-
-  const { loading, error, data } = useQuery(GET_CATEGORIES);
+  const { loading, error, data } = useQuery(GET_HOTS);
   let template=``;
+  if(loading) return <Loading />
   if(error){
     console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
     console.log(error.networkError.message)
     console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
   }
-
   if(data&&data.categories){
-    // max 10개
     template=data.categories.map((cate)=>
     <TouchableOpacity  key = {cate.id.toString()} onPress={()=>
         navigation.navigate('CategoryListPage',{
           category:cate.label,
+          categoryId:cate.id
         })}>
       <HashTag hashtag={cate.label} picked={false}/>
     </TouchableOpacity>
@@ -76,9 +75,7 @@ const SearchPage = ({navigation}:SearchPageProps) => {
             <Title>
               <Text style={Styles.m_font}>카테고리</Text>
             </Title>
-            {loading?(
-              <Loading />
-            ):data&&data.categories?(
+            {data&&data.categories?(
                 <View style={{flexDirection:'row', flexWrap:'wrap',marginVertical:20}}>
                   {template}
                 </View>    

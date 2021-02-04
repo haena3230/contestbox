@@ -9,7 +9,7 @@ type StackParamList={
   SearchListPage:{search:string};
   SearchFilterPage:undefined;
   CategoryPage:undefined;
-  CategoryListPage:{category:string}
+  CategoryListPage:{category:string,categoryId:string}
   CategoryFilterPage:undefined;
   FilterPage:undefined;
   DetailPage:{listId:string};
