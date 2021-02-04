@@ -64,6 +64,14 @@ export const GET_LISTS= gql`
               status
             }
             siteURL
+            place{
+              alias
+              fullAddress
+              latLng{
+                lat
+                lng
+              }
+            }
         }
     }
     `;

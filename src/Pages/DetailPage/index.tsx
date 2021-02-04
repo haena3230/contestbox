@@ -1,17 +1,19 @@
 // list detail Page
-import React,{useCallback, useRef} from 'react';
-import {View,Text, Linking, Alert} from 'react-native';
+import React,{useRef} from 'react';
+import {View,Text} from 'react-native';
 import moment from 'moment';
 // style
-import {Color,Container, Styles} from '~/Styles';
+import {Color,Container, Styles,IconSize} from '~/Styles';
 import styled from 'styled-components/native';
 // components
 import Header from '~/Components/Header';
 import ToTop from '~/Components/ToTop';
 import { ScrollView } from 'react-native-gesture-handler';
 import {HashTag} from '~/Components/HashTag';
-import {ShortBtn} from '~/Components/Btn';
 import Loading from '~/Components/Loading';
+import {OpenURLBtn} from '~/Components/Btn';
+// icon
+import MarkIcon from '~/Assets/map-marker-alt-solid.svg';
 // navi
 import {DetailPageProps} from '~/Types';
 import {SndMap} from '~/Components/Map';
@@ -34,19 +36,7 @@ const DetailPage =(props:DetailPageProps)=>{
     const { loading, error, data } = useQuery(GET_DETAILS,{
         variables:{id:listId}
     });
-    // link
-    const OpenURLButton = ({ url, children }) => {
-        const handlePress = useCallback(async () => {
-            const supported = await Linking.canOpenURL(url);
-            if (supported) {
-            await Linking.openURL(url);
-            } else {
-            Alert.alert(`Don't know how to open this URL: ${url}`);
-            }
-        }, [url]);
-        
-    return <ShortBtn text={children} onPress={handlePress} color={Color.p_color}/>;
-    };
+    
     // period
     const PeriodSplit=(At)=>{
         let Period =At.split('T');
@@ -66,9 +56,9 @@ const DetailPage =(props:DetailPageProps)=>{
             <Box>
                 <ScrollView ref={scrollRef}>
                     {data.contest.posterURL!==""?(
-                        <Poster source={{uri:data.contest.posterURL}}/>    
+                        <Poster source={require('~/Assets/poster.png')}/>
+                        // <Poster source={{uri:data.contest.posterURL}}/>    
                     ):(
-                        // <Poster source={require('~/Assets/poster.png')}/>
                         null      
                     )}
                     
@@ -108,19 +98,13 @@ const DetailPage =(props:DetailPageProps)=>{
                     <Period Start={PeriodSplit(data.contest.application.period.startAt)} End={PeriodSplit(data.contest.application.period.endAt)}/>
                     {data.contest.siteURL!==""?(
                         <View style={{width:'100%',alignItems:'flex-end'}}>
-                            <View style={{width:'30%'}}>
-                                <OpenURLButton url={data.contest.siteURL}>홈페이지</OpenURLButton>
-                            </View>
+                            <OpenURLBtn url={data.contest.siteURL}>홈페이지</OpenURLBtn>
                         </View>
                     ):(
                        null
                     )}
                     <ContentTitle>상세내용</ContentTitle>
-                    
-                    <ContentTitle>대회 장소</ContentTitle>
-                    <MapBox>
-                        <SndMap latitude={37.565051} longitude={126.978567}/>
-                    </MapBox>
+                    <MapPart place={data.contest.place.fullAddress} lat={data.contest.place.latLng.lat} lng={data.contest.place.latLng.lng}/>
                 </ScrollView>
             </Box>
             <ToTop onPressToTop={onPressToTop}/>
@@ -175,6 +159,28 @@ const Period = ({Start,End}:PeriodProps)=>{
         </PeriodContainer>
     )
 }
+// map part
+interface MapPartProps{
+    place:string;
+    lat:number;
+    lng:number;
+}
+const MapPart=({place,lat,lng}:MapPartProps)=>{
+    return(
+        <View>
+            <View style={{flexDirection:'row',alignItems:'flex-end',justifyContent:'space-between'}}>
+                <ContentTitle>대회 장소</ContentTitle>
+                <View style={{flexDirection:'row',alignItems:'center'}}>
+                    <MarkIcon width={IconSize.sicon} height={IconSize.sicon} color={Color.g4_color} />
+                    <MapText>{place}</MapText>
+                </View>
+            </View>
+            <MapBox>
+                <SndMap latitude={lat} longitude={lng}/>
+            </MapBox>
+        </View>
+    )
+}
 
 // detail page
 const Box=styled.View`
@@ -192,6 +198,8 @@ const Poster =styled.Image`
     height:450px;
     resizeMode:contain
     margin-vertical:10px;
+    border-radius:10px;
+    overflow:hidden;
 `
 const TextBox=styled.View`
     margin-vertical:5px;
@@ -238,6 +246,12 @@ const Time=styled.View`
 const TimeText =styled.Text`
     ${Styles.ss_font};
     margin-horizontal:3px;
+`
 
+// map
+const MapText=styled.Text`
+    ${Styles.s_font};
+    color:${Color.g4_color};
+    margin-horizontal:3px;
 `
 export default DetailPage;

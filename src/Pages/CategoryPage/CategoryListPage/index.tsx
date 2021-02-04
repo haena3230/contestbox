@@ -1,5 +1,5 @@
 import React,{useState,useRef} from 'react';
-import {View,Text} from 'react-native';
+import {View} from 'react-native';
 import styled from 'styled-components/native';
 import {Styles,Container} from '~/Styles';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
@@ -11,7 +11,7 @@ import {CategoryListPageProps} from '~/Types';
 
 // component
 import {SortComponent} from '~/Components/Sort'
-import {SortBtn,FilterBtn,MapBtn,ListBtn} from '~/Components/Btn';
+import {FilterBtn,ListBtn} from '~/Components/Btn';
 import Loading from '~/Components/Loading';
 import TextList,{TagBox,ListBox} from '~/Components/TextList';
 import {HashTag} from '~/Components/HashTag';

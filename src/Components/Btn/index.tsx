@@ -1,8 +1,8 @@
 // button components
-import React from 'react';
+import React,{useCallback} from 'react';
 import styled from 'styled-components/native';
 import {Color,Styles,IconSize} from '~/Styles';
-import {View,TouchableOpacity,Text} from 'react-native';
+import {View,TouchableOpacity,Text, Linking, Alert} from 'react-native';
 
 
 // icon
@@ -100,6 +100,19 @@ export const SortUpBtn=()=>{
     )
 }
 
+// link
+export const OpenURLBtn = ({ url, children }) => {
+    const handlePress = useCallback(async () => {
+        const supported = await Linking.canOpenURL(url);
+        if (supported) {
+        await Linking.openURL(url);
+        } else {
+        Alert.alert(`Don't know how to open this URL: ${url}`);
+        }
+    }, [url]);
+    
+return <ShortBtn text={children} onPress={handlePress} color={Color.p_color}/>;
+};
 
 
 // long
