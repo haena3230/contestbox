@@ -42,9 +42,7 @@ const HomePage = ({navigation}:HomaPageProps) => {
       <PosterBox>
         <Poster source={require('~/Assets/poster.png')}/>
       </PosterBox>
-      <View style={{width:120}}>
-        <PosterText numberOfLines={1} ellipsizeMode="tail">{contest.node.title}</PosterText>
-      </View>
+      <PosterText numberOfLines={2} ellipsizeMode="tail">{contest.node.title}</PosterText>
     </PosterContainer>
     )
   }
@@ -130,6 +128,8 @@ const Title=styled.Text`
 `
 // poster
 const PosterContainer=styled.TouchableOpacity`
+  height:100%;
+  aspect-ratio:0.6;
   padding-vertical:10px;
   margin-horizontal:10px;
 `
@@ -147,5 +147,6 @@ const Poster=styled.Image`
 const PosterText=styled.Text`
   ${Styles.s_font};
   font-weight:bold;
+  margin-horizontal:3px;
 `
 export default HomePage;
