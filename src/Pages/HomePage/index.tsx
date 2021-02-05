@@ -16,13 +16,18 @@ import {HomaPageProps} from '~/Types';
 
 const HomePage = ({navigation}:HomaPageProps) => {
   // catrgory && hot data
-  const { loading, error, data } = useQuery(GET_HOTS);
+  const { loading, error, data } = useQuery(GET_HOTS,{
+    variables:{sort:'HITS',edge:{
+      first:10
+    }}
+  });
   let categoriesData=``;
   let hotData=``;
   if(loading) return <Loading />
   if(error)return <Text>err</Text>
   if(data.categories){
-    categoriesData=data.categories.map((cate)=>
+    // max 10개
+    categoriesData=data.categories.slice(0,9).map((cate)=>
     <TouchableOpacity  key = {cate.id.toString()} onPress={()=>
         navigation.navigate('CategoryListPage',{
           category:cate.label,
