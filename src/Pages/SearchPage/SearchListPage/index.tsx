@@ -5,7 +5,7 @@ import {Container,Styles,Color} from '~/Styles';
 import styled from 'styled-components/native';
 // data
 import {SearchListPageProps} from '~/Types';
-import {GET_SEARCH_LISTS} from '~/queries';
+import {GET_LISTS} from '~/queries';
 import {useQuery} from '@apollo/client';
 // components
 import {SearchBarSmall} from '~/Components/SearchBar';
@@ -30,10 +30,44 @@ const SearchListPage =(props:SearchListPageProps)=>{
             animated: true,
         })
     };
-
+    // sort
+    // 정렬 버튼
+    const[sortState,setSortState]=useState<string>('추천순');
+    const[sort,setSort]=useState<boolean>(false);
+    const[one,setOne]=useState<boolean>(true);
+    const[two,setTwo]=useState<boolean>(false);
+    const[three,setThree]=useState<boolean>(false);
+    const onPressTagOne=()=>{
+        setOne(true);
+        setTwo(false);
+        setThree(false);
+        setSortStatus('LATEST')
+        setSort(!sort);
+        setSortState('추천순');
+    }
+    const onPressTagTwo=()=>{
+        setOne(false)
+        setTwo(true)
+        setThree(false)
+        setSortStatus('HITS')
+        setSort(!sort);
+        setSortState('조회순');
+    }
+    const onPressTagThree=()=>{
+        setOne(false)
+        setTwo(false)
+        setThree(true)
+        setSortStatus('LATEST')
+        setSort(!sort);
+        setSortState('등록순');
+    }
+    const onPressSort=()=>{
+        setSort(!sort);
+    }
     // list data
-    const {loading,error,data}=useQuery(GET_SEARCH_LISTS,{
-        variables:{search:search}
+    const [sortStatus,setSortStatus]=useState<string>('LATEST')
+    const {loading,error,data}=useQuery(GET_LISTS,{
+        variables:{search:search,sort:sortStatus}
     })
     let listData='';
     if(loading) return <Loading />
@@ -67,60 +101,18 @@ const SearchListPage =(props:SearchListPageProps)=>{
         <Container>
             <ScrollView ref={scrollRef}>
                 <SearchBarSmall navigation={props.navigation}/>
-                <SearchListBar  search={search}  count={data.contests.edges.length} onPressFilter={onPressFilter}/>
+                <SearchListBar 
+                    search={search} 
+                    count={data.contests.edges.length} 
+                    onPressFilter={onPressFilter}
+                    onPressSort={()=>setSort(!sort)}
+                    sortState={sortState}
+                    />
                 <View style={{padding:5}}>
                     {listData}
                 </View>
             </ScrollView>
-            <ToTop onPressToTop={onPressToTop}/>
-        </Container>
-    )
-}
-interface SearchListBarProps{
-    search:string|undefined;
-    count:number;
-    onPressFilter:()=>void;
-}
-const SearchListBar=({search,count,onPressFilter}:SearchListBarProps)=>{
-    // 정렬 버튼
-    const[sortState,setSortState]=useState<string>('추천순');
-    const[sort,setSort]=useState<boolean>(false);
-    const[one,setOne]=useState<boolean>(true);
-    const[two,setTwo]=useState<boolean>(false);
-    const[three,setThree]=useState<boolean>(false);
-    const onPressTagOne=()=>{
-        setOne(true);
-        setTwo(false);
-        setThree(false);
-        setSort(!sort);
-        setSortState('추천순');
-    }
-    const onPressTagTwo=()=>{
-        setOne(false)
-        setTwo(true)
-        setThree(false)
-        setSort(!sort);
-        setSortState('조회순');
-    }
-    const onPressTagThree=()=>{
-        setOne(false)
-        setTwo(false)
-        setThree(true)
-        setSort(!sort);
-        setSortState('등록순');
-    }
-    const onPressSort=()=>{
-        setSort(!sort);
-    }
-    return(
-        <BarBox>
-            <View style={{flexDirection:'row'}}>
-                <BarBoxText>' {search} ' 검색결과 </BarBoxText>
-                <BarBoxCount> {count}</BarBoxCount>
-            </View>
-            <View style={{flexDirection:'row'}}>
-                <SortBtn onPressSort={onPressSort} state={sortState}/>
-                <SortComponent 
+            <SortComponent 
                 onPressCancle={onPressSort} 
                 modalVisible={sort} 
                 one={one}
@@ -130,6 +122,28 @@ const SearchListBar=({search,count,onPressFilter}:SearchListBarProps)=>{
                 onPressTagTwo={onPressTagTwo}
                 onPressTagThree={onPressTagThree}
                 />
+            <ToTop onPressToTop={onPressToTop}/>
+        </Container>
+    )
+}
+interface SearchListBarProps{
+    search:string|undefined;
+    count:number;
+    onPressFilter:()=>void;
+    onPressSort:()=>void;
+    sortState:string;
+}
+const SearchListBar=({search,count,onPressFilter,onPressSort,sortState}:SearchListBarProps)=>{
+    
+    return(
+        <BarBox>
+            <View style={{flexDirection:'row'}}>
+                <BarBoxText>' {search} ' 검색결과 </BarBoxText>
+                <BarBoxCount> {count}</BarBoxCount>
+            </View>
+            <View style={{flexDirection:'row'}}>
+                <SortBtn onPressSort={onPressSort} state={sortState}/>
+                
                 <FilterBtn onPressFilter={onPressFilter}/>
                 <MapBtn onPressMap={()=>null}/>
             </View>

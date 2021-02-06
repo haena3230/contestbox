@@ -55,9 +55,10 @@ const DetailPage =(props:DetailPageProps)=>{
             <Header />            
             <Box>
                 <ScrollView ref={scrollRef}>
-                    {data.contest.posterURL!==""?(
-                        <Poster source={require('~/Assets/poster.png')}/>
-                        // <Poster source={{uri:data.contest.posterURL}}/>    
+                    {data.contest.posterURL!==null?(
+                        <Poster source={{
+                            uri:data.contest.posterURL
+                        }}/>
                     ):(
                         null      
                     )}
@@ -104,7 +105,12 @@ const DetailPage =(props:DetailPageProps)=>{
                        null
                     )}
                     <ContentTitle>상세내용</ContentTitle>
-                    <MapPart place={data.contest.place.fullAddress} lat={data.contest.place.latLng.lat} lng={data.contest.place.latLng.lng}/>
+                    {data.contest.place!==null?(
+                        <MapPart place={data.contest.place.fullAddress} lat={data.contest.place.latLng.lat} lng={data.contest.place.latLng.lng}/>
+                    ):(
+                        null
+                    )}
+                    
                 </ScrollView>
             </Box>
             <ToTop onPressToTop={onPressToTop}/>

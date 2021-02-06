@@ -19,7 +19,7 @@ const HomePage = ({navigation}:HomaPageProps) => {
   const { loading, error, data } = useQuery(GET_HOTS,{
     variables:{sort:'HITS',edge:{
       first:10
-    }}
+    },applicationStatuses:['NOTSTARTED','INPROGRESS']}
   });
   let categoriesData=``;
   let hotData=``;
@@ -45,7 +45,7 @@ const HomePage = ({navigation}:HomaPageProps) => {
       })
     }>
       <PosterBox>
-        <Poster source={require('~/Assets/poster.png')}/>
+        <Poster source={{uri:contest.node.posterURL}}/>
       </PosterBox>
       <PosterText numberOfLines={2} ellipsizeMode="tail">{contest.node.title}</PosterText>
     </PosterContainer>

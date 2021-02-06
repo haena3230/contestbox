@@ -59,7 +59,7 @@ const SearchPage = ({navigation}:SearchPageProps) => {
   return (
       <Container>
         <Header />
-        {/* <Add /> */}
+        {/* <Add />QW */}
         <MainContainer>
           <Title>
             <Text style={Styles.b_font}>어떤 </Text>

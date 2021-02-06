@@ -11,7 +11,7 @@ import {CategoryListPageProps} from '~/Types';
 
 // component
 import {SortComponent} from '~/Components/Sort'
-import {FilterBtn,ListBtn} from '~/Components/Btn';
+import {FilterBtn,ListBtn,SortBtn} from '~/Components/Btn';
 import Loading from '~/Components/Loading';
 import TextList,{TagBox,ListBox} from '~/Components/TextList';
 import {HashTag} from '~/Components/HashTag';
@@ -41,6 +41,7 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
         setOne(true);
         setTwo(false);
         setThree(false);
+        setSortStatus('LATEST');
         setSort(!sort);
         setSortState('추천순');
     }
@@ -48,6 +49,7 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
         setOne(false)
         setTwo(true)
         setThree(false)
+        setSortStatus('HITS');
         setSort(!sort);
         setSortState('조회순');
     }
@@ -55,6 +57,7 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
         setOne(false)
         setTwo(false)
         setThree(true)
+        setSortStatus('LATEST');
         setSort(!sort);
         setSortState('등록순');
     }
@@ -65,8 +68,9 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
     const [map,setMap]=useState(false);
 
     // list data
+    const [sortStatus,setSortStatus]=useState<string>('LATEST')
     const { loading, error, data } = useQuery(GET_LISTS,{
-        variables:{categories:[categoryId]}
+        variables:{categories:[categoryId],sort:sortStatus}
     });
     let template=``;
     if (loading) return <Loading />;
@@ -108,7 +112,7 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
                     <CategoryBox>
                         <Category># {category}</Category>
                     </CategoryBox>
-                    <BarBox onPressMap={()=>setMap(!map)}/>
+                    <BarBox isMap={true} onPressMap={()=>setMap(!map)} onPressSort={()=>null} sortState={null} />
                     <View style={{width:'100%',height:'60%'}}>
                         <Map />
                     </View>
@@ -119,7 +123,7 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
                         <Category># {category}</Category>
                     </CategoryBox>
                     <Categories />
-                     <BarBox onPressMap={()=>setMap(!map)}/>
+                     <BarBox isMap={false} onPressMap={()=>setMap(!map)} onPressSort={()=>setSort(!sort)} sortState={sortState}/>
                     <View style={{marginBottom:10}}>
                         {template}
                     </View>
@@ -142,12 +146,15 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
 
 // category && btn
 interface HeaderBoxProps{
+    isMap:boolean;
     onPressMap:()=>void;
+    onPressSort:()=>void;
+    sortState:string;
 }
-const BarBox=({onPressMap}:HeaderBoxProps)=>{
+const BarBox=({isMap,onPressMap,onPressSort,sortState}:HeaderBoxProps)=>{
     return(
         <Bar>
-            <View />
+            {isMap?(null):(<SortBtn onPressSort={onPressSort} state={sortState}/>)}
             <View style={{flexDirection:'row'}}>
                 <FilterBtn onPressFilter={()=>null}/>
                 <ListBtn onPressMap={onPressMap}/>
@@ -181,5 +188,6 @@ const Category=styled.Text`
 const Bar = styled.View`
     flex-direction:row;
     justify-content:space-between;
+    margin-left:5px;
 `
 export default CategoryListPage;

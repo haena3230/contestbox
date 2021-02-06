@@ -1,17 +1,18 @@
 import { gql } from '@apollo/client';
 
 export const GET_HOTS = gql`
-  query ($sort:ContestsSortType, $edge:EdgeInput){
+  query ($sort:ContestsSortType, $edge:EdgeInput, $applicationStatuses:[ContestApplicationStatus!]){
     categories {
       id
       label
     }
-    contests(sort:$sort,edge:$edge){
+    contests(sort:$sort,edge:$edge,applicationStatuses:$applicationStatuses){
       edges{
         node{
           id
           hits
           title
+          posterURL
         }
       }
     }
@@ -19,31 +20,8 @@ export const GET_HOTS = gql`
 `;
 
 export const GET_LISTS= gql`
-  query ($categories:[ID!]){
-    contests(categories:$categories) {
-      edges{
-        node{
-          id
-          title
-          hits
-          categories{
-            id
-            label
-          }
-          application{
-            status
-            period{
-              endAt
-            }
-          }
-        }
-      }
-    }
-  }
-`;
-export const GET_SEARCH_LISTS= gql`
-  query ($search:String){
-    contests(search:$search) {
+  query ($categories:[ID!],$search:String,$sort:ContestsSortType){
+    contests(categories:$categories,search:$search,sort:$sort) {
       edges{
         node{
           id
@@ -124,7 +102,7 @@ export const ADD_CONTEST=gql`
               endAt:"2020-12-12T12:12:12.933Z"
             }
           }
-          categoriesID:["5ff7530f0ee5ae789ecc4d5a","5ffaff39af72037a420f9bc9"]
+          categoriesID:["5ff71d24d897dcf49985befb","6005ca896816d395485299a1"]
           auspicersID:[]
           typesID:[]
           managersID:[]
