@@ -111,11 +111,13 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
         <Container>
             {map?(
                 <View>
-                    <CategoryBox>
-                        <Category># {category}</Category>
-                    </CategoryBox>
-                    <BarBox isMap={true} onPressMap={()=>setMap(!map)} onPressSort={()=>null} sortState={null} />
-                    <View style={{width:'100%',height:'60%'}}>
+                    <View style={{height:'15%'}}>
+                        <CategoryBox>
+                            <Category># {category}</Category>
+                        </CategoryBox>
+                    </View>
+                    <BarBox height ={'10%'} isMap={true} onPressMap={()=>setMap(!map)} onPressSort={()=>null} sortState={null} />
+                    <View style={{width:'100%',height:'75%'}}>
                         <Map />
                     </View>
                 </View>
@@ -126,6 +128,7 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
                     </CategoryBox>
                     <Categories />
                      <BarBox 
+                        height={30}
                         isMap={false} 
                         onPressMap={()=>setMap(!map)} 
                         onPressSort={()=>setSort(!sort)} 
@@ -157,10 +160,17 @@ interface HeaderBoxProps{
     onPressMap:()=>void;
     onPressSort:()=>void;
     sortState:string;
+    height:string|number;
 }
-const BarBox=({isMap,onPressMap,onPressSort,sortState}:HeaderBoxProps)=>{
+const BarBox=({isMap,onPressMap,onPressSort,sortState,height}:HeaderBoxProps)=>{
     return(
-        <Bar>
+        <View style={{
+            flexDirection:'row',
+            justifyContent:'space-between',
+            alignItems:'flex-end',
+            marginLeft:5,
+            height:height,
+            }}>
             {isMap?(<View />):(<SortBtn onPressSort={onPressSort} state={sortState}/>)}
             <View style={{flexDirection:'row'}}>
                 <FilterBtn onPressFilter={()=>null}/>
@@ -170,7 +180,7 @@ const BarBox=({isMap,onPressMap,onPressSort,sortState}:HeaderBoxProps)=>{
                     <MapBtn onPressMap={onPressMap}/>
                 )}
             </View>
-        </Bar>
+        </View>
     )
 }
 
@@ -194,11 +204,5 @@ const CategoryBox=styled.View`
 const Category=styled.Text`
     ${Styles.b_font};
     font-weight:bold;
-`
-
-const Bar = styled.View`
-    flex-direction:row;
-    justify-content:space-between;
-    margin-left:5px;
 `
 export default CategoryListPage;

@@ -24,23 +24,23 @@ interface ILocation {
   longitude: number;
 }
 
+
 const Map=()=> {
-    const P1 = {latitude: 37.565051, longitude: 126.978567};
+    const defaultPosition = {latitude: 37.565051, longitude: 126.978567};
     const [permission,setPermission]=useState(false);
-    const [location, setLocation] = useState<ILocation | undefined>(undefined);
+    const [myPosiion, setMyPosition] = useState<ILocation | undefined>(undefined);
     const[menu,setMenu]=useState<boolean>(false);
     useEffect(() => {
         requestPermission().then(result => { console.log({ result }); 
         if (result === "granted") { 
             Geolocation.getCurrentPosition(
-                position => {
-                    setPermission(true);
+                async position => {
                     const {latitude, longitude} = position.coords;
-                    setLocation({
+                    await setMyPosition({
                         latitude,
                         longitude,
                     });
-                    console.log(location)
+                    await setPermission(true);
                 },
                 error => {
                     console.log(error.code, error.message);
@@ -51,26 +51,24 @@ const Map=()=> {
      });
     }, []);
     return (
-        <View style={{width:'100%',height:'100%'}}>
+        <View style={{width:'100%',height:'100%',padding:5}}>
             <MapContainer>
                 {permission?(
-                    <NaverMapView style={{width: '100%', height: '100%'}}
-                        showsMyLocationButton={true}
-                        center={{...location, zoom: 10}}
-                        onCameraChange={() => setMenu(false)}
-                        onMapClick={() => setMenu(false)}
-                        >
-                        <Marker coordinate={P1} pinColor="blue" onClick={() => setMenu(true)}/>
-                    </NaverMapView>
+                    <MapView 
+                        onCameraChange={()=>setMenu(false)}
+                        onMapClick={()=>setMenu(false)}
+                        onTipClick={()=>setMenu(!menu)}
+                        latitude={myPosiion.latitude}
+                        longitude={myPosiion.longitude}
+                    />
                 ):(
-                    <NaverMapView style={{width: '100%', height: '100%'}}
-                        showsMyLocationButton={true}
-                        center={{...P1, zoom: 10}}
-                        onCameraChange={() => setMenu(false)}
-                        onMapClick={() => setMenu(false)}
-                        >
-                        <Marker coordinate={P1} pinColor="blue" onClick={() => setMenu(true)}/>
-                    </NaverMapView>
+                    <MapView 
+                        onCameraChange={()=>setMenu(false)}
+                        onMapClick={()=>setMenu(false)}
+                        onTipClick={()=>setMenu(!menu)}
+                        latitude={defaultPosition.latitude}
+                        longitude={defaultPosition.longitude}
+                    />
                 )}
             </MapContainer>
             {menu?(
@@ -90,25 +88,30 @@ const Map=()=> {
     )
 }
 
-interface SndMapProps{
+interface MapViewProps{
     latitude:number;
     longitude:number;
+    onCameraChange:()=>void;
+    onMapClick:()=>void;
+    onTipClick:()=>void;
 }
-export const SndMap=({latitude,longitude}:SndMapProps)=>{
-    const P1 = {latitude: latitude, longitude: longitude};
+export const MapView=({latitude,longitude,onCameraChange,onMapClick,onTipClick}:MapViewProps)=>{
+    const MyPosition = {latitude: latitude, longitude: longitude};
     return(
     <NaverMapView style={{width: '100%', height: '100%'}}
         showsMyLocationButton={true}
-        center={{...P1, zoom: 10}}
+        center={{...MyPosition, zoom: 10}}
+        onCameraChange={onCameraChange}
+        onMapClick={onMapClick}
         >
-        <Marker coordinate={P1} pinColor="blue" />
+        <Marker coordinate={MyPosition} pinColor="blue" onClick={onTipClick} />
     </NaverMapView>
     )
 }
+
 const MapContainer = styled.View`
     width:100%;
     height:100%;
-    margin:5px;
     border-width:1px;
     border-radius:10px;
     border-color:${Color.g1_color};

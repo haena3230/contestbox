@@ -1,5 +1,5 @@
 // SearchListPage
-import React,{useState,useRef, useEffect} from 'react';
+import React,{useState,useRef} from 'react';
 import {View,ScrollView, Text} from 'react-native';
 import {Container,Styles,Color} from '~/Styles';
 import styled from 'styled-components/native';
