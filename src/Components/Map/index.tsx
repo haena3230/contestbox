@@ -47,7 +47,8 @@ const Map=()=> {
                 },
                 {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
             );
-        } });
+        }else   setPermission(false)
+     });
     }, []);
     return (
         <View style={{width:'100%',height:'100%'}}>

@@ -3,10 +3,11 @@ import React,{useState} from 'react';
 import {TouchableOpacity,TextInput} from 'react-native';
 import {Color,IconSize,Styles} from '~/Styles';
 import styled from 'styled-components/native';
-import {SearchPageProps} from '~/Types';
+import {SearchPageProps,SearchListPageProps} from '~/Types';
 // icon
 import Search from '~/Assets/search-solid.svg';
 import Arrow from '~/Assets/chevron-left-solid.svg';
+
 
 export const SearchBar=({navigation}:SearchPageProps)=>{
   const[searchText,setSearchText]=useState('');
@@ -33,13 +34,15 @@ const SearchBarStyle=styled.View`
   border-width:1px;
   border-color:${Color.g1_color};
 `
-export const SearchBarSmall=({navigation}:SearchPageProps)=>{
+export const SearchBarSmall=({navigation}:SearchListPageProps)=>{
     const[searchText,setSearchText]=useState('');
     return(
         <SearchHeader>
             <Arrow onPress={()=>navigation.goBack()} height={IconSize.sicon} width={IconSize.sicon} color={Color.g3_color}/>
             <SmallSearchBarStyle>
-                <TouchableOpacity onPress={()=>null} style={{paddingHorizontal:15}}>
+                <TouchableOpacity onPress={()=>navigation.replace('SearchListPage',{
+                  search:searchText
+                })} style={{paddingHorizontal:15}}>
                     <Search height={IconSize.sicon} width={IconSize.sicon} color={Color.g3_color}/>
                 </TouchableOpacity>
                 <SearchHeaderText placeholder={'검색어를 입력해 주세요.'} value={searchText} onChangeText={(text)=>{setSearchText(text)}} />

@@ -71,34 +71,3 @@ const ViewCount=styled.Text`
     ${Styles.ss_font};
 `
 export default TextList;
-
- // list data
-//   const { loading, error, data } = useQuery(GET_LISTS);
-//   let template=``;
-//   if (loading) return <Loading />;
-//   if (error) return <Text>Error</Text>;
-//   if(data&&data.contests.edges){
-//     template=data.contests.edges.map((data)=>
-//     <ListBox key = {data.node.id.toString()} onPress={()=>navigation.navigate('DetailPage',{
-//       listId:data.node.id,
-//     })}>
-//       <TextList 
-//         recruit={data.node.application.status} 
-//         deadline={data.node.application.period.endAt}
-//         title={data.node.title} 
-//         viewcount={data.node.hits}
-//         />
-//         {data.node.categories!==null?(
-//           <TagBox>
-//             {data.node.categories.slice(0,3).map((tag)=>
-//               <HashTag key={tag.id.toString()} hashtag={tag.label} picked={false}/>
-//             )}
-//             {data.node.categories.length>3?(
-//               <HashTag hashtag={'+'+ (data.node.categories.length-3)} picked={false}/>
-//             ):(
-//               null
-//             )}
-//           </TagBox>
-//         ):null}
-//       </ListBox>
-//     )

@@ -106,7 +106,12 @@ const DetailPage =(props:DetailPageProps)=>{
                     )}
                     <ContentTitle>상세내용</ContentTitle>
                     {data.contest.place!==null?(
-                        <MapPart place={data.contest.place.fullAddress} lat={data.contest.place.latLng.lat} lng={data.contest.place.latLng.lng}/>
+                        <MapPart 
+                            alias={data.contest.place.alias}
+                            place={data.contest.place.fullAddress} 
+                            lat={data.contest.place.latLng.lat} 
+                            lng={data.contest.place.latLng.lng}
+                            />
                     ):(
                         null
                     )}
@@ -167,23 +172,25 @@ const Period = ({Start,End}:PeriodProps)=>{
 }
 // map part
 interface MapPartProps{
+    alias:string;
     place:string;
     lat:number;
     lng:number;
 }
-const MapPart=({place,lat,lng}:MapPartProps)=>{
+const MapPart=({alias,place,lat,lng}:MapPartProps)=>{
     return(
-        <View>
+        <View style={{marginBottom:30}}>
             <View style={{flexDirection:'row',alignItems:'flex-end',justifyContent:'space-between'}}>
                 <ContentTitle>대회 장소</ContentTitle>
-                <View style={{flexDirection:'row',alignItems:'center'}}>
-                    <MarkIcon width={IconSize.sicon} height={IconSize.sicon} color={Color.g4_color} />
-                    <MapText>{place}</MapText>
-                </View>
+                <MapText>{alias}</MapText>
             </View>
             <MapBox>
                 <SndMap latitude={lat} longitude={lng}/>
             </MapBox>
+            <View style={{flexDirection:'row',alignItems:'flex-start'}}>
+                <MarkIcon width={IconSize.sicon} height={IconSize.sicon} color={Color.g4_color} />
+                <MapText>{place}</MapText>
+            </View>
         </View>
     )
 }
@@ -233,8 +240,7 @@ const MapBox=styled.View`
     border-color:${Color.g1_color};
     overflow:hidden;
     height:200px;
-    margin-top:10px;
-    margin-bottom:30px;
+    margin-vertical:10px;
 `
 
 // period

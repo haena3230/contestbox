@@ -11,7 +11,7 @@ import {CategoryListPageProps} from '~/Types';
 
 // component
 import {SortComponent} from '~/Components/Sort'
-import {FilterBtn,ListBtn,SortBtn} from '~/Components/Btn';
+import {FilterBtn,ListBtn,SortBtn,MapBtn} from '~/Components/Btn';
 import Loading from '~/Components/Loading';
 import TextList,{TagBox,ListBox} from '~/Components/TextList';
 import {HashTag} from '~/Components/HashTag';
@@ -72,7 +72,7 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
     const { loading, error, data } = useQuery(GET_LISTS,{
         variables:{categories:[categoryId],sort:sortStatus}
     });
-    let template=``;
+    let listData=``;
     if (loading) return <Loading />;
     if (error){
         console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
@@ -80,10 +80,12 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
         console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
     }
     if(data&&data.contests.edges){
-        template=data.contests.edges.map((data)=>
-        <ListBox key = {data.node.id.toString()} onPress={()=>props.navigation.navigate('DetailPage',{
-            listId:data.node.id,
-        })}>
+        listData=data.contests.edges.map((data)=>
+        <ListBox key = {data.node.id.toString()} onPress={()=>{
+            props.navigation.navigate('DetailPage',{
+                listId:data.node.id,
+            })
+        }}>
         <TextList 
             recruit={data.node.application.status} 
             deadline={data.node.application.period.endAt}
@@ -123,9 +125,14 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
                         <Category># {category}</Category>
                     </CategoryBox>
                     <Categories />
-                     <BarBox isMap={false} onPressMap={()=>setMap(!map)} onPressSort={()=>setSort(!sort)} sortState={sortState}/>
+                     <BarBox 
+                        isMap={false} 
+                        onPressMap={()=>setMap(!map)} 
+                        onPressSort={()=>setSort(!sort)} 
+                        sortState={sortState}
+                    />
                     <View style={{marginBottom:10}}>
-                        {template}
+                        {listData}
                     </View>
                     <SortComponent 
                     onPressCancle={onPressSort} 
@@ -154,10 +161,14 @@ interface HeaderBoxProps{
 const BarBox=({isMap,onPressMap,onPressSort,sortState}:HeaderBoxProps)=>{
     return(
         <Bar>
-            {isMap?(null):(<SortBtn onPressSort={onPressSort} state={sortState}/>)}
+            {isMap?(<View />):(<SortBtn onPressSort={onPressSort} state={sortState}/>)}
             <View style={{flexDirection:'row'}}>
                 <FilterBtn onPressFilter={()=>null}/>
-                <ListBtn onPressMap={onPressMap}/>
+                {isMap?(
+                    <ListBtn onPressMap={onPressMap}/>
+                ):(
+                    <MapBtn onPressMap={onPressMap}/>
+                )}
             </View>
         </Bar>
     )

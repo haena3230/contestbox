@@ -1,5 +1,5 @@
 // SearchListPage
-import React,{useState,useRef} from 'react';
+import React,{useState,useRef, useEffect} from 'react';
 import {View,ScrollView, Text} from 'react-native';
 import {Container,Styles,Color} from '~/Styles';
 import styled from 'styled-components/native';
@@ -74,9 +74,11 @@ const SearchListPage =(props:SearchListPageProps)=>{
     if(error) return <Text>err</Text>
     if(data&&data.contests)
     listData=data.contests.edges.map((data)=>
-        <ListBox key = {data.node.id.toString()} onPress={()=>props.navigation.navigate('DetailPage',{
-            listId:data.node.id,
-        })}>
+        <ListBox key = {data.node.id.toString()} onPress={()=>{
+            props.navigation.navigate('DetailPage',{
+                listId:data.node.id,
+            })
+        }}>
         <TextList 
             recruit={data.node.application.status} 
             deadline={data.node.application.period.endAt}
