@@ -13,8 +13,17 @@ import Loading from '~/Components/Loading';
 import {useQuery} from '@apollo/client';
 import {GET_HOTS} from '~/queries';
 import {HomaPageProps} from '~/Types';
+import {useDispatch, useSelector} from 'react-redux'
+import { categoryAction } from '~/Store/actions';
+import {RootState} from '~/App';
 
 const HomePage = ({navigation}:HomaPageProps) => {
+  // redux
+  const dispatch = useDispatch()
+  const storeCategories=(testArray:Array<string>)=>{
+    dispatch(categoryAction(testArray))
+  }
+  const categories= useSelector((state:RootState)=>state.query.testArray)
   // catrgory && hot data
   const { loading, error, data } = useQuery(GET_HOTS,{
     variables:{sort:'HITS',edge:{
@@ -35,7 +44,8 @@ const HomePage = ({navigation}:HomaPageProps) => {
         })}>
       <HashTag hashtag={cate.label} picked={false}/>
     </TouchableOpacity>
-    )
+    ),
+    storeCategories(data.categories)
   }
   if(data.contests){
     hotData=data.contests.edges.map((contest)=>
@@ -53,6 +63,9 @@ const HomePage = ({navigation}:HomaPageProps) => {
   }
   return (
     <Container>
+      <TouchableOpacity onPress={()=>console.log(categories)}>
+        <Text>testset</Text>
+      </TouchableOpacity>
       <Header />
       <BannerBox>
         <Banner />

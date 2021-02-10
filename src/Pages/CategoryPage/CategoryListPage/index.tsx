@@ -116,40 +116,49 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
                             <Category># {category}</Category>
                         </CategoryBox>
                     </View>
-                    <BarBox height ={'10%'} isMap={true} onPressMap={()=>setMap(!map)} onPressSort={()=>null} sortState={null} />
+                    <BarBox 
+                        height ={'10%'} 
+                        isMap={true} 
+                        onPressMap={()=>setMap(!map)} 
+                        onPressFilter={()=>props.navigation.navigate('CategoryFilterPage')}
+                        onPressSort={()=>null} 
+                        sortState={null} />
                     <View style={{width:'100%',height:'75%'}}>
                         <Map />
                     </View>
                 </View>
             ):(
-                <ScrollView style={{padding:5}} ref={scrollRef}>
-                    <CategoryBox>
-                        <Category># {category}</Category>
-                    </CategoryBox>
-                    <Categories />
-                     <BarBox 
-                        height={30}
-                        isMap={false} 
-                        onPressMap={()=>setMap(!map)} 
-                        onPressSort={()=>setSort(!sort)} 
-                        sortState={sortState}
-                    />
-                    <View style={{marginBottom:10}}>
-                        {listData}
-                    </View>
-                    <SortComponent 
-                    onPressCancle={onPressSort} 
-                    modalVisible={sort} 
-                    one={one}
-                    two={two}
-                    three={three}
-                    onPressTagOne={onPressTagOne}
-                    onPressTagTwo={onPressTagTwo}
-                    onPressTagThree={onPressTagThree}
-                    />
-                </ScrollView>
+                <View>
+                    <ScrollView style={{padding:5}} ref={scrollRef}>
+                        <CategoryBox>
+                            <Category># {category}</Category>
+                        </CategoryBox>
+                        <Categories />
+                        <BarBox 
+                            height={30}
+                            isMap={false} 
+                            onPressMap={()=>setMap(!map)}
+                            onPressFilter={()=>props.navigation.navigate('CategoryFilterPage')}
+                            onPressSort={()=>setSort(!sort)} 
+                            sortState={sortState}
+                        />
+                        <View style={{marginBottom:10}}>
+                            {listData}
+                        </View>
+                        <SortComponent 
+                        onPressCancle={onPressSort} 
+                        modalVisible={sort} 
+                        one={one}
+                        two={two}
+                        three={three}
+                        onPressTagOne={onPressTagOne}
+                        onPressTagTwo={onPressTagTwo}
+                        onPressTagThree={onPressTagThree}
+                        />
+                    </ScrollView>
+                    <ToTop onPressToTop={onPressToTop}/>
+                </View>
             )}
-            <ToTop onPressToTop={onPressToTop}/>
         </Container>
     )
 }
@@ -158,11 +167,12 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
 interface HeaderBoxProps{
     isMap:boolean;
     onPressMap:()=>void;
+    onPressFilter:()=>void;
     onPressSort:()=>void;
     sortState:string;
     height:string|number;
 }
-const BarBox=({isMap,onPressMap,onPressSort,sortState,height}:HeaderBoxProps)=>{
+const BarBox=({isMap,onPressMap,onPressFilter,onPressSort,sortState,height}:HeaderBoxProps)=>{
     return(
         <View style={{
             flexDirection:'row',
@@ -173,7 +183,7 @@ const BarBox=({isMap,onPressMap,onPressSort,sortState,height}:HeaderBoxProps)=>{
             }}>
             {isMap?(<View />):(<SortBtn onPressSort={onPressSort} state={sortState}/>)}
             <View style={{flexDirection:'row'}}>
-                <FilterBtn onPressFilter={()=>null}/>
+                <FilterBtn onPressFilter={onPressFilter}/>
                 {isMap?(
                     <ListBtn onPressMap={onPressMap}/>
                 ):(

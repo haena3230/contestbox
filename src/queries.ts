@@ -75,41 +75,17 @@ export const GET_LISTS= gql`
             }
         }
     }
-    `;
+`;
 
-export const ADD_CATEGORY=gql`
-    mutation ($label:String!){
-      addCategory(
-        category:{
-          label:$label
-        }
-      )
-    }
-`
-
-export const ADD_CONTEST=gql`
-    mutation{
-      addContest(
-        contest:{
-          title:"20/21어쩌구저쩌구대회"
-          content:"test"
-          siteURL:"https://www.naver.com/"
-          posterURL:""
-          application:{
-            types:[]
-            period:{
-              startAt:"2020-12-12T12:12:12.933Z"
-              endAt:"2020-12-12T12:12:12.933Z"
-            }
-          }
-          categoriesID:["5ff71d24d897dcf49985befb","6005ca896816d395485299a1"]
-          auspicersID:[]
-          typesID:[]
-          managersID:[]
-          sponsorsID:[]
-          swaggersID:[]
-          conditionsID:[]
-        }
-      )
+export const GET_FILTER=gql`
+    query{
+      types{
+        id
+        label
+      }
+      conditions{
+        id
+        label
+      }
     }
 `

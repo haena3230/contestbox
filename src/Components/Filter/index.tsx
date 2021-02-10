@@ -42,8 +42,12 @@ const Close = ({onPressClose}:CloseBtnProps)=>{
 // 리스트 메뉴 (종류,참여조건)
 interface FilterMenuTypeProps{
     title:string;
+    tagArray:Array<{
+        id:string,
+        label:string,
+    }>
 }
-export const FilterMenuType=({title}:FilterMenuTypeProps)=>{
+export const FilterMenuType=({title,tagArray}:FilterMenuTypeProps)=>{
     const [menu,setMenu]=useState<Boolean>(false);
     return(
         <MenuContainer>
@@ -58,21 +62,27 @@ export const FilterMenuType=({title}:FilterMenuTypeProps)=>{
             </MenuBox>
             {menu?(
                 <Type>
-                    <TagState />
+                    {tagArray.map((data)=>{
+                        return(
+                            <TagState key={data.id} tagTitle={data.label}/>
+                        )
+                    })}
                 </Type>
             ):null}
         </MenuContainer>
     )
 }
-
-const TagState=()=>{
+interface TagStateProps{
+    tagTitle:string;
+}
+const TagState=({tagTitle}:TagStateProps)=>{
     const[state,setState]=useState<boolean>(false);
     return(
         <TouchableOpacity onPress={()=>setState(!state)}>
             {state?(
-                <HashTag hashtag={'test'} picked={true}/>
+                <HashTag hashtag={tagTitle} picked={true}/>
             ):(
-                <HashTag hashtag={'test'} picked={false}/>
+                <HashTag hashtag={tagTitle} picked={false}/>
             )}
             
         </TouchableOpacity>

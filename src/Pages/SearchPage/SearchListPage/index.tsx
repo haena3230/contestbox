@@ -102,7 +102,7 @@ const SearchListPage =(props:SearchListPageProps)=>{
     return(
         <Container>
             <ScrollView ref={scrollRef}>
-                <SearchBarSmall navigation={props.navigation}/>
+                <SearchBarSmall navigation={props.navigation} route={props.route}/>
                 <SearchListBar 
                     search={search} 
                     count={data.contests.edges.length} 

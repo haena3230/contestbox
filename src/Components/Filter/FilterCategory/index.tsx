@@ -4,58 +4,73 @@
 // 두번째 view는 리스트 클릭 -> 버튼 상태 chg
 
 import React,{useState} from 'react';
-import {View} from 'react-native';
+import {Text, View} from 'react-native';
 import styled from 'styled-components/native';
 import {Color,Styles} from '~/Styles';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 // component
 import {SortDownBtn,SortUpBtn} from '~/Components/Btn';
+import Loading from '~/Components/Loading';
+// data
+import {GET_CATEGORIES} from '~/queries';
+import {useQuery} from '@apollo/client';
 
 export const FilterCategory=()=>{
     return(
         <View>
-            <FirstView />      
+            <FirstView firstLabel={'Test'} />
         </View>
     )
 }
 
 // 첫번째 뷰
-const FirstView=()=>{
+interface FirstViewProps{
+    firstLabel:string;
+}
+const FirstView=({firstLabel}:FirstViewProps)=>{
     const[isView,setIsView]=useState<boolean>(false);
     const[isSelect,setIsSelect]=useState<boolean>(false);
+    // data
     return(
         <View>
-            <ViewBox>
-                <TouchableOpacity style={{flexDirection:'row',alignItems:'center'}}
-                     onPress={()=>setIsView(!isView)}> 
-                    {isView?
-                    <SortUpBtn />:<SortDownBtn />
-                    }
-                    <CategoryText>
-                        스포츠
-                    </CategoryText>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={()=>setIsSelect(!isSelect)}>
-                    {isSelect?
-                    <SelectBtn isSelect={true}/>:<SelectBtn isSelect={false}/>    
-                    }
-                </TouchableOpacity>
-            </ViewBox>
-            {isView?
-            <SecondView />:null
-            }
+        <ViewBox>
+            <TouchableOpacity style={{flexDirection:'row',alignItems:'center'}}
+                    onPress={()=>setIsView(!isView)}> 
+                {isView?
+                <SortUpBtn />:<SortDownBtn />
+                }
+                <CategoryText>
+                    {firstLabel}
+                </CategoryText>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={()=>setIsSelect(!isSelect)}>
+                {isSelect?
+                <SelectBtn isSelect={true}/>:<SelectBtn isSelect={false}/>    
+                }
+            </TouchableOpacity>
+        </ViewBox>
+        {isView?(
+            <View>
+                <SecondView category={'test'}/>
+            </View>
+        ):(
+            null
+        )}
         </View>
     )
 }
 
 // 두번째 뷰
-const SecondView=()=>{
+interface SecondViewProps{
+    category:string;
+}
+const SecondView=({category}:SecondViewProps)=>{
     const[isSelect,setIsSelect]=useState<boolean>(false);
     return(
         <TouchableOpacity onPress={()=>setIsSelect(!isSelect)}>
             <ViewBox>
                 <CategoryText style={{marginLeft:'15%'}}>
-                    test
+                    {category}
                 </CategoryText>
                 {isSelect?
                 <SelectBtn isSelect={true}/>:<SelectBtn isSelect={false}/>    
