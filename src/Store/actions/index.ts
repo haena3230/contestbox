@@ -1,9 +1,17 @@
 // 액션
 export const CATEGORIES = 'CATEGORIES'
+export const FIRSTCATEGORIES='FIRSTCATEGORIES'
 
-export const categoryAction= (test:Array<string>)=>{
+export const categoryAction= (categories:Array<string>)=>{
     return{
         type:CATEGORIES,
-        testArray:test,
+        categoriesArray:categories,
+    }
+}
+
+export const firstCategoryAction= (categoriesArray:Array<string>)=>{
+    return{
+        type:FIRSTCATEGORIES,
+        firstCategories:categoriesArray,
     }
 }
