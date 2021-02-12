@@ -5,6 +5,7 @@ export const GET_HOTS = gql`
     categories {
       id
       label
+      parentID
     }
     contests(sort:$sort,edge:$edge,applicationStatuses:$applicationStatuses){
       edges{

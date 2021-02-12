@@ -8,37 +8,28 @@ import styled from 'styled-components/native';
 // component
 import Category from '~/Components/Category';
 import {CategoryPageProps} from '~/Types';
-import Loading from '~/Components/Loading';
 
 // data
-import {GET_HOTS} from '~/queries';
-import {useQuery} from '@apollo/client';
+import {useSelector} from 'react-redux';
+import {RootState} from '~/App';
 
 const CategoryPage =({navigation}:CategoryPageProps)=>{
     // category data
-    let categories='';
-    const {loading,error,data} = useQuery(GET_HOTS);
-    if(loading) return <Loading />
-    if(error) {
-        console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-        console.log(error.networkError.message)
-        console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-    }       
-    if(data&&data.categories){
-        categories=data.categories.map((data)=>
-            <Category key={data.id.toString()} label={data.label} onPress={()=>{
-                navigation.navigate('CategoryListPage',{
-                    category:data.label,
-                    categoryId:data.id
-                });
-            }}/>
-        )
-    }
+    const categories= useSelector((state:RootState)=>state.query.firstCategories)
     return(
         <Container>
             <ScrollView style={{padding:10}}>
                 <Title>카테고리</Title>
-                {categories}
+                {categories.map((data)=>{
+                    return(
+                        <Category key={data.id.toString()} label={data.label} onPress={()=>{
+                        navigation.navigate('CategoryListPage',{
+                            category:data.label,
+                            categoryId:data.id
+                        });
+                    }}/>
+                    )
+                })}
             </ScrollView>
         </Container>
     )

@@ -13,30 +13,63 @@ import Loading from '~/Components/Loading';
 import {useQuery} from '@apollo/client';
 import {GET_HOTS} from '~/queries';
 import {HomaPageProps} from '~/Types';
-import {useDispatch, useSelector} from 'react-redux'
-import { categoryAction } from '~/Store/actions';
-import {RootState} from '~/App';
+import {useDispatch} from 'react-redux'
+import { categoryAction,firstCategoryAction } from '~/Store/actions';
+
+// category treeview 저장
+const categoryView=(array:Array<{id,label,parentID}>)=>{
+  let i=0;
+  let categories = new Array();
+  while(array[i]!==undefined){
+    let tmp = new Array();
+    let j=0;
+    if(array[i].parentID===null){
+      tmp.push(array[i]);
+      while(array[j]!==undefined){
+        if(array[i].id===array[j].parentID){
+          tmp.push(array[j]);
+        } j++;
+      }
+      categories.push(tmp);
+    }
+    i++
+  }
+  return categories;
+}
+
+// 1차 categories
+const firstCategories=(array)=>{
+  let categories=new Array();
+  let i=0;
+  while(array[i]!==undefined){
+    categories.push(array[i][0])
+    i++;
+  }
+  return categories; 
+}
 
 const HomePage = ({navigation}:HomaPageProps) => {
   // redux
   const dispatch = useDispatch()
-  const storeCategories=(testArray:Array<string>)=>{
-    dispatch(categoryAction(testArray))
+  const storeCategories=(Array:Array<string>)=>{
+    dispatch(categoryAction(Array))
   }
-  const categories= useSelector((state:RootState)=>state.query.testArray)
+   const storeFirstCategories=(Array:Array<string>)=>{
+    dispatch(firstCategoryAction(Array))
+  }
   // catrgory && hot data
   const { loading, error, data } = useQuery(GET_HOTS,{
     variables:{sort:'HITS',edge:{
       first:10
     },applicationStatuses:['NOTSTARTED','INPROGRESS']}
   });
-  let categoriesData=``;
-  let hotData=``;
+  let categoriesData=[];
+  let hotData='';
   if(loading) return <Loading />
   if(error)return <Text>err</Text>
   if(data.categories){
     // max 10개
-    categoriesData=data.categories.slice(0,9).map((cate)=>
+    categoriesData=firstCategories(categoryView(data.categories)).slice(0,9).map((cate)=>
     <TouchableOpacity  key = {cate.id.toString()} onPress={()=>
         navigation.navigate('CategoryListPage',{
           category:cate.label,
@@ -45,7 +78,8 @@ const HomePage = ({navigation}:HomaPageProps) => {
       <HashTag hashtag={cate.label} picked={false}/>
     </TouchableOpacity>
     ),
-    storeCategories(data.categories)
+    storeCategories(categoryView(data.categories));
+    storeFirstCategories(firstCategories(categoryView(data.categories)));
   }
   if(data.contests){
     hotData=data.contests.edges.map((contest)=>
@@ -63,9 +97,6 @@ const HomePage = ({navigation}:HomaPageProps) => {
   }
   return (
     <Container>
-      <TouchableOpacity onPress={()=>console.log(categories)}>
-        <Text>testset</Text>
-      </TouchableOpacity>
       <Header />
       <BannerBox>
         <Banner />

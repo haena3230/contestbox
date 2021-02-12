@@ -1,5 +1,5 @@
 import React,{useState,useRef} from 'react';
-import {View} from 'react-native';
+import {Text, View} from 'react-native';
 import styled from 'styled-components/native';
 import {Styles,Container} from '~/Styles';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
@@ -8,7 +8,9 @@ import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { useQuery } from '@apollo/client';
 import {GET_LISTS} from '~/queries';
 import {CategoryListPageProps} from '~/Types';
-
+import {addCategoryFilterAction,deleteCategoryFilterAction} from '~/Store/actions';
+import {useDispatch,useSelector} from 'react-redux';
+import {RootState} from '~/App';
 // component
 import {SortComponent} from '~/Components/Sort'
 import {FilterBtn,ListBtn,SortBtn,MapBtn} from '~/Components/Btn';
@@ -18,10 +20,39 @@ import {HashTag} from '~/Components/HashTag';
 import ToTop from '~/Components/ToTop';
 import Map from '~/Components/Map';
 
+const test=[
+      {
+        "id": "5ff71d24d897dcf49985befb",
+        "label": "QWE"
+      },
+      {
+        "id": "5ff73629f5d17f0542f96857",
+        "label": "QWE"
+      },
+      {
+        "id": "5ff73baccc4b793069417ff2",
+        "label": "QWE"
+      },
+      {
+        "id": "5ff75309313783bd56ed9cd6",
+        "label": "QWE"
+      },
+      {
+        "id": "6005ca896816d395485299a1",
+        "label": "TEST"
+      }
+    ]
 
 const CategoryListPage=(props:CategoryListPageProps)=>{
     const {category,categoryId}=props.route.params;
-
+    const dispatch = useDispatch()
+    const storeCategories=(filter:object)=>{
+        dispatch(addCategoryFilterAction(filter))
+    }
+    const deleteCategories=(filter:object)=>{
+        dispatch(deleteCategoryFilterAction(filter))
+    }
+    const filter= useSelector((state:RootState)=>state.query.filterArray)
     // totop
     const scrollRef=useRef<ScrollView>();
     const onPressToTop=()=>{
@@ -129,6 +160,15 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
                 </View>
             ):(
                 <View>
+                    <TouchableOpacity onPress={()=>storeCategories(test[0])}>
+                        <Text>add</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={()=>deleteCategories(test[0])}>
+                        <Text>delete</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={()=>console.log(filter)}>
+                        <Text>확인</Text>
+                    </TouchableOpacity>
                     <ScrollView style={{padding:5}} ref={scrollRef}>
                         <CategoryBox>
                             <Category># {category}</Category>
