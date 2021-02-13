@@ -14,7 +14,7 @@ import {useQuery} from '@apollo/client';
 import {GET_HOTS} from '~/queries';
 import {HomaPageProps} from '~/Types';
 import {useDispatch} from 'react-redux'
-import { categoryAction,firstCategoryAction } from '~/Store/actions';
+import { categoryAction } from '~/Store/actions';
 
 // category treeview 저장
 const categoryView=(array:Array<{id,label,parentID}>)=>{
@@ -37,25 +37,11 @@ const categoryView=(array:Array<{id,label,parentID}>)=>{
   return categories;
 }
 
-// 1차 categories
-const firstCategories=(array)=>{
-  let categories=new Array();
-  let i=0;
-  while(array[i]!==undefined){
-    categories.push(array[i][0])
-    i++;
-  }
-  return categories; 
-}
-
 const HomePage = ({navigation}:HomaPageProps) => {
   // redux
   const dispatch = useDispatch()
   const storeCategories=(Array:Array<string>)=>{
     dispatch(categoryAction(Array))
-  }
-   const storeFirstCategories=(Array:Array<string>)=>{
-    dispatch(firstCategoryAction(Array))
   }
   // catrgory && hot data
   const { loading, error, data } = useQuery(GET_HOTS,{
@@ -69,17 +55,17 @@ const HomePage = ({navigation}:HomaPageProps) => {
   if(error)return <Text>err</Text>
   if(data.categories){
     // max 10개
-    categoriesData=firstCategories(categoryView(data.categories)).slice(0,9).map((cate)=>
-    <TouchableOpacity  key = {cate.id.toString()} onPress={()=>
+    categoriesData=categoryView(data.categories).slice(0,9).map((cate)=>
+    <TouchableOpacity  key = {cate[0].id} onPress={()=>
         navigation.navigate('CategoryListPage',{
-          category:cate.label,
-          categoryId:cate.id
+          category:cate[0].label,
+          categoryId:cate[0].id,
+          categories:cate
         })}>
-      <HashTag hashtag={cate.label} picked={false}/>
+      <HashTag hashtag={cate[0].label} picked={false}/>
     </TouchableOpacity>
     ),
     storeCategories(categoryView(data.categories));
-    storeFirstCategories(firstCategories(categoryView(data.categories)));
   }
   if(data.contests){
     hotData=data.contests.edges.map((contest)=>

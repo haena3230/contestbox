@@ -15,7 +15,7 @@ const client = new ApolloClient({
 
 // redux
 export const rootReducer:Reducer = combineReducers({
-  query:queryReducers,
+  query:queryReducers
 })
 const store:Store = createStore(rootReducer)
 export type RootState = ReturnType<typeof rootReducer>

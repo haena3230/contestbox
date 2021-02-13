@@ -15,17 +15,18 @@ import {RootState} from '~/App';
 
 const CategoryPage =({navigation}:CategoryPageProps)=>{
     // category data
-    const categories= useSelector((state:RootState)=>state.query.firstCategories)
+    const categories= useSelector((state:RootState)=>state.query.categoriesArray)
     return(
         <Container>
             <ScrollView style={{padding:10}}>
                 <Title>카테고리</Title>
                 {categories.map((data)=>{
                     return(
-                        <Category key={data.id.toString()} label={data.label} onPress={()=>{
+                        <Category key={data[0].id.toString()} label={data[0].label} onPress={()=>{
                         navigation.navigate('CategoryListPage',{
-                            category:data.label,
-                            categoryId:data.id
+                            category:data[0].label,
+                            categoryId:data[0].id,
+                            categories:data
                         });
                     }}/>
                     )

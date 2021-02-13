@@ -17,7 +17,7 @@ import {RootState} from '~/App';
 
 const SearchPage = ({navigation}:SearchPageProps) => {
   // catrgory data
-  const categories= useSelector((state:RootState)=>state.query.firstCategories)
+  const categories= useSelector((state:RootState)=>state.query.categoriesArray)
   return (
       <Container>
         <Header />
@@ -40,12 +40,13 @@ const SearchPage = ({navigation}:SearchPageProps) => {
                 <View style={{flexDirection:'row', flexWrap:'wrap',marginVertical:20}}>
                   {categories.map((cate)=>{
                     return(
-                      <TouchableOpacity  key = {cate.id} onPress={()=>
+                      <TouchableOpacity  key = {cate[0].id} onPress={()=>
                           navigation.navigate('CategoryListPage',{
-                            category:cate.label,
-                            categoryId:cate.id
+                            category:cate[0].label,
+                            categoryId:cate[0].id,
+                            categories:cate
                           })}>
-                        <HashTag hashtag={cate.label} picked={false}/>
+                        <HashTag hashtag={cate[0].label} picked={false}/>
                       </TouchableOpacity>
                     )
                   })}                  

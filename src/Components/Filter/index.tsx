@@ -75,7 +75,7 @@ export const FilterMenuType=({title,tagArray}:FilterMenuTypeProps)=>{
 interface TagStateProps{
     tagTitle:string;
 }
-const TagState=({tagTitle}:TagStateProps)=>{
+export const TagState=({tagTitle}:TagStateProps)=>{
     const[state,setState]=useState<boolean>(false);
     return(
         <TouchableOpacity onPress={()=>setState(!state)}>

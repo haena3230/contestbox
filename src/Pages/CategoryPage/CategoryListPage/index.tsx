@@ -8,9 +8,6 @@ import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { useQuery } from '@apollo/client';
 import {GET_LISTS} from '~/queries';
 import {CategoryListPageProps} from '~/Types';
-import {addCategoryFilterAction,deleteCategoryFilterAction} from '~/Store/actions';
-import {useDispatch,useSelector} from 'react-redux';
-import {RootState} from '~/App';
 // component
 import {SortComponent} from '~/Components/Sort'
 import {FilterBtn,ListBtn,SortBtn,MapBtn} from '~/Components/Btn';
@@ -20,39 +17,9 @@ import {HashTag} from '~/Components/HashTag';
 import ToTop from '~/Components/ToTop';
 import Map from '~/Components/Map';
 
-const test=[
-      {
-        "id": "5ff71d24d897dcf49985befb",
-        "label": "QWE"
-      },
-      {
-        "id": "5ff73629f5d17f0542f96857",
-        "label": "QWE"
-      },
-      {
-        "id": "5ff73baccc4b793069417ff2",
-        "label": "QWE"
-      },
-      {
-        "id": "5ff75309313783bd56ed9cd6",
-        "label": "QWE"
-      },
-      {
-        "id": "6005ca896816d395485299a1",
-        "label": "TEST"
-      }
-    ]
-
 const CategoryListPage=(props:CategoryListPageProps)=>{
-    const {category,categoryId}=props.route.params;
-    const dispatch = useDispatch()
-    const storeCategories=(filter:object)=>{
-        dispatch(addCategoryFilterAction(filter))
-    }
-    const deleteCategories=(filter:object)=>{
-        dispatch(deleteCategoryFilterAction(filter))
-    }
-    const filter= useSelector((state:RootState)=>state.query.filterArray)
+    const {category,categoryId,categories}=props.route.params;
+    console.log(categories)
     // totop
     const scrollRef=useRef<ScrollView>();
     const onPressToTop=()=>{
@@ -160,20 +127,19 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
                 </View>
             ):(
                 <View>
-                    <TouchableOpacity onPress={()=>storeCategories(test[0])}>
-                        <Text>add</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={()=>deleteCategories(test[0])}>
-                        <Text>delete</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={()=>console.log(filter)}>
-                        <Text>확인</Text>
-                    </TouchableOpacity>
                     <ScrollView style={{padding:5}} ref={scrollRef}>
                         <CategoryBox>
                             <Category># {category}</Category>
                         </CategoryBox>
-                        <Categories />
+                        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+                            {categories.slice(1).map((data)=>{
+                                return(
+                                    <TouchableOpacity onPress={()=>null} key={data.id}>
+                                        <HashTag hashtag={data.label} picked={true}/>
+                                    </TouchableOpacity>
+                                )
+                            })}
+                        </ScrollView>
                         <BarBox 
                             height={30}
                             isMap={false} 
@@ -231,17 +197,6 @@ const BarBox=({isMap,onPressMap,onPressFilter,onPressSort,sortState,height}:Head
                 )}
             </View>
         </View>
-    )
-}
-
-// 카테고리 선택
-const Categories=()=>{
-    return(
-        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-            <TouchableOpacity>
-                <HashTag hashtag='test' picked={false}/>
-            </TouchableOpacity>
-        </ScrollView>
     )
 }
 
