@@ -42,8 +42,6 @@ const SearchPage = ({navigation}:SearchPageProps) => {
                     return(
                       <TouchableOpacity  key = {cate[0].id} onPress={()=>
                           navigation.navigate('CategoryListPage',{
-                            category:cate[0].label,
-                            categoryId:cate[0].id,
                             categories:cate
                           })}>
                         <HashTag hashtag={cate[0].label} picked={false}/>

@@ -1,4 +1,4 @@
-import React,{useState,useRef} from 'react';
+import React,{useState,useRef, useEffect} from 'react';
 import {Text, View} from 'react-native';
 import styled from 'styled-components/native';
 import {Styles,Container} from '~/Styles';
@@ -18,8 +18,35 @@ import ToTop from '~/Components/ToTop';
 import Map from '~/Components/Map';
 
 const CategoryListPage=(props:CategoryListPageProps)=>{
-    const {category,categoryId,categories}=props.route.params;
-    console.log(categories)
+    // 선택 개수 세는 함수
+    const countCategory=(array:Array<any>)=>{
+        let result=array.filter(d=>{
+            return d.value===true
+        })
+        let idArray=[];
+        result.forEach((e)=>{
+            idArray.push(e.id)
+        })
+        console.log(idArray)
+        return(idArray);
+    }
+    // 카테고리
+    const {categories}=props.route.params;
+    let i=0;
+    let categoryState=[]
+    for(i=0;i<categories.length;i++){
+        categoryState.push({
+            id:categories[i].id,
+            label:categories[i].label,
+            value:false
+        })
+    }
+    const [state,setState]=useState(false)
+    const [category,setCategory]=useState<Array<{id:string,label:string,value:boolean}>>(categoryState)
+    
+    useEffect(()=>{
+        console.log('@@@@@@@@@@@@@@@@@@@@@@@@')
+    },[state])
     // totop
     const scrollRef=useRef<ScrollView>();
     const onPressToTop=()=>{
@@ -28,7 +55,6 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
             animated: true,
         })
     };
-
      // 정렬 버튼
     const[sortState,setSortState]=useState<string>('추천순');
     const[sort,setSort]=useState<boolean>(false);
@@ -68,7 +94,7 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
     // list data
     const [sortStatus,setSortStatus]=useState<string>('LATEST')
     const { loading, error, data } = useQuery(GET_LISTS,{
-        variables:{categories:[categoryId],sort:sortStatus}
+        variables:{categories:countCategory(category).concat(categories[0].id),sort:sortStatus}
     });
     let listData=``;
     if (loading) return <Loading />;
@@ -111,7 +137,7 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
                 <View>
                     <View style={{height:'15%'}}>
                         <CategoryBox>
-                            <Category># {category}</Category>
+                            <Category># {categories[0].label}</Category>
                         </CategoryBox>
                     </View>
                     <BarBox 
@@ -120,7 +146,8 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
                         onPressMap={()=>setMap(!map)} 
                         onPressFilter={()=>props.navigation.navigate('CategoryFilterPage')}
                         onPressSort={()=>null} 
-                        sortState={null} />
+                        sortState={null}
+                        badgeNumber={countCategory(category).length} />
                     <View style={{width:'100%',height:'75%'}}>
                         <Map />
                     </View>
@@ -129,17 +156,26 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
                 <View>
                     <ScrollView style={{padding:5}} ref={scrollRef}>
                         <CategoryBox>
-                            <Category># {category}</Category>
+                            <Category># {categories[0].label}</Category>
                         </CategoryBox>
-                        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-                            {categories.slice(1).map((data)=>{
-                                return(
-                                    <TouchableOpacity onPress={()=>null} key={data.id}>
-                                        <HashTag hashtag={data.label} picked={true}/>
-                                    </TouchableOpacity>
-                                )
-                            })}
-                        </ScrollView>
+                        {category.length===categories.length?(
+                                <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+                                    {category.slice(1).map((data,index)=>{
+                                        return(
+                                            <TouchableOpacity onPress={()=>{
+                                                let tmpArray=category;
+                                                tmpArray[index+1].value=!data.value;
+                                                setCategory(tmpArray)
+                                                setState(!state)
+                                            }} key={data.id}>
+                                                <HashTag hashtag={data.label} picked={data.value}/>
+                                            </TouchableOpacity>
+                                        )
+                                    })}
+                                </ScrollView>
+                            ):(
+                                null
+                            )}
                         <BarBox 
                             height={30}
                             isMap={false} 
@@ -147,6 +183,7 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
                             onPressFilter={()=>props.navigation.navigate('CategoryFilterPage')}
                             onPressSort={()=>setSort(!sort)} 
                             sortState={sortState}
+                            badgeNumber={countCategory(category).length}
                         />
                         <View style={{marginBottom:10}}>
                             {listData}
@@ -177,8 +214,9 @@ interface HeaderBoxProps{
     onPressSort:()=>void;
     sortState:string;
     height:string|number;
+    badgeNumber:number;
 }
-const BarBox=({isMap,onPressMap,onPressFilter,onPressSort,sortState,height}:HeaderBoxProps)=>{
+const BarBox=({isMap,onPressMap,onPressFilter,onPressSort,sortState,height,badgeNumber}:HeaderBoxProps)=>{
     return(
         <View style={{
             flexDirection:'row',
@@ -189,7 +227,7 @@ const BarBox=({isMap,onPressMap,onPressFilter,onPressSort,sortState,height}:Head
             }}>
             {isMap?(<View />):(<SortBtn onPressSort={onPressSort} state={sortState}/>)}
             <View style={{flexDirection:'row'}}>
-                <FilterBtn onPressFilter={onPressFilter}/>
+                <FilterBtn onPressFilter={onPressFilter} number={badgeNumber}/>
                 {isMap?(
                     <ListBtn onPressMap={onPressMap}/>
                 ):(

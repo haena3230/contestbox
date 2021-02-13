@@ -16,7 +16,7 @@ export const FilterHeader=()=>{
         <HeaderContainer>
             <HeaderTitle>
                 <HeaderBox>
-                    <FilterBtn onPressFilter={()=>null}/> 
+                    <FilterBtn onPressFilter={()=>null} number={0}/> 
                 </HeaderBox>
                 <Text style={Styles.b_font}>필터</Text>
             </HeaderTitle>

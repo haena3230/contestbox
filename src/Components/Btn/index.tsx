@@ -58,12 +58,31 @@ export const ListBtn=({onPressMap}:MapBtnProps)=>{
 // filter btn
 interface FilterBtnProps{
     onPressFilter:()=>void;
+    number:number;
 }
-export const FilterBtn =({onPressFilter}:FilterBtnProps)=>{
+export const FilterBtn =({onPressFilter,number}:FilterBtnProps)=>{
     return(
         <IconBorder onPress={onPressFilter}>
+            {number===0?(
+                null
+            ):(
+                <Badge number={number}/>
+            )}
             <FilterIcon width={IconSize.icon} height={IconSize.icon} color={Color.g4_color} />
         </IconBorder>   
+    )
+}
+
+interface BadgeProps{
+    number:number
+}
+const Badge=({number}:BadgeProps)=>{
+    return(
+        <BadgeStyle>
+            <Text style={{color:Color.w_color,fontSize:10}}>
+                {number}
+            </Text>
+        </BadgeStyle>
     )
 }
 
@@ -153,4 +172,18 @@ const IconBorder=styled.TouchableOpacity`
     border-radius:5px;
     padding:5px;
     margin:2px;
+`
+
+// badge
+const BadgeStyle=styled.View`
+    border-radius:10px;
+    width:15px;
+    height:15px;
+    background-color:${Color.p_color};
+    align-items:center;
+    justify-content:center;
+    position:absolute;
+    right:-5px;
+    top:-5px;
+    z-index:3;
 `

@@ -12,7 +12,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import {SortDownBtn,SortUpBtn} from '~/Components/Btn';
 import Loading from '~/Components/Loading';
 // data
-import {GET_CATEGORIES} from '~/queries';
+// import {GET_CATEGORIES} from '~/queries';
 import {useQuery} from '@apollo/client';
 
 export const FilterCategory=()=>{

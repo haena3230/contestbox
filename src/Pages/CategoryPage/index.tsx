@@ -24,8 +24,6 @@ const CategoryPage =({navigation}:CategoryPageProps)=>{
                     return(
                         <Category key={data[0].id.toString()} label={data[0].label} onPress={()=>{
                         navigation.navigate('CategoryListPage',{
-                            category:data[0].label,
-                            categoryId:data[0].id,
                             categories:data
                         });
                     }}/>
