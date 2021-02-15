@@ -9,7 +9,7 @@ type StackParamList={
   SearchListPage:{search:string};
   SearchFilterPage:undefined;
   CategoryPage:undefined;
-  CategoryListPage:{categories:Array<any>}
+  CategoryListPage:undefined;
   CategoryFilterPage:undefined;
   FilterPage:undefined;
   DetailPage:{listId:string};
@@ -35,6 +35,9 @@ export interface CategoryPageProps{
 export interface CategoryListPageProps {
   navigation: StackNavigationProp<StackParamList, 'DetailPage'>;
   route: RouteProp<StackParamList, 'CategoryListPage'>;
+}
+export interface CategoryFilterPageProps {
+  navigation: StackNavigationProp<StackParamList, 'CategoryListPage'>;
 }
 
 export interface DetailPageProps {

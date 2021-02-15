@@ -9,39 +9,23 @@ import {Container,Styles,Color} from '~/Styles';
 import Swiper from 'react-native-swiper';
 import {HashTag} from '~/Components/HashTag';
 import Loading from '~/Components/Loading';
+import {CategoryView} from '~/Components/Filter';
 // data
 import {useQuery} from '@apollo/client';
 import {GET_HOTS} from '~/queries';
 import {HomaPageProps} from '~/Types';
 import {useDispatch} from 'react-redux'
-import { categoryAction } from '~/Store/actions';
-
-// category treeview 저장
-const categoryView=(array:Array<{id,label,parentID}>)=>{
-  let i=0;
-  let categories = new Array();
-  while(array[i]!==undefined){
-    let tmp = new Array();
-    let j=0;
-    if(array[i].parentID===null){
-      tmp.push(array[i]);
-      while(array[j]!==undefined){
-        if(array[i].id===array[j].parentID){
-          tmp.push(array[j]);
-        } j++;
-      }
-      categories.push(tmp);
-    }
-    i++
-  }
-  return categories;
-}
+import { categoryAction,CLCategoryAction } from '~/Store/actions';
+import {newStateArray} from '~/Components/Filter';
 
 const HomePage = ({navigation}:HomaPageProps) => {
   // redux
   const dispatch = useDispatch()
   const storeCategories=(Array:Array<string>)=>{
     dispatch(categoryAction(Array))
+  }
+  const storeNewArrayCategories=(Array:Array<any>)=>{
+    dispatch(CLCategoryAction(Array))
   }
   // catrgory && hot data
   const { loading, error, data } = useQuery(GET_HOTS,{
@@ -55,17 +39,15 @@ const HomePage = ({navigation}:HomaPageProps) => {
   if(error)return <Text>err</Text>
   if(data.categories){
     // max 10개
-    categoriesData=categoryView(data.categories).slice(0,9).map((cate)=>
-    <TouchableOpacity  key = {cate[0].id} onPress={()=>
-        navigation.navigate('CategoryListPage',{
-          category:cate[0].label,
-          categoryId:cate[0].id,
-          categories:cate
-        })}>
+    categoriesData=CategoryView(data.categories).slice(0,9).map((cate)=>
+    <TouchableOpacity  key = {cate[0].id} onPress={()=>{
+        navigation.navigate('CategoryListPage'),
+        storeNewArrayCategories(newStateArray(cate))
+        }}>
       <HashTag hashtag={cate[0].label} picked={false}/>
     </TouchableOpacity>
     ),
-    storeCategories(categoryView(data.categories));
+    storeCategories(CategoryView(data.categories));
   }
   if(data.contests){
     hotData=data.contests.edges.map((contest)=>

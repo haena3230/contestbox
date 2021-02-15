@@ -12,10 +12,16 @@ import {Color,Styles,Container,DWidth} from '~/Styles';
 import {TouchableOpacity } from 'react-native-gesture-handler';
 // data
 import {SearchPageProps} from '~/Types';
-import {useSelector} from 'react-redux';
+import {useSelector,useDispatch} from 'react-redux';
 import {RootState} from '~/App';
+import {CLCategoryAction} from '~/Store/actions';
+import {newStateArray} from '~/Components/Filter';
 
 const SearchPage = ({navigation}:SearchPageProps) => {
+  const dispatch=useDispatch();
+  const storeNewArrayCategories=(Array:Array<string>)=>{
+    dispatch(CLCategoryAction(Array))
+  }
   // catrgory data
   const categories= useSelector((state:RootState)=>state.query.categoriesArray)
   return (
@@ -40,10 +46,10 @@ const SearchPage = ({navigation}:SearchPageProps) => {
                 <View style={{flexDirection:'row', flexWrap:'wrap',marginVertical:20}}>
                   {categories.map((cate)=>{
                     return(
-                      <TouchableOpacity  key = {cate[0].id} onPress={()=>
-                          navigation.navigate('CategoryListPage',{
-                            categories:cate
-                          })}>
+                      <TouchableOpacity  key = {cate[0].id} onPress={()=>{
+                          navigation.navigate('CategoryListPage'),
+                          storeNewArrayCategories(newStateArray(cate))
+                          }}>
                         <HashTag hashtag={cate[0].label} picked={false}/>
                       </TouchableOpacity>
                     )

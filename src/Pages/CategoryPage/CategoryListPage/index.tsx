@@ -8,6 +8,8 @@ import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { useQuery } from '@apollo/client';
 import {GET_LISTS} from '~/queries';
 import {CategoryListPageProps} from '~/Types';
+import {useSelector} from 'react-redux';
+import {RootState} from '~/App';
 // component
 import {SortComponent} from '~/Components/Sort'
 import {FilterBtn,ListBtn,SortBtn,MapBtn} from '~/Components/Btn';
@@ -16,34 +18,17 @@ import TextList,{TagBox,ListBox} from '~/Components/TextList';
 import {HashTag} from '~/Components/HashTag';
 import ToTop from '~/Components/ToTop';
 import Map from '~/Components/Map';
+import {pickedIdArray} from '~/Components/Filter';
 
 const CategoryListPage=(props:CategoryListPageProps)=>{
-    // 선택 개수 세는 함수
-    const countCategory=(array:Array<any>)=>{
-        let result=array.filter(d=>{
-            return d.value===true
-        })
-        let idArray=[];
-        result.forEach((e)=>{
-            idArray.push(e.id)
-        })
-        console.log(idArray)
-        return(idArray);
-    }
-    // 카테고리
-    const {categories}=props.route.params;
-    let i=0;
-    let categoryState=[]
-    for(i=0;i<categories.length;i++){
-        categoryState.push({
-            id:categories[i].id,
-            label:categories[i].label,
-            value:false
-        })
-    }
-    const [state,setState]=useState(false)
-    const [category,setCategory]=useState<Array<{id:string,label:string,value:boolean}>>(categoryState)
-    
+    // 마운트를 위한 상태
+    const [state,setState]=useState(false);
+    // category & type & condition
+    const categories =useSelector((state:RootState)=>state.query.CLCategoryArray)
+    const types= useSelector((state:RootState)=>state.query.CLTypeArray)
+    const conditions= useSelector((state:RootState)=>state.query.CLConditionArray)
+    // state
+    const [category,setCategory]=useState<Array<{id:string,label:string,value:boolean}>>(categories)
     useEffect(()=>{
         console.log('@@@@@@@@@@@@@@@@@@@@@@@@')
     },[state])
@@ -93,8 +78,13 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
 
     // list data
     const [sortStatus,setSortStatus]=useState<string>('LATEST')
+    // types도 추가하기
     const { loading, error, data } = useQuery(GET_LISTS,{
-        variables:{categories:countCategory(category).concat(categories[0].id),sort:sortStatus}
+        variables:{
+            categories:pickedIdArray(category).concat(categories[0].id),
+            sort:sortStatus,
+            conditions:pickedIdArray(conditions)
+        }
     });
     let listData=``;
     if (loading) return <Loading />;
@@ -147,7 +137,7 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
                         onPressFilter={()=>props.navigation.navigate('CategoryFilterPage')}
                         onPressSort={()=>null} 
                         sortState={null}
-                        badgeNumber={countCategory(category).length} />
+                        badgeNumber={pickedIdArray(category).length+pickedIdArray(conditions).length+pickedIdArray(types).length} />
                     <View style={{width:'100%',height:'75%'}}>
                         <Map />
                     </View>
@@ -183,7 +173,7 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
                             onPressFilter={()=>props.navigation.navigate('CategoryFilterPage')}
                             onPressSort={()=>setSort(!sort)} 
                             sortState={sortState}
-                            badgeNumber={countCategory(category).length}
+                            badgeNumber={pickedIdArray(category).length+pickedIdArray(conditions).length+pickedIdArray(types).length}
                         />
                         <View style={{marginBottom:10}}>
                             {listData}

@@ -10,10 +10,6 @@ import {Color,Styles} from '~/Styles';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 // component
 import {SortDownBtn,SortUpBtn} from '~/Components/Btn';
-import Loading from '~/Components/Loading';
-// data
-// import {GET_CATEGORIES} from '~/queries';
-import {useQuery} from '@apollo/client';
 
 export const FilterCategory=()=>{
     return(

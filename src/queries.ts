@@ -21,8 +21,8 @@ export const GET_HOTS = gql`
 `;
 
 export const GET_LISTS= gql`
-  query ($categories:[ID!],$search:String,$sort:ContestsSortType){
-    contests(categories:$categories,search:$search,sort:$sort) {
+  query ($categories:[ID!],$search:String,$sort:ContestsSortType,$conditions:[ID!]){
+    contests(categories:$categories,search:$search,sort:$sort,conditions:$conditions) {
       edges{
         node{
           id
