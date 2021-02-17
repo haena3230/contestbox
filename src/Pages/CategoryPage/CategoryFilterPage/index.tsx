@@ -3,7 +3,7 @@ import React,{useEffect, useState} from 'react';
 import {Container} from '~/Styles';
 import styled from 'styled-components/native';
 // component
-import {FilterHeader,FilterBottom,MenuContainer,MenuBox,MenuTitle} from '~/Components/Filter';
+import {FilterHeader,FilterBottom,MenuContainer,MenuBox,MenuTitle,Type} from '~/Components/Filter';
 import { ScrollView } from 'react-native-gesture-handler';
 import Loading from '~/Components/Loading';
 import {SortDownBtn, SortUpBtn} from  '~/Components/Btn';
@@ -126,12 +126,5 @@ const CategoryFilterPage =({navigation}:CategoryFilterPageProps)=>{
     )
 }
 
-
-// 종류
-const Type = styled.View`
-    flex-direction:row;
-    flex-wrap:wrap;
-    padding:15px;
-`
 
 export default CategoryFilterPage;

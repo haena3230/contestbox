@@ -68,7 +68,6 @@ export const FilterHeader=()=>{
                 </HeaderBox>
                 <Text style={Styles.b_font}>필터</Text>
             </HeaderTitle>
-            <Close onPressClose={()=>navigation.goBack()}/>
         </HeaderContainer>
     )   
 }
@@ -163,6 +162,12 @@ export const MenuTitle=styled.Text`
     color:${Color.g4_color};
     font-weight:bold;
 `
+// 종류
+export const Type = styled.View`
+    flex-direction:row;
+    flex-wrap:wrap;
+    padding:15px;
+`
 
 // 카테고리
 const CategoryBox =styled.View`
@@ -181,3 +186,4 @@ const BottomContainer=styled.View`
     position:absolute;
     bottom:0;
 `
+

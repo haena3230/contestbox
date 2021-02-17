@@ -33,6 +33,7 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
         console.log('@@@@@@@@@@@@@@@@@@@@@@@@')
     },[state])
     // totop
+    let totop=false;
     const scrollRef=useRef<ScrollView>();
     const onPressToTop=()=>{
         scrollRef.current.scrollTo({
@@ -81,9 +82,10 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
     // types도 추가하기
     const { loading, error, data } = useQuery(GET_LISTS,{
         variables:{
-            categories:pickedIdArray(category).concat(categories[0].id),
             sort:sortStatus,
-            conditions:pickedIdArray(conditions)
+            categories:pickedIdArray(category).concat(categories[0].id),
+            conditions:pickedIdArray(conditions),
+            types:pickedIdArray(types)
         }
     });
     let listData=``;
@@ -120,6 +122,8 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
             ):null}
         </ListBox>
         )
+        if(listData.length>3) totop=true;
+        else totop=false;
     }
     return(
         <Container>
@@ -189,7 +193,11 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
                         onPressTagThree={onPressTagThree}
                         />
                     </ScrollView>
-                    <ToTop onPressToTop={onPressToTop}/>
+                    {totop?(
+                        <ToTop onPressToTop={onPressToTop}/>
+                    ):(
+                        null
+                    )}
                 </View>
             )}
         </Container>
@@ -231,7 +239,6 @@ const BarBox=({isMap,onPressMap,onPressFilter,onPressSort,sortState,height,badge
 const CategoryBox=styled.View`
    justify-content:center;
    align-items:center;
-   padding-vertical:30px;
 `
 
 const Category=styled.Text`

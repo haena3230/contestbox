@@ -1,5 +1,5 @@
 // SearchListPage
-import React,{useState,useRef} from 'react';
+import React,{useState,useRef, useEffect} from 'react';
 import {View,ScrollView, Text} from 'react-native';
 import {Container,Styles,Color} from '~/Styles';
 import styled from 'styled-components/native';
@@ -7,6 +7,8 @@ import styled from 'styled-components/native';
 import {SearchListPageProps} from '~/Types';
 import {GET_LISTS} from '~/queries';
 import {useQuery} from '@apollo/client';
+import {useSelector} from 'react-redux';
+import {RootState} from '~/App';
 // components
 import {SearchBarSmall} from '~/Components/SearchBar';
 import {SortBtn,FilterBtn,MapBtn} from  '~/Components/Btn';
@@ -15,14 +17,27 @@ import TextList,{TagBox,ListBox} from '~/Components/TextList';
 import {HashTag} from '~/Components/HashTag';
 import ToTop from '~/Components/ToTop';
 import Loading from '~/Components/Loading';
+import {pickedIdArray} from '~/Components/Filter';
 
 const SearchListPage =(props:SearchListPageProps)=>{
     const {search} = props.route.params;
+    // 마운트를 위한 상태
+    const [state,setState]=useState(false);
+    // category & type & condition
+    const categories =useSelector((state:RootState)=>state.query.SLCategoryArray)
+    const types= useSelector((state:RootState)=>state.query.SLTypeArray)
+    const conditions= useSelector((state:RootState)=>state.query.SLConditionArray)
+    // state
+    const [category,setCategory]=useState<Array<{id:string,label:string,value:boolean}>>(categories)
+    useEffect(()=>{
+        console.log('@@@@@@@@@@@@@@@@@@@@@@@@')
+    },[state])
     // 필터 선택
     const onPressFilter =()=>{
         props.navigation.navigate('SearchFilterPage');
     }
     // totop
+    let totop=false;
     const scrollRef=useRef<ScrollView>();
     const onPressToTop=()=>{
         scrollRef.current.scrollTo({
@@ -67,12 +82,18 @@ const SearchListPage =(props:SearchListPageProps)=>{
     // list data
     const [sortStatus,setSortStatus]=useState<string>('LATEST')
     const {loading,error,data}=useQuery(GET_LISTS,{
-        variables:{search:search,sort:sortStatus}
+        variables:{
+            search:search,
+            sort:sortStatus,
+            categories:pickedIdArray(category),
+            conditions:pickedIdArray(conditions),
+            types:pickedIdArray(types)
+        }
     })
     let listData='';
     if(loading) return <Loading />
     if(error) return <Text>err</Text>
-    if(data&&data.contests)
+    if(data&&data.contests){
     listData=data.contests.edges.map((data)=>
         <ListBox key = {data.node.id.toString()} onPress={()=>{
             props.navigation.navigate('DetailPage',{
@@ -99,6 +120,9 @@ const SearchListPage =(props:SearchListPageProps)=>{
             ):null}
         </ListBox>
     )
+        if(listData.length>3) totop=true
+        else totop=false;
+    }
     return(
         <Container>
             <ScrollView ref={scrollRef}>
@@ -109,6 +133,7 @@ const SearchListPage =(props:SearchListPageProps)=>{
                     onPressFilter={onPressFilter}
                     onPressSort={()=>setSort(!sort)}
                     sortState={sortState}
+                    badgeNumber={pickedIdArray(category).length+pickedIdArray(conditions).length+pickedIdArray(types).length}
                     />
                 <View style={{padding:5}}>
                     {listData}
@@ -124,7 +149,11 @@ const SearchListPage =(props:SearchListPageProps)=>{
                 onPressTagTwo={onPressTagTwo}
                 onPressTagThree={onPressTagThree}
                 />
-            <ToTop onPressToTop={onPressToTop}/>
+                {totop?(
+                    <ToTop onPressToTop={onPressToTop}/>
+                ):(
+                    null
+                )}
         </Container>
     )
 }
@@ -134,8 +163,9 @@ interface SearchListBarProps{
     onPressFilter:()=>void;
     onPressSort:()=>void;
     sortState:string;
+    badgeNumber:number;
 }
-const SearchListBar=({search,count,onPressFilter,onPressSort,sortState}:SearchListBarProps)=>{
+const SearchListBar=({search,count,onPressFilter,onPressSort,sortState,badgeNumber}:SearchListBarProps)=>{
     
     return(
         <BarBox>
@@ -146,7 +176,7 @@ const SearchListBar=({search,count,onPressFilter,onPressSort,sortState}:SearchLi
             <View style={{flexDirection:'row'}}>
                 <SortBtn onPressSort={onPressSort} state={sortState}/>
                 
-                <FilterBtn onPressFilter={onPressFilter}/>
+                <FilterBtn onPressFilter={onPressFilter} number={badgeNumber}/>
                 <MapBtn onPressMap={()=>null}/>
             </View>
         </BarBox>

@@ -3,6 +3,9 @@ export const CATEGORIES = 'CATEGORIES'
 export const CLCategory='CLCategory'
 export const CLType='CLType'
 export const CLCondition='CLCondition'
+export const SLCategory='SLCategory'
+export const SLType='SLType'
+export const SLCondition='SLCondition'
 
 export const categoryAction= (categories:Array<string>)=>{
     return{
@@ -30,5 +33,27 @@ export const CLConditionAction= (array:Array<string>)=>{
     return{
         type:CLCondition,
         CLConditionArray:array,
+    }
+}
+
+// 카테고리 리스트 페이지 선택된 카테고리 저장 
+export const SLCategoryAction= (array:Array<any>)=>{
+    return{
+        type:SLCategory,
+        SLCategoryArray:array,
+    }
+}
+// 카테고리 리스트 페이지 선택된 카테고리 저장 
+export const SLTypeAction= (array:Array<string>)=>{
+    return{
+        type:SLType,
+        SLTypeArray:array,
+    }
+}
+// 카테고리 리스트 페이지 선택된 카테고리 저장 
+export const SLConditionAction= (array:Array<string>)=>{
+    return{
+        type:SLCondition,
+        SLConditionArray:array,
     }
 }
