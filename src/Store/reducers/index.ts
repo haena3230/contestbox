@@ -1,11 +1,12 @@
 // 리듀서
-import {CATEGORIES,CLCategory,CLType,CLCondition,SLCategory,SLType,SLCondition} from '../actions'
+import {CATEGORIES,CLCategory,CLType,CLCondition,Search,SLCategory,SLType,SLCondition} from '../actions'
 
 const initState={
     categoriesArray:[],
     CLCategoryArray:[],
     CLTypeArray:[],
     CLConditionArray:[],
+    SearchText:'',
     SLCategoryArray:[],
     SLTypeArray:[],
     SLConditionArray:[],
@@ -31,7 +32,12 @@ export const queryReducers = (state=initState,action: any)=>{
             return {
                 ...state,
                 CLConditionArray:action.CLConditionArray,
-            } 
+            }
+        case Search:
+            return {
+                ...state,
+                SearchText:action.SearchText,
+            }  
         case SLCategory:
             return {
                 ...state,

@@ -6,7 +6,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 type StackParamList={
   HomePage:undefined;
   SearchPage:undefined;
-  SearchListPage:{search:string};
+  SearchListPage:undefined;
   SearchFilterPage:undefined;
   CategoryPage:undefined;
   CategoryListPage:undefined;
@@ -21,7 +21,10 @@ export interface SearchPageProps{
 
 export interface SearchListPageProps{
   navigation:StackNavigationProp<StackParamList,'SearchPage'>
-  route:RouteProp<StackParamList,'SearchListPage'>
+}
+
+export interface SearchFilterPageProps{
+  navigation:StackNavigationProp<StackParamList,'SearchListPage'>
 }
 
 export interface HomaPageProps{

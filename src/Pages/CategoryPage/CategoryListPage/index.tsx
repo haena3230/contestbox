@@ -129,13 +129,33 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
         <Container>
             {map?(
                 <View>
-                    <View style={{height:'15%'}}>
+                    <View style={{height:'17%',justifyContent:'flex-end'}}>
                         <CategoryBox>
                             <Category># {categories[0].label}</Category>
                         </CategoryBox>
-                    </View>
+                        <View>
+                            {category.length===categories.length?(
+                                    <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} >
+                                        {category.slice(1).map((data,index)=>{
+                                            return(
+                                                <TouchableOpacity onPress={()=>{
+                                                    let tmpArray=category;
+                                                    tmpArray[index+1].value=!data.value;
+                                                    setCategory(tmpArray)
+                                                    setState(!state)
+                                                }} key={data.id}>
+                                                    <HashTag hashtag={data.label} picked={data.value}/>
+                                                </TouchableOpacity>
+                                            )
+                                        })}
+                                    </ScrollView>
+                                ):(
+                                    null
+                                )}
+                        </View>
+                        </View>
                     <BarBox 
-                        height ={'10%'} 
+                        height ={'8%'} 
                         isMap={true} 
                         onPressMap={()=>setMap(!map)} 
                         onPressFilter={()=>props.navigation.navigate('CategoryFilterPage')}
@@ -149,27 +169,29 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
             ):(
                 <View>
                     <ScrollView style={{padding:5}} ref={scrollRef}>
-                        <CategoryBox>
-                            <Category># {categories[0].label}</Category>
-                        </CategoryBox>
-                        {category.length===categories.length?(
-                                <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-                                    {category.slice(1).map((data,index)=>{
-                                        return(
-                                            <TouchableOpacity onPress={()=>{
-                                                let tmpArray=category;
-                                                tmpArray[index+1].value=!data.value;
-                                                setCategory(tmpArray)
-                                                setState(!state)
-                                            }} key={data.id}>
-                                                <HashTag hashtag={data.label} picked={data.value}/>
-                                            </TouchableOpacity>
-                                        )
-                                    })}
-                                </ScrollView>
-                            ):(
-                                null
-                            )}
+                        <View style={{paddingTop:20}}>
+                            <CategoryBox>
+                                <Category># {categories[0].label}</Category>
+                            </CategoryBox>
+                            {category.length===categories.length?(
+                                    <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+                                        {category.slice(1).map((data,index)=>{
+                                            return(
+                                                <TouchableOpacity onPress={()=>{
+                                                    let tmpArray=category;
+                                                    tmpArray[index+1].value=!data.value;
+                                                    setCategory(tmpArray)
+                                                    setState(!state)
+                                                }} key={data.id}>
+                                                    <HashTag hashtag={data.label} picked={data.value}/>
+                                                </TouchableOpacity>
+                                            )
+                                        })}
+                                    </ScrollView>
+                                ):(
+                                    null
+                                )}
+                        </View>
                         <BarBox 
                             height={30}
                             isMap={false} 
@@ -237,7 +259,6 @@ const BarBox=({isMap,onPressMap,onPressFilter,onPressSort,sortState,height,badge
 }
 
 const CategoryBox=styled.View`
-   justify-content:center;
    align-items:center;
 `
 

@@ -84,31 +84,3 @@ const Category=styled.View`
 
 
 export default SearchPage;
-
-const testdata=[
-  {
-    id:1,
-    label:'test',
-  },
-  {
-    id:2,
-    label:'test',
-  },
-  {
-    id:3,
-    label:'test',
-  },
-  {
-    id:4,
-    label:'test',
-  },
-  {
-    id:5,
-    label:'test',
-  },
-  {
-    id:6,
-    label:'test',
-  },
-
-]

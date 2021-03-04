@@ -20,9 +20,12 @@ import Loading from '~/Components/Loading';
 import {pickedIdArray} from '~/Components/Filter';
 
 const SearchListPage =(props:SearchListPageProps)=>{
-    const {search} = props.route.params;
+    const search=useSelector((state:RootState)=>state.query.SearchText)
     // 마운트를 위한 상태
     const [state,setState]=useState(false);
+    useEffect(()=>{
+        console.log('@@@@@@@@@@@@@@@@@@@@@@@@')
+    },[state])
     // category & type & condition
     const categories =useSelector((state:RootState)=>state.query.SLCategoryArray)
     const types= useSelector((state:RootState)=>state.query.SLTypeArray)
@@ -126,7 +129,7 @@ const SearchListPage =(props:SearchListPageProps)=>{
     return(
         <Container>
             <ScrollView ref={scrollRef}>
-                <SearchBarSmall navigation={props.navigation} route={props.route}/>
+                <SearchBarSmall navigation={props.navigation}/>
                 <SearchListBar 
                     search={search} 
                     count={data.contests.edges.length} 

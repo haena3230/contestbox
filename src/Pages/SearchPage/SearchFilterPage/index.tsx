@@ -13,11 +13,12 @@ import {useQuery} from '@apollo/client';
 import {useSelector,useDispatch} from 'react-redux';
 import {RootState} from '~/App';
 import {SLTypeAction,SLConditionAction,SLCategoryAction} from '~/Store/actions';
+import { SearchFilterPageProps } from '~/Types';
 
-const SearchFilterPage =()=>{
+const SearchFilterPage =({navigation}:SearchFilterPageProps)=>{
     // 상태 불러오기
-    let types= useSelector((state:RootState)=>state.query.CLTypeArray)
-    let conditions= useSelector((state:RootState)=>state.query.CLConditionArray)
+    let types= useSelector((state:RootState)=>state.query.SLTypeArray)
+    let conditions= useSelector((state:RootState)=>state.query.SLConditionArray)
     // 상태 업데이트
     const[state,setState]=useState(false);
     useEffect(()=>{
@@ -109,7 +110,14 @@ const SearchFilterPage =()=>{
                         )}
                 </MenuContainer>
             </ScrollView>
-            <FilterBottom onPressConfirm={()=>null} onPressReset={()=>null}/>
+            <FilterBottom 
+                onPressConfirm={()=>navigation.navigate('SearchListPage')} 
+                onPressReset={()=>{
+                    storeSLTypeNewArray(newStateArray(types))
+                    storeSLConditionNewArray(newStateArray(conditions))
+                    setState(!state)
+                }}
+                />
         </Container>
         
     )
