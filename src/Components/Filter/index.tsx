@@ -3,10 +3,9 @@ import React, { useState } from 'react';
 import { Text, TouchableOpacity} from 'react-native';
 import styled from 'styled-components/native';
 import { Styles,Color } from '~/Styles';
-import {useNavigation} from '@react-navigation/native';
+
 // components
-import {FilterBtn, ShortBtn, SortDownBtn, SortUpBtn} from  '~/Components/Btn';
-import {FilterCategory} from '~/Components/Filter/FilterCategory';
+import {FilterBtn, ShortBtn} from  '~/Components/Btn';
 
 // 함수
 
@@ -59,7 +58,6 @@ export const pickedIdArray=(array:Array<any>)=>{
 
 // 필터페이지 헤더
 export const FilterHeader=()=>{
-    const navigation=useNavigation();
     return(
         <HeaderContainer>
             <HeaderTitle>
@@ -83,29 +81,6 @@ const Close = ({onPressClose}:CloseBtnProps)=>{
                 <CloseBtn>닫기</CloseBtn>
             </HeaderBox>
         </TouchableOpacity>
-    )
-}
- 
-// 리스트메뉴 (카테고리)
-export const FilterMenuCategory=()=>{
-    const [menu,setMenu]=useState<Boolean>(false);
-    return(
-        <MenuContainer>
-            <MenuBox  onPress={()=>setMenu(!menu)}>
-                <MenuTitle>
-                    카테고리
-                </MenuTitle>
-                {menu?
-                    <SortUpBtn />
-                    :<SortDownBtn />
-                }
-            </MenuBox>
-            {menu?(
-                <CategoryBox>
-                    <FilterCategory />
-                </CategoryBox>
-            ):null}
-        </MenuContainer>
     )
 }
 
@@ -166,11 +141,6 @@ export const MenuTitle=styled.Text`
 export const Type = styled.View`
     flex-direction:row;
     flex-wrap:wrap;
-    padding:15px;
-`
-
-// 카테고리
-const CategoryBox =styled.View`
     padding:15px;
 `
 // bottom

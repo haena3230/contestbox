@@ -4,54 +4,65 @@
 // 두번째 view는 리스트 클릭 -> 버튼 상태 chg
 
 import React,{useState} from 'react';
-import {Text, View} from 'react-native';
+import {View} from 'react-native';
 import styled from 'styled-components/native';
 import {Color,Styles} from '~/Styles';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 // component
 import {SortDownBtn,SortUpBtn} from '~/Components/Btn';
 
-export const FilterCategory=()=>{
-    return(
-        <View>
-            <FirstView firstLabel={'Test'} />
-        </View>
-    )
+interface FilterCategoryProps{
+    secondCategories:Array<{id:string,label:string,value:boolean}>
+    category:string;
+    isSelect:boolean;
+    onPressFirst:()=>void;
+    onPressSecond:()=>void;
 }
-
-// 첫번째 뷰
-interface FirstViewProps{
-    firstLabel:string;
-}
-const FirstView=({firstLabel}:FirstViewProps)=>{
+export const FilterCategory=({category,secondCategories,isSelect,onPressFirst,onPressSecond}:FilterCategoryProps)=>{
     const[isView,setIsView]=useState<boolean>(false);
-    const[isSelect,setIsSelect]=useState<boolean>(false);
     // data
     return(
         <View>
-        <ViewBox>
-            <TouchableOpacity style={{flexDirection:'row',alignItems:'center'}}
-                    onPress={()=>setIsView(!isView)}> 
-                {isView?
-                <SortUpBtn />:<SortDownBtn />
-                }
-                <CategoryText>
-                    {firstLabel}
-                </CategoryText>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={()=>setIsSelect(!isSelect)}>
-                {isSelect?
-                <SelectBtn isSelect={true}/>:<SelectBtn isSelect={false}/>    
-                }
-            </TouchableOpacity>
-        </ViewBox>
-        {isView?(
+                {secondCategories.length===1?(
+                    <ViewBox>
+                        <View style={{flexDirection:'row',alignItems:'center'}}>
+                            <ListBar />
+                            <CategoryText>
+                                {category}
+                            </CategoryText>
+                        </View>
+                        <TouchableOpacity onPress={onPressFirst}>
+                            <SelectBtn isSelect={isSelect}/>
+                        </TouchableOpacity>
+                    </ViewBox>
+                ):(
+                    <ViewBox>
+                        <TouchableOpacity style={{flexDirection:'row',alignItems:'center'}}
+                                onPress={()=>setIsView(!isView)}> 
+                            {isView?
+                            <SortUpBtn />:<SortDownBtn />
+                            }
+                            <CategoryText>
+                                {category}
+                            </CategoryText>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={onPressFirst}>
+                            <SelectBtn isSelect={isSelect}/>
+                        </TouchableOpacity>
+                    </ViewBox>
+                )}
+            
+            {isView?(
             <View>
-                <SecondView category={'test'}/>
+                {secondCategories.slice(1).map((data)=>{
+                    return(
+                        <SecondView key= {data.id} category={data.label} isSelect={data.value} onPressBtn={onPressSecond} />
+                    )
+                })}
             </View>
-        ):(
-            null
-        )}
+            ):(
+                null
+            )}
         </View>
     )
 }
@@ -59,18 +70,17 @@ const FirstView=({firstLabel}:FirstViewProps)=>{
 // 두번째 뷰
 interface SecondViewProps{
     category:string;
+    isSelect:boolean;
+    onPressBtn:()=>void;
 }
-const SecondView=({category}:SecondViewProps)=>{
-    const[isSelect,setIsSelect]=useState<boolean>(false);
+const SecondView=({category,isSelect,onPressBtn}:SecondViewProps)=>{
     return(
-        <TouchableOpacity onPress={()=>setIsSelect(!isSelect)}>
+        <TouchableOpacity onPress={onPressBtn}>
             <ViewBox>
                 <CategoryText style={{marginLeft:'15%'}}>
                     {category}
                 </CategoryText>
-                {isSelect?
-                <SelectBtn isSelect={true}/>:<SelectBtn isSelect={false}/>    
-                }
+                <SelectBtn isSelect={isSelect}/>
             </ViewBox>
         </TouchableOpacity>
     )
@@ -121,3 +131,10 @@ const SelectBtnBox=styled.View`
     margin-right:5px;
 `
 
+// 하위 리스트 없을때 
+const ListBar=styled.View`
+    width:8px;
+    height:2px;
+    background-color:${Color.g3_color};
+    margin-horizontal:8px;
+`

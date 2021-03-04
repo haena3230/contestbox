@@ -29,8 +29,17 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
     const conditions= useSelector((state:RootState)=>state.query.CLConditionArray)
     // state
     const [category,setCategory]=useState<Array<{id:string,label:string,value:boolean}>>(categories)
+    // category 선택시 빼주기 위한 변수
+    let categoryState=[categories[0].id];
+    if(pickedIdArray(category)===[]){
+        categoryState=[categories[0].id];
+    }
+    else{
+        categoryState=pickedIdArray(category);
+    }
     useEffect(()=>{
         console.log('@@@@@@@@@@@@@@@@@@@@@@@@')
+        
     },[state])
     // totop
     let totop=false;
@@ -79,11 +88,11 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
 
     // list data
     const [sortStatus,setSortStatus]=useState<string>('LATEST')
-    // types도 추가하기
+    
     const { loading, error, data } = useQuery(GET_LISTS,{
         variables:{
             sort:sortStatus,
-            categories:pickedIdArray(category).concat(categories[0].id),
+            categories:categoryState,
             conditions:pickedIdArray(conditions),
             types:pickedIdArray(types)
         }
