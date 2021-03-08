@@ -8,25 +8,56 @@ import {View} from 'react-native';
 import styled from 'styled-components/native';
 import {Color,Styles} from '~/Styles';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import {useSelector,useDispatch} from 'react-redux';
+import {RootState} from '~/App';
+import {SLCategoryAction} from '~/Store/actions';
 // component
 import {SortDownBtn,SortUpBtn} from '~/Components/Btn';
+
+// value 들어간 배열로 변환 
+export const CategoryStateArray=(array:Array<{id:string,label:string}>)=>{
+    let i=0;
+    let len=array.length;
+    let categories=new Array();
+    for(i=0;i<len;i++){
+        let tmp=new Array();
+        let j=0;
+        while(array[i][j]!==undefined){
+            tmp.push({
+                id:array[i][j].id,
+                label:array[i][j].label,
+                value:false
+            });
+            j++;
+        }
+        categories.push(tmp)
+    }
+    return categories;
+}
 
 interface FilterCategoryProps{
     secondCategories:Array<{id:string,label:string,value:boolean}>
     category:string;
     isSelect:boolean;
+    sndIdx:number;
     onPressFirst:()=>void;
     onPressSecond:()=>void;
 }
-export const FilterCategory=({category,secondCategories,isSelect,onPressFirst,onPressSecond}:FilterCategoryProps)=>{
+export const FilterCategory=({category,secondCategories,isSelect,sndIdx,onPressFirst,onPressSecond}:FilterCategoryProps)=>{
     const[isView,setIsView]=useState<boolean>(false);
+    let categories=useSelector((state:RootState)=>state.query.SLCategoryArray)
+    let orgCategories =useSelector((state:RootState)=>state.query.categoriesArray)
+    const dispatch=useDispatch();
+    const storeSLCategoryNewArray=(Array:Array<string>)=>{
+        dispatch(SLCategoryAction(Array))
+    }
+    
     // data
     return(
         <View>
                 {secondCategories.length===1?(
                     <ViewBox>
                         <View style={{flexDirection:'row',alignItems:'center'}}>
-                            <ListBar />
                             <CategoryText>
                                 {category}
                             </CategoryText>
@@ -39,12 +70,12 @@ export const FilterCategory=({category,secondCategories,isSelect,onPressFirst,on
                     <ViewBox>
                         <TouchableOpacity style={{flexDirection:'row',alignItems:'center'}}
                                 onPress={()=>setIsView(!isView)}> 
-                            {isView?
-                            <SortUpBtn />:<SortDownBtn />
-                            }
                             <CategoryText>
                                 {category}
                             </CategoryText>
+                            {isView?
+                            <SortUpBtn />:<SortDownBtn />
+                            }
                         </TouchableOpacity>
                         <TouchableOpacity onPress={onPressFirst}>
                             <SelectBtn isSelect={isSelect}/>
@@ -54,9 +85,26 @@ export const FilterCategory=({category,secondCategories,isSelect,onPressFirst,on
             
             {isView?(
             <View>
-                {secondCategories.slice(1).map((data)=>{
+                {secondCategories.slice(1).map((data,index)=>{
                     return(
-                        <SecondView key= {data.id} category={data.label} isSelect={data.value} onPressBtn={onPressSecond} />
+                        <SecondView 
+                            key= {data.id} 
+                            category={data.label} 
+                            isSelect={data.value} 
+                            onPressBtn={()=>{
+                                if(categories.length===0){
+                                    let tmpArray=CategoryStateArray(orgCategories);
+                                    tmpArray[sndIdx][index+1].value=!data.value;
+                                    storeSLCategoryNewArray(tmpArray)
+                                }
+                                else{
+                                    let tmpArray=categories;
+                                    tmpArray[sndIdx][index+1].value=!data.value;
+                                    storeSLCategoryNewArray(tmpArray)
+                                }
+                                onPressSecond();
+                            }}
+                             />
                     )
                 })}
             </View>
@@ -129,12 +177,4 @@ const SelectBtnBox=styled.View`
     border-radius:3px;
     background-color:${(props:SelectBtnBoxProps)=>props.backgroundColor};
     margin-right:5px;
-`
-
-// 하위 리스트 없을때 
-const ListBar=styled.View`
-    width:8px;
-    height:2px;
-    background-color:${Color.g3_color};
-    margin-horizontal:8px;
 `

@@ -30,11 +30,6 @@ const SearchListPage =(props:SearchListPageProps)=>{
     const categories =useSelector((state:RootState)=>state.query.SLCategoryArray)
     const types= useSelector((state:RootState)=>state.query.SLTypeArray)
     const conditions= useSelector((state:RootState)=>state.query.SLConditionArray)
-    // state
-    const [category,setCategory]=useState<Array<{id:string,label:string,value:boolean}>>(categories)
-    useEffect(()=>{
-        console.log('@@@@@@@@@@@@@@@@@@@@@@@@')
-    },[state])
     // 필터 선택
     const onPressFilter =()=>{
         props.navigation.navigate('SearchFilterPage');
@@ -88,7 +83,7 @@ const SearchListPage =(props:SearchListPageProps)=>{
         variables:{
             search:search,
             sort:sortStatus,
-            categories:pickedIdArray(category),
+            categories:pickedIdArray(categories),
             conditions:pickedIdArray(conditions),
             types:pickedIdArray(types)
         }
@@ -136,7 +131,7 @@ const SearchListPage =(props:SearchListPageProps)=>{
                     onPressFilter={onPressFilter}
                     onPressSort={()=>setSort(!sort)}
                     sortState={sortState}
-                    badgeNumber={pickedIdArray(category).length+pickedIdArray(conditions).length+pickedIdArray(types).length}
+                    badgeNumber={pickedIdArray(categories).length+pickedIdArray(conditions).length+pickedIdArray(types).length}
                     />
                 <View style={{padding:5}}>
                     {listData}
