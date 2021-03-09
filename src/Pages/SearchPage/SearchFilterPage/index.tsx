@@ -27,6 +27,8 @@ const SearchFilterPage =({navigation}:SearchFilterPageProps)=>{
     let conditions= useSelector((state:RootState)=>state.query.SLConditionArray)
     // 상태 업데이트
     const[state,setState]=useState<boolean>(false);
+    const[typeArray,setTypeArray]=useState<Array<{id:string,label:string,value:boolean}>>(types);
+    const[conditionArray,setConditionArray]=useState<Array<{id:string,label:string,value:boolean}>>(conditions);
     useEffect(()=>{
         console.log('@@@@@@@@@@@@@@@@@@');
     },[state])
@@ -36,27 +38,17 @@ const SearchFilterPage =({navigation}:SearchFilterPageProps)=>{
     const [conditionMenu,setConditionMenu]=useState<boolean>(false);
     // 상태 저장하기
     const dispatch=useDispatch();
-    const storeSLCategoryNewArray=(Array:Array<string>)=>{
+    const storeSLCategoryNewArray=(Array:Array<any>)=>{
         dispatch(SLCategoryAction(Array))
     }
-    const storeSLTypeNewArray=(Array:Array<string>)=>{
+    const storeSLTypeNewArray=(Array:Array<any>)=>{
         dispatch(SLTypeAction(Array))
     }
-    const storeSLConditionNewArray=(Array:Array<string>)=>{
+    const storeSLConditionNewArray=(Array:Array<any>)=>{
         dispatch(SLConditionAction(Array))
     }
-    // data
-    const {loading,error,data}=useQuery(GET_FILTER);
-    if(loading) return <Loading />;
-    if(error) return <Text>err</Text>;
-    if(data&&types.length===0){
-        types=newStateArray(data.types)
-    }
-    if(data&&categories.length===0){
+    if(categories.length===0){
         categories=CategoryStateArray(orgCategories)
-    }
-    if(data&&conditions.length===0){
-        conditions=newStateArray(data.conditions)
     }
     return(
         <Container>
@@ -74,11 +66,11 @@ const SearchFilterPage =({navigation}:SearchFilterPageProps)=>{
                     </MenuBox>
                         {typeMenu?(
                             <Type>
-                            {types.map((data,index)=>
+                            {typeArray.map((data,index)=>
                                 <TouchableOpacity onPress={()=>{
-                                    let tmpArray=types;
+                                    let tmpArray=typeArray;
                                     tmpArray[index].value=!data.value;
-                                    storeSLTypeNewArray(tmpArray)
+                                    setTypeArray(tmpArray);
                                     setState(!state)
                                 }} key={data.id}>
                                     <HashTag hashtag={data.label} picked={data.value}/>
@@ -144,11 +136,11 @@ const SearchFilterPage =({navigation}:SearchFilterPageProps)=>{
                     </MenuBox>
                         {conditionMenu?(
                             <Type>
-                            {conditions.map((data,index)=>
+                            {conditionArray.map((data,index)=>
                                 <TouchableOpacity onPress={()=>{
-                                    let tmpArray=conditions;
+                                    let tmpArray=conditionArray;
                                     conditions[index].value=!data.value;
-                                    storeSLConditionNewArray(tmpArray)
+                                    setConditionArray(tmpArray)
                                     setState(!state)
                                 }} key={data.id}>
                                     <HashTag hashtag={data.label} picked={data.value}/>
@@ -162,12 +154,17 @@ const SearchFilterPage =({navigation}:SearchFilterPageProps)=>{
             </ScrollView>
             <FilterBottom 
                 onPressConfirm={()=>{
+                    storeSLTypeNewArray(typeArray);
+                    storeSLConditionNewArray(conditionArray);
+                    navigation.replace('SearchListPage');
                     navigation.navigate('SearchListPage');
                 }} 
-                onPressReset={()=>{
-                    storeSLTypeNewArray(newStateArray(types))
-                    storeSLConditionNewArray(newStateArray(conditions))
-                    setState(!state)
+                onPressReset={async ()=>{
+                    await setTypeArray(newStateArray(types));
+                    await setConditionArray(newStateArray(conditionArray));
+                    storeSLTypeNewArray(typeArray);
+                    storeSLConditionNewArray(conditionArray);
+                    setState(!state);
                 }}
                 />
         </Container>

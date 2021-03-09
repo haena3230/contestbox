@@ -7,7 +7,7 @@ import styled from 'styled-components/native';
 import {SearchListPageProps} from '~/Types';
 import {GET_LISTS} from '~/queries';
 import {useQuery} from '@apollo/client';
-import {useSelector} from 'react-redux';
+import {useSelector,useDispatch} from 'react-redux';
 import {RootState} from '~/App';
 // components
 import {SearchBarSmall} from '~/Components/SearchBar';
@@ -17,7 +17,11 @@ import TextList,{TagBox,ListBox} from '~/Components/TextList';
 import {HashTag} from '~/Components/HashTag';
 import ToTop from '~/Components/ToTop';
 import Loading from '~/Components/Loading';
-import {pickedIdArray} from '~/Components/Filter';
+import {pickedIdArray,pickedIdArraies,newStateArray} from '~/Components/Filter';
+import { SLConditionAction, SLTypeAction } from '~/Store/actions';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+
+
 
 const SearchListPage =(props:SearchListPageProps)=>{
     const search=useSelector((state:RootState)=>state.query.SearchText)
@@ -27,6 +31,13 @@ const SearchListPage =(props:SearchListPageProps)=>{
         console.log('@@@@@@@@@@@@@@@@@@@@@@@@')
     },[state])
     // category & type & condition
+    const dispatch=useDispatch();
+    const storeSLTypeNewArray=(Array:Array<any>)=>{
+        dispatch(SLTypeAction(Array))
+    }
+    const storeSLConditionNewArray=(Array:Array<any>)=>{
+        dispatch(SLConditionAction(Array))
+    }
     const categories =useSelector((state:RootState)=>state.query.SLCategoryArray)
     const types= useSelector((state:RootState)=>state.query.SLTypeArray)
     const conditions= useSelector((state:RootState)=>state.query.SLConditionArray)
@@ -91,6 +102,12 @@ const SearchListPage =(props:SearchListPageProps)=>{
     let listData='';
     if(loading) return <Loading />
     if(error) return <Text>err</Text>
+    if(data&&types.length===0){
+        storeSLTypeNewArray(newStateArray(data.types));
+    }
+    if(data&&conditions.length===0){
+        storeSLConditionNewArray(newStateArray(data.conditions));
+    }
     if(data&&data.contests){
     listData=data.contests.edges.map((data)=>
         <ListBox key = {data.node.id.toString()} onPress={()=>{
@@ -123,6 +140,9 @@ const SearchListPage =(props:SearchListPageProps)=>{
     }
     return(
         <Container>
+            <TouchableOpacity onPress={()=>console.log(categories)}>
+                <Text>test</Text>
+            </TouchableOpacity>
             <ScrollView ref={scrollRef}>
                 <SearchBarSmall navigation={props.navigation}/>
                 <SearchListBar 
@@ -131,7 +151,7 @@ const SearchListPage =(props:SearchListPageProps)=>{
                     onPressFilter={onPressFilter}
                     onPressSort={()=>setSort(!sort)}
                     sortState={sortState}
-                    badgeNumber={pickedIdArray(categories).length+pickedIdArray(conditions).length+pickedIdArray(types).length}
+                    badgeNumber={pickedIdArraies(categories).length+pickedIdArray(conditions).length+pickedIdArray(types).length}
                     />
                 <View style={{padding:5}}>
                     {listData}

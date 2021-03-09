@@ -87,7 +87,7 @@ const CategoryFilterPage =({navigation}:CategoryFilterPageProps)=>{
                     </MenuBox>
                         {conditionMenu?(
                             <Type>
-                            {conditions.map((data,index)=>
+                            {conditionArray.map((data,index)=>
                                 <TouchableOpacity onPress={()=>{
                                     let tmpArray=conditionArray;
                                     tmpArray[index].value=!data.value;

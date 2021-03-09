@@ -45,15 +45,32 @@ export const newStateArray=(array:Array<any>)=>{
 
 // 선택된 id만 포함된 배열
 export const pickedIdArray=(array:Array<any>)=>{
-    let result=array.filter(d=>{
-        return d.value===true
-    })
     let idArray=[];
+    let result=array.filter(d=>{
+    return d.value===true
+    });
     result.forEach((e)=>{
         idArray.push(e.id)
-    })
+    });
     return(idArray);
 }
+
+// 선택된 id만 포함된 배열(다차원)
+export const pickedIdArraies=(array:Array<any>)=>{
+    let idArray=[];
+    let i=0;
+    while(array[i]!=undefined){
+        let result=array[i].filter(d=>{
+        return d.value===true
+        });
+        result.forEach((e)=>{
+            idArray.push(e.id)
+        });
+        i++;
+    };
+    return(idArray);
+}
+
 
 // 필터페이지 헤더
 export const FilterHeader=()=>{
