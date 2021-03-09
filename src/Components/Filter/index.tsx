@@ -52,7 +52,6 @@ export const pickedIdArray=(array:Array<any>)=>{
     result.forEach((e)=>{
         idArray.push(e.id)
     })
-    console.log(idArray)
     return(idArray);
 }
 

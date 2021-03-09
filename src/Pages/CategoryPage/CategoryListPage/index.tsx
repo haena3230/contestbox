@@ -8,8 +8,9 @@ import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { useQuery } from '@apollo/client';
 import {GET_LISTS} from '~/queries';
 import {CategoryListPageProps} from '~/Types';
-import {useSelector} from 'react-redux';
+import {useSelector,useDispatch} from 'react-redux';
 import {RootState} from '~/App';
+import { CLConditionAction, CLTypeAction } from '~/Store/actions';
 // component
 import {SortComponent} from '~/Components/Sort'
 import {FilterBtn,ListBtn,SortBtn,MapBtn} from '~/Components/Btn';
@@ -18,11 +19,20 @@ import TextList,{TagBox,ListBox} from '~/Components/TextList';
 import {HashTag} from '~/Components/HashTag';
 import ToTop from '~/Components/ToTop';
 import Map from '~/Components/Map';
-import {pickedIdArray} from '~/Components/Filter';
+import {newStateArray, pickedIdArray} from '~/Components/Filter';
+
 
 const CategoryListPage=(props:CategoryListPageProps)=>{
     // 마운트를 위한 상태
     const [state,setState]=useState(false);
+    // 저장
+    const dispatch=useDispatch();
+    const storeCLTypeNewArray=(Array:Array<any>)=>{
+        dispatch(CLTypeAction(Array))
+    }
+    const storeCLConditionNewArray=(Array:Array<any>)=>{
+        dispatch(CLConditionAction(Array))
+    }
     // category & type & condition
     const categories =useSelector((state:RootState)=>state.query.CLCategoryArray)
     const types= useSelector((state:RootState)=>state.query.CLTypeArray)
@@ -39,7 +49,6 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
     }
     useEffect(()=>{
         console.log('@@@@@@@@@@@@@@@@@@@@@@@@')
-        
     },[state])
     // totop
     let totop=false;
@@ -104,6 +113,12 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
         console.log(error.graphQLErrors)
         console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
     }
+    if(data&&types.length===0){
+        storeCLTypeNewArray(newStateArray(data.types));
+    }
+    if(data&&conditions.length===0){
+        storeCLConditionNewArray(newStateArray(data.conditions));
+    }
     if(data&&data.contests.edges){
         listData=data.contests.edges.map((data)=>
         <ListBox key = {data.node.id.toString()} onPress={()=>{
@@ -136,6 +151,9 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
     }
     return(
         <Container>
+            <TouchableOpacity onPress={()=>console.log(types)}>
+                <Text>test</Text>
+            </TouchableOpacity>
             {map?(
                 <View>
                     <View style={{height:'17%',justifyContent:'flex-end'}}>
