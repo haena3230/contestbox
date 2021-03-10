@@ -18,7 +18,7 @@ import Loading from '~/Components/Loading';
 import TextList,{TagBox,ListBox} from '~/Components/TextList';
 import {HashTag} from '~/Components/HashTag';
 import ToTop from '~/Components/ToTop';
-import Map from '~/Components/Map';
+import {Map} from '~/Components/Map';
 import {newStateArray, pickedIdArray} from '~/Components/Filter';
 
 
@@ -151,9 +151,6 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
     }
     return(
         <Container>
-            <TouchableOpacity onPress={()=>console.log(types)}>
-                <Text>test</Text>
-            </TouchableOpacity>
             {map?(
                 <View>
                     <View style={{height:'17%',justifyContent:'flex-end'}}>
@@ -189,7 +186,7 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
                         onPressSort={()=>null} 
                         sortState={null}
                         badgeNumber={pickedIdArray(category).length+pickedIdArray(conditions).length+pickedIdArray(types).length} />
-                    <View style={{width:'100%',height:'75%'}}>
+                    <View style={{width:'100%',height:'75%', padding:5}}>
                         <Map />
                     </View>
                 </View>
