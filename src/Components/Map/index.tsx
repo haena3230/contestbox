@@ -1,6 +1,6 @@
 // 지도 component
 import React, { useState, useEffect } from 'react';
-import { View, PermissionsAndroid, Text } from 'react-native';
+import { View, PermissionsAndroid } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 // styles
 import { Styles, Color } from '~/Styles';
@@ -14,10 +14,7 @@ import Geolocation from 'react-native-geolocation-service';
 import MapView,{Marker} from 'react-native-maps';
 import { useQuery } from '@apollo/client';
 import { GET_LISTS } from '~/queries';
-import { pickedIdArray } from '../Filter';
 import Loading from '../Loading';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import { Navigation } from 'swiper';
 
 // 위치정보 수집 권한 요청
 export async function requestPermission() {
