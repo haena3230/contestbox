@@ -8,14 +8,19 @@ import styled from 'styled-components/native';
 // component
 import Category from '~/Components/Category';
 import {CategoryPageProps} from '~/Types';
-
+import {newStateArray} from '~/Components/Filter';
 // data
-import {useSelector} from 'react-redux';
+import {useSelector,useDispatch} from 'react-redux';
 import {RootState} from '~/App';
+import { CLCategoryAction } from '~/Store/actions';
 
 const CategoryPage =({navigation}:CategoryPageProps)=>{
     // category data
-    const categories= useSelector((state:RootState)=>state.query.categoriesArray)
+    const categories= useSelector((state:RootState)=>state.query.categoriesArray);
+    const dispatch = useDispatch();
+    const storeNewArrayCategories=(Array:Array<any>)=>{
+        dispatch(CLCategoryAction(Array))
+    }
     return(
         <Container>
             <ScrollView style={{padding:10}}>
@@ -23,10 +28,9 @@ const CategoryPage =({navigation}:CategoryPageProps)=>{
                 {categories.map((data)=>{
                     return(
                         <Category key={data[0].id.toString()} label={data[0].label} onPress={()=>{
-                        navigation.navigate('CategoryListPage',{
-                            categories:data
-                        });
-                    }}/>
+                            navigation.navigate('CategoryListPage'),
+                            storeNewArrayCategories(newStateArray(data));
+                        }}/>
                     )
                 })}
             </ScrollView>

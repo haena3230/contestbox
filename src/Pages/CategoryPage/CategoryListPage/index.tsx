@@ -187,7 +187,12 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
                         sortState={null}
                         badgeNumber={pickedIdArray(category).length+pickedIdArray(conditions).length+pickedIdArray(types).length} />
                     <View style={{width:'100%',height:'75%', padding:5}}>
-                        <Map />
+                        <Map 
+                            search={null}
+                            categoryState={categoryState}
+                            conditions={pickedIdArray(conditions)}
+                            types={pickedIdArray(types)}
+                            />
                     </View>
                 </View>
             ):(
@@ -289,5 +294,6 @@ const CategoryBox=styled.View`
 const Category=styled.Text`
     ${Styles.b_font};
     font-weight:bold;
+    padding-vertical:10px;
 `
 export default CategoryListPage;

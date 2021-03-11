@@ -21,7 +21,7 @@ export const GET_HOTS = gql`
 `;
 
 export const GET_LISTS= gql`
-  query ($categories:[ID!],$search:String,$sort:ContestsSortType,$conditions:[ID!],$types:[ID!]){
+  query ($categories:[ID!],$search:String,$sort:ContestsSortType,$conditions:[ID!],$types:[ID!],$place:LatLngBoxInput){
     types{
         id
         label
@@ -30,7 +30,7 @@ export const GET_LISTS= gql`
         id
         label
       }
-    contests(categories:$categories,search:$search,sort:$sort,conditions:$conditions,types:$types) {
+    contests(categories:$categories,search:$search,sort:$sort,conditions:$conditions,types:$types,place:$place) {
       edges{
         node{
           id
@@ -46,6 +46,14 @@ export const GET_LISTS= gql`
               endAt
             }
           }
+          place{
+              alias
+              fullAddress
+              latLng{
+                lat
+                lng
+              }
+            }
         }
       }
     }

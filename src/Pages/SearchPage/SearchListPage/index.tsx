@@ -11,7 +11,7 @@ import {useSelector,useDispatch} from 'react-redux';
 import {RootState} from '~/App';
 // components
 import {SearchBarSmall} from '~/Components/SearchBar';
-import {SortBtn,FilterBtn,MapBtn} from  '~/Components/Btn';
+import {SortBtn,FilterBtn,MapBtn, ListBtn} from  '~/Components/Btn';
 import {SortComponent} from '~/Components/Sort';
 import TextList,{TagBox,ListBox} from '~/Components/TextList';
 import {HashTag} from '~/Components/HashTag';
@@ -19,17 +19,12 @@ import ToTop from '~/Components/ToTop';
 import Loading from '~/Components/Loading';
 import {pickedIdArray,pickedIdArraies,newStateArray} from '~/Components/Filter';
 import { SLConditionAction, SLTypeAction } from '~/Store/actions';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-
-
+import {Map} from '~/Components/Map';
 
 const SearchListPage =(props:SearchListPageProps)=>{
     const search=useSelector((state:RootState)=>state.query.SearchText)
     // 마운트를 위한 상태
-    const [state,setState]=useState(false);
-    useEffect(()=>{
-        console.log('@@@@@@@@@@@@@@@@@@@@@@@@')
-    },[state])
+    const[map,setMap]=useState<boolean>(false);
     // category & type & condition
     const dispatch=useDispatch();
     const storeSLTypeNewArray=(Array:Array<any>)=>{
@@ -140,23 +135,46 @@ const SearchListPage =(props:SearchListPageProps)=>{
     }
     return(
         <Container>
-            <TouchableOpacity onPress={()=>console.log(categories)}>
-                <Text>test</Text>
-            </TouchableOpacity>
-            <ScrollView ref={scrollRef}>
-                <SearchBarSmall navigation={props.navigation}/>
-                <SearchListBar 
-                    search={search} 
-                    count={data.contests.edges.length} 
-                    onPressFilter={onPressFilter}
-                    onPressSort={()=>setSort(!sort)}
-                    sortState={sortState}
-                    badgeNumber={pickedIdArraies(categories).length+pickedIdArray(conditions).length+pickedIdArray(types).length}
-                    />
-                <View style={{padding:5}}>
-                    {listData}
+            {map?(
+                <View>
+                    <SearchBarSmall navigation={props.navigation}/>
+                    <SearchListBar 
+                        isMap={true}
+                        search={search} 
+                        count={data.contests.edges.length} 
+                        onPressFilter={onPressFilter}
+                        onPressSort={()=>setSort(!sort)}
+                        onPressMap={()=>setMap(!map)}
+                        sortState={sortState}
+                        badgeNumber={pickedIdArraies(categories).length+pickedIdArray(conditions).length+pickedIdArray(types).length}
+                        />
+                    <View style={{height:'80%', width:'100%', padding:5}}>
+                        <Map 
+                            search={search}
+                            categoryState={pickedIdArray(categories)}
+                            conditions={pickedIdArray(conditions)}
+                            types={pickedIdArray(types)}
+                            />
+                    </View>
                 </View>
-            </ScrollView>
+            ):(
+                <ScrollView ref={scrollRef}>
+                    <SearchBarSmall navigation={props.navigation}/>
+                    <SearchListBar
+                        isMap={false} 
+                        search={search} 
+                        count={data.contests.edges.length} 
+                        onPressFilter={onPressFilter}
+                        onPressSort={()=>setSort(!sort)}
+                        onPressMap={()=>setMap(!map)}
+                        sortState={sortState}
+                        badgeNumber={pickedIdArraies(categories).length+pickedIdArray(conditions).length+pickedIdArray(types).length}
+                        />
+                    <View style={{padding:5}}>
+                        {listData}
+                    </View>
+                </ScrollView>
+            )}
             <SortComponent 
                 onPressCancle={onPressSort} 
                 modalVisible={sort} 
@@ -167,7 +185,7 @@ const SearchListPage =(props:SearchListPageProps)=>{
                 onPressTagTwo={onPressTagTwo}
                 onPressTagThree={onPressTagThree}
                 />
-                {totop?(
+                {totop&&!map?(
                     <ToTop onPressToTop={onPressToTop}/>
                 ):(
                     null
@@ -176,14 +194,16 @@ const SearchListPage =(props:SearchListPageProps)=>{
     )
 }
 interface SearchListBarProps{
+    isMap:boolean;
     search:string|undefined;
     count:number;
     onPressFilter:()=>void;
     onPressSort:()=>void;
+    onPressMap:()=>void;
     sortState:string;
     badgeNumber:number;
 }
-const SearchListBar=({search,count,onPressFilter,onPressSort,sortState,badgeNumber}:SearchListBarProps)=>{
+const SearchListBar=({isMap,search,count,onPressFilter,onPressSort,onPressMap,sortState,badgeNumber}:SearchListBarProps)=>{
     
     return(
         <BarBox>
@@ -192,10 +212,13 @@ const SearchListBar=({search,count,onPressFilter,onPressSort,sortState,badgeNumb
                 <BarBoxCount> {count}</BarBoxCount>
             </View>
             <View style={{flexDirection:'row'}}>
-                <SortBtn onPressSort={onPressSort} state={sortState}/>
-                
+                {isMap?null:
+                <SortBtn onPressSort={onPressSort} state={sortState}/>}
                 <FilterBtn onPressFilter={onPressFilter} number={badgeNumber}/>
-                <MapBtn onPressMap={()=>null}/>
+                {isMap?
+                <ListBtn onPressMap={onPressMap}/>:<MapBtn onPressMap={onPressMap}/>
+                }
+                
             </View>
         </BarBox>
     )

@@ -1,15 +1,23 @@
 // 지도 component
 import React, { useState, useEffect } from 'react';
 import { View, PermissionsAndroid, Text } from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 // styles
 import { Styles, Color } from '~/Styles';
 import styled from 'styled-components/native';
 // components
-import { Recruit } from '~/Components/Recruit';
+import {Immenent} from '~/Components/TextList';
+import {PreRecruit,Recruit,NoRecruit,CancelRecruit,ImmenentRecruit} from '~/Components/Recruit';
 import { HashTag } from '~/Components/HashTag';
 // map
 import Geolocation from 'react-native-geolocation-service';
 import MapView,{Marker} from 'react-native-maps';
+import { useQuery } from '@apollo/client';
+import { GET_LISTS } from '~/queries';
+import { pickedIdArray } from '../Filter';
+import Loading from '../Loading';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { Navigation } from 'swiper';
 
 // 위치정보 수집 권한 요청
 export async function requestPermission() {
@@ -20,20 +28,45 @@ export async function requestPermission() {
 interface ILocation {
     latitude: number;
     longitude: number;
+    latitudeDelta:number;
+    longitudeDelta:number;
 }
-
-export const Map = () => {
-    const [myPosiion, setMyPosition] = useState<ILocation | undefined>({latitude: 37.565051, longitude: 126.978567});
+interface MapProps{
+    search:string;
+    categoryState:Array<any>;
+    conditions:Array<any>
+    types:Array<any>;
+}
+interface InfoProps{
+    id:string;
+    title:string;
+    hits:number;
+    tags:Array<{
+        id:string;
+        label:string;
+    }>
+    status:string;
+    deadline:string;
+}
+// 닫기버튼 추가하기
+export const Map = ({search,categoryState,conditions,types}:MapProps) => {
+    const [location, setLocation] = useState<ILocation | undefined>({
+        latitude: 37.565051, longitude: 126.978567,
+        latitudeDelta:0.0922, longitudeDelta:0.107
+    });
     const[menu,setMenu]=useState<boolean>(false);
+    const[info,setInfo]=useState<InfoProps>();
     useEffect(() => {
         requestPermission().then(result => { console.log({ result }); 
         if (result === "granted") { 
             Geolocation.getCurrentPosition(
                 async position => {
                     const {latitude, longitude} = position.coords;
-                    await setMyPosition({
-                        latitude,
-                        longitude,
+                    await setLocation({
+                        latitude:latitude,
+                        longitude:longitude,
+                        latitudeDelta:location.latitudeDelta,
+                        longitudeDelta:location.longitudeDelta
                     });
                 },
                 error => {
@@ -44,123 +77,157 @@ export const Map = () => {
         }
      });
     }, []);
+    const { loading, error, data } = useQuery(GET_LISTS,{
+        variables:{
+            search:search,
+            categories:categoryState,
+            conditions:conditions,
+            types:types,
+            // place:{
+            //     leftBottom:{
+            //         lat:location.latitude-location.latitudeDelta,
+            //         lng:location.longitude-location.longitudeDelta
+            //     },
+            //     rightTop:{
+            //         lat:location.latitude+location.latitudeDelta,
+            //         lng:location.longitude+location.longitudeDelta
+            //     }
+            // }
+        }
+    });
+    let mapData=``;
+    if (loading) return <Loading />;
+    if (error){
+        console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
+        console.log(error.graphQLErrors)
+        console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
+    }
+    if(data&&data.contests.edges){
+        mapData=data.contests.edges.map((data)=>
+            <View key={data.node.id.toString()}>
+                {data.node.place!==null?(
+                    <Marker
+                    coordinate={{latitude: data.node.place.latLng.lat, longitude: data.node.place.latLng.lng}}
+                    onPress={()=>{
+                        setInfo({
+                            id:data.node.id,
+                            title:data.node.title,
+                            hits:data.node.hits,
+                            tags:data.node.categories,
+                            status:data.node.application.status,
+                            deadline:data.node.application.period.endAt,
+                        })
+                        setMenu(!menu)
+                        console.log(menu)
+                    }}
+                    />
+                ):null}
+            </View>
+        )
+    }
     return (
         <MapContainer>
             <MapView
                 style={{flex:1}}
+                showsUserLocation={true}
+                region={location}
+                onPress={()=>setMenu(false)}
                 initialRegion={{
-                    latitude: myPosiion.latitude,
-                    longitude: myPosiion.longitude,
-                    latitudeDelta: 0.005,
-                    longitudeDelta: 0.005,
+                    latitude: location.latitude,
+                    longitude: location.longitude,
+                    latitudeDelta: location.latitudeDelta,
+                    longitudeDelta: location.longitudeDelta
                 }}
-            />
-             <Marker
-                coordinate={{latitude: myPosiion.latitude, longitude: myPosiion.longitude}}
-                title="this is a marker"
-                description="this is a marker example"
+                onRegionChangeComplete={(region)=>{
+                    setLocation(region);
+                    console.log(region);
+                }}
+                >
+                {mapData}
+            </MapView>
+            {menu?
+                <MapInfoMenu
+                    id={info.id}
+                    title={info.title}
+                    hits={info.hits}
+                    tags={info.tags}
+                    status={info.status}
+                    deadline={info.deadline}
                 />
-            {menu?(
-                <MenuContainer>
-                <Title>2020/21 한국언어학올림피아드</Title>
-                <StateBox>
-                    <Recruit />
-                    <Hits>조회수 0</Hits>
-                </StateBox>
-                <CateBox>
-                    <HashTag hashtag={'fff'} picked={false}/>
-                    <HashTag hashtag={'fff'} picked={false}/>
-                </CateBox>
-            </MenuContainer>
-            ):(null)}
+            :(null)}
         </MapContainer>
     )
 }
+interface MapInfoProps{
+    id:string;
+    title:string;
+    hits:number;
+    tags:Array<{
+        id:string,
+        label:string
+    }>
+    status:string;
+    deadline:string;
+}
+export const MapInfoMenu=({id,title,hits,tags,status,deadline}:MapInfoProps)=>{
+    const navigation=useNavigation();
+    const recruit=(status)=>{
+        switch(status){
+            case 'NOTSTARTED':
+                return <PreRecruit />;
+            case 'INPROGRESS':
+                return <Recruit />;
+            case 'COMPLETED':
+                return <NoRecruit />;
+        }
+    }
+    return(
+        <MenuContainer onPress={()=>navigation.navigate('DetailPage',{
+                        listId:id
+                    })}>
+            <Title>{title}</Title>
+            <StateBox>
+                {recruit(status)}
+                {Immenent(deadline)}
+                <Hits>조회수 {hits}</Hits>
+            </StateBox>
+            <CateBox>
+                {tags.map((tag)=>{
+                    return(
+                        <HashTag key={tag.id.toString()} hashtag={tag.label} picked={false}/>
+                    )
+                })}
+            </CateBox>
+        </MenuContainer>
+    )
+}
 
-
-// const Map=()=> {
-//     const defaultPosition = {latitude: 37.565051, longitude: 126.978567};
-//     const [permission,setPermission]=useState(false);
-//     const [myPosiion, setMyPosition] = useState<ILocation | undefined>(undefined);
-//     const[menu,setMenu]=useState<boolean>(false);
-//     useEffect(() => {
-//         requestPermission().then(result => { console.log({ result }); 
-//         if (result === "granted") { 
-//             Geolocation.getCurrentPosition(
-//                 async position => {
-//                     const {latitude, longitude} = position.coords;
-//                     await setMyPosition({
-//                         latitude,
-//                         longitude,
-//                     });
-//                     await setPermission(true);
-//                 },
-//                 error => {
-//                     console.log(error.code, error.message);
-//                 },
-//                 {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
-//             );
-//         }else   setPermission(false)
-//      });
-//     }, []);
-//     return (
-//         <View style={{width:'100%',height:'100%',padding:5}}>
-//             <MapContainer>
-//                 {permission?(
-//                     <MapView 
-//                         onCameraChange={()=>setMenu(false)}
-//                         onMapClick={()=>setMenu(false)}
-//                         onTipClick={()=>setMenu(!menu)}
-//                         latitude={myPosiion.latitude}
-//                         longitude={myPosiion.longitude}
-//                     />
-//                 ):(
-//                     <MapView 
-//                         onCameraChange={()=>setMenu(false)}
-//                         onMapClick={()=>setMenu(false)}
-//                         onTipClick={()=>setMenu(!menu)}
-//                         latitude={defaultPosition.latitude}
-//                         longitude={defaultPosition.longitude}
-//                     />
-//                 )}
-//             </MapContainer>
-//             {menu?(
-//                 <MenuContainer>
-//                 <Title>2020/21 한국언어학올림피아드</Title>
-//                 <StateBox>
-//                     <Recruit />
-//                     <Hits>조회수 0</Hits>
-//                 </StateBox>
-//                 <CateBox>
-//                     <HashTag hashtag={'fff'} picked={false}/>
-//                     <HashTag hashtag={'fff'} picked={false}/>
-//                 </CateBox>
-//             </MenuContainer>
-//             ):(null)}
-//         </View>
-//     )
-// }
-
-// interface MapViewProps{
-//     latitude:number;
-//     longitude:number;
-//     onCameraChange:()=>void;
-//     onMapClick:()=>void;
-//     onTipClick:()=>void;
-// }
-// export const MapView=({latitude,longitude,onCameraChange,onMapClick,onTipClick}:MapViewProps)=>{
-//     const MyPosition = {latitude: latitude, longitude: longitude};
-//     return(
-//     <NaverMapView style={{width: '100%', height: '100%'}}
-//         showsMyLocationButton={true}
-//         center={{...MyPosition, zoom: 10}}
-//         onCameraChange={onCameraChange}
-//         onMapClick={onMapClick}
-//         >
-//         <Marker coordinate={MyPosition} pinColor="blue" onClick={onTipClick} />
-//     </NaverMapView>
-//     )
-// }
+interface MapViewProps{
+    latitude:number;
+    longitude:number;
+    title:string;
+    description:string;
+}
+export const SmallMap=({latitude,longitude,title,description}:MapViewProps)=>{
+    return(
+    <MapView
+        style={{flex:1}}
+        showsUserLocation={true}
+        initialRegion={{
+            latitude: latitude,
+            longitude: longitude,
+            latitudeDelta: 0.005,
+            longitudeDelta: 0.005,
+        }}
+        >
+        <Marker
+            coordinate={{latitude: latitude, longitude: longitude}}
+            title={title}
+            description={description}
+        />
+    </MapView>
+    )
+}
 
 const MapContainer = styled.View`
     flex:1;
@@ -169,7 +236,7 @@ const MapContainer = styled.View`
     border-color:${Color.g1_color};
     overflow:hidden;
 `
-const MenuContainer = styled.View`
+const MenuContainer = styled.TouchableOpacity`
     position:absolute;
     bottom:0;
     width:100%;

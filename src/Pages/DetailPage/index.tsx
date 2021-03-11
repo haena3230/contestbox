@@ -16,7 +16,7 @@ import {OpenURLBtn} from '~/Components/Btn';
 import MarkIcon from '~/Assets/map-marker-alt-solid.svg';
 // navi
 import {DetailPageProps} from '~/Types';
-import {MapView} from '~/Components/Map';
+import {SmallMap} from '~/Components/Map';
 
 // data
 import { useQuery } from '@apollo/client';
@@ -185,7 +185,12 @@ const MapPart=({alias,place,lat,lng}:MapPartProps)=>{
                 <MapText>{alias}</MapText>
             </View>
             <MapBox>
-                <MapView onCameraChange={()=>null} onMapClick={()=>null} onTipClick={()=>null} latitude={lat} longitude={lng}/>
+                <SmallMap 
+                    latitude={lat} 
+                    longitude={lng}
+                    title={alias}
+                    description={place}
+                    />
             </MapBox>
             <View style={{flexDirection:'row',alignItems:'flex-start'}}>
                 <MarkIcon width={IconSize.sicon} height={IconSize.sicon} color={Color.g4_color} />

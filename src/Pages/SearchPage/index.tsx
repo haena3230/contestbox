@@ -28,9 +28,6 @@ const SearchPage = ({navigation}:SearchPageProps) => {
       <Container>
         <Header />
         <MainContainer>
-          <TouchableOpacity onPress={()=>console.log(categories)}>
-            <Text>rer</Text>
-          </TouchableOpacity>
           <Title>
             <Text style={Styles.b_font}>어떤 </Text>
             <Point>대회</Point>

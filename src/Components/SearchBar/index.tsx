@@ -25,7 +25,13 @@ export const SearchBar=({navigation}:SearchPageProps)=>{
       }} style={{paddingHorizontal:15}}>
         <Search height={IconSize.icon} width={IconSize.icon} color={Color.g3_color}/>
       </TouchableOpacity>
-      <TextInput style={Styles.m_font} placeholder={'검색어를 입력해 주세요.'} value={searchText} onChangeText={(text)=>{setSearchText(text)}} />
+      <TextInput 
+        style={Styles.m_font} 
+        placeholder={'검색어를 입력해 주세요.'} 
+        value={searchText} 
+        onChangeText={(text)=>{setSearchText(text)}} 
+        
+        />
     </SearchBarStyle>
   )
 }
