@@ -12,12 +12,11 @@ import { ScrollView } from 'react-native-gesture-handler';
 import {HashTag} from '~/Components/HashTag';
 import Loading from '~/Components/Loading';
 import {OpenURLBtn} from '~/Components/Btn';
-// icon
 import MarkIcon from '~/Assets/map-marker-alt-solid.svg';
+import Markdown from 'react-native-markdown-display';
 // navi
 import {DetailPageProps} from '~/Types';
 import {SmallMap} from '~/Components/Map';
-
 // data
 import { useQuery } from '@apollo/client';
 import {GET_DETAILS} from '~/queries';
@@ -104,7 +103,14 @@ const DetailPage =(props:DetailPageProps)=>{
                     ):(
                        null
                     )}
-                    <ContentTitle>상세내용</ContentTitle>
+                    {data.contest.content!==null?(
+                        <View>
+                            <ContentTitle>상세내용</ContentTitle>
+                            <Markdown>
+                                {data.contest.content}
+                            </Markdown>
+                        </View>
+                    ):null}
                     {data.contest.place!==null?(
                         <MapPart 
                             alias={data.contest.place.alias}

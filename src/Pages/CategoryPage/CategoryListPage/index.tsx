@@ -11,6 +11,7 @@ import {CategoryListPageProps} from '~/Types';
 import {useSelector,useDispatch} from 'react-redux';
 import {RootState} from '~/App';
 import { CLConditionAction, CLTypeAction } from '~/Store/actions';
+import {SortStatus} from '~/Types';
 // component
 import {SortComponent} from '~/Components/Sort'
 import {FilterBtn,ListBtn,SortBtn,MapBtn} from '~/Components/Btn';
@@ -20,7 +21,6 @@ import {HashTag} from '~/Components/HashTag';
 import ToTop from '~/Components/ToTop';
 import {Map} from '~/Components/Map';
 import {newStateArray, pickedIdArray} from '~/Components/Filter';
-
 
 const CategoryListPage=(props:CategoryListPageProps)=>{
     // 마운트를 위한 상태
@@ -60,47 +60,45 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
         })
     };
      // 정렬 버튼
-    const[sortState,setSortState]=useState<string>('추천순');
+    const[sortState,setSortState]=useState<SortStatus>({
+        statusName:'추천순',
+        status:'LATEST',
+        statusArr:[true,false,false]
+    });
     const[sort,setSort]=useState<boolean>(false);
-    const[one,setOne]=useState<boolean>(true);
-    const[two,setTwo]=useState<boolean>(false);
-    const[three,setThree]=useState<boolean>(false);
     const onPressTagOne=()=>{
-        setOne(true);
-        setTwo(false);
-        setThree(false);
-        setSortStatus('LATEST');
+        setSortState({
+            statusName:'추천순',
+            status:'LATEST',
+            statusArr:[true,false,false]
+        })
         setSort(!sort);
-        setSortState('추천순');
     }
     const onPressTagTwo=()=>{
-        setOne(false)
-        setTwo(true)
-        setThree(false)
-        setSortStatus('HITS');
+        setSortState({
+            statusName:'조회순',
+            status:'HITS',
+            statusArr:[false,true,false]
+        })
         setSort(!sort);
-        setSortState('조회순');
     }
     const onPressTagThree=()=>{
-        setOne(false)
-        setTwo(false)
-        setThree(true)
-        setSortStatus('LATEST');
+        setSortState({
+            statusName:'등록순',
+            status:'LATEST',
+            statusArr:[false,false,true]
+        }) 
         setSort(!sort);
-        setSortState('등록순');
     }
     const onPressSort=()=>{
         setSort(!sort);
     }
     //map
     const [map,setMap]=useState(false);
-
-    // list data
-    const [sortStatus,setSortStatus]=useState<string>('LATEST')
     
     const { loading, error, data } = useQuery(GET_LISTS,{
         variables:{
-            sort:sortStatus,
+            sort:sortState.status,
             categories:categoryState,
             conditions:pickedIdArray(conditions),
             types:pickedIdArray(types)
@@ -227,7 +225,7 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
                             onPressMap={()=>setMap(!map)}
                             onPressFilter={()=>props.navigation.navigate('CategoryFilterPage')}
                             onPressSort={()=>setSort(!sort)} 
-                            sortState={sortState}
+                            sortState={sortState.statusName}
                             badgeNumber={pickedIdArray(category).length+pickedIdArray(conditions).length+pickedIdArray(types).length}
                         />
                         <View style={{marginBottom:10}}>
@@ -236,9 +234,9 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
                         <SortComponent 
                         onPressCancle={onPressSort} 
                         modalVisible={sort} 
-                        one={one}
-                        two={two}
-                        three={three}
+                        one={sortState.statusArr[0]}
+                        two={sortState.statusArr[1]}
+                        three={sortState.statusArr[2]}
                         onPressTagOne={onPressTagOne}
                         onPressTagTwo={onPressTagTwo}
                         onPressTagThree={onPressTagThree}

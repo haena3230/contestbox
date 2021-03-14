@@ -68,12 +68,6 @@ const CategoryFilterPage =({navigation}:CategoryFilterPageProps)=>{
                             null
                         )}
                 </MenuContainer>
-                <TouchableOpacity onPress={()=>{
-                    console.log(types)
-                    console.log(conditions)
-                    }}>
-                    <Text>test</Text>
-                </TouchableOpacity>
                 {/* 참여조건 */}
                 <MenuContainer>
                     <MenuBox  onPress={()=>setConditionMenu(!conditionMenu)}>

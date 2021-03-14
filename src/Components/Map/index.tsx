@@ -12,7 +12,7 @@ import { HashTag } from '~/Components/HashTag';
 // map
 import Geolocation from 'react-native-geolocation-service';
 import MapView,{Marker} from 'react-native-maps';
-import { useQuery } from '@apollo/client';
+import { useQuery,makeVar } from '@apollo/client';
 import { GET_LISTS } from '~/queries';
 import Loading from '../Loading';
 
@@ -28,6 +28,20 @@ interface ILocation {
     latitudeDelta:number;
     longitudeDelta:number;
 }
+interface MapApiProps{
+    place:{
+        leftBottom:{
+            lat:number,
+            lng:number
+        },
+        rightTop:{
+            lat:number,
+            lng:number
+        }
+    }
+}
+type MapApi=MapApiProps[];
+
 interface MapProps{
     search:string;
     categoryState:Array<any>;
@@ -51,6 +65,19 @@ export const Map = ({search,categoryState,conditions,types}:MapProps) => {
         latitude: 37.565051, longitude: 126.978567,
         latitudeDelta:0.0922, longitudeDelta:0.107
     });
+    const initLocation:MapApi=[{
+        place:{
+            leftBottom:{
+                lat:location.latitude-location.latitudeDelta,
+                lng:location.longitude-location.longitudeDelta
+            },
+            rightTop:{
+                lat:location.latitude+location.latitudeDelta,
+                lng:location.longitude+location.longitudeDelta
+            }
+        }
+    }]
+    const mapVar = makeVar<MapApi>(initLocation);
     const[menu,setMenu]=useState<boolean>(false);
     const[info,setInfo]=useState<InfoProps>();
     useEffect(() => {
@@ -80,16 +107,7 @@ export const Map = ({search,categoryState,conditions,types}:MapProps) => {
             categories:categoryState,
             conditions:conditions,
             types:types,
-            // place:{
-            //     leftBottom:{
-            //         lat:location.latitude-location.latitudeDelta,
-            //         lng:location.longitude-location.longitudeDelta
-            //     },
-            //     rightTop:{
-            //         lat:location.latitude+location.latitudeDelta,
-            //         lng:location.longitude+location.longitudeDelta
-            //     }
-            // }
+            place:mapVar
         }
     });
     let mapData=``;
@@ -136,8 +154,19 @@ export const Map = ({search,categoryState,conditions,types}:MapProps) => {
                     longitudeDelta: location.longitudeDelta
                 }}
                 onRegionChangeComplete={(region)=>{
-                    setLocation(region);
-                    console.log(region);
+                    mapVar([{
+                        place:{
+                            leftBottom:{
+                                lat:region.latitude-region.latitudeDelta,
+                                lng:region.longitude-region.longitudeDelta
+                            },
+                            rightTop:{
+                                lat:region.latitude+region.latitudeDelta,
+                                lng:region.longitude+region.longitudeDelta
+                            }
+                        }
+                    }])
+                    console.log(location);
                 }}
                 >
                 {mapData}

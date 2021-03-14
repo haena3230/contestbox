@@ -82,6 +82,7 @@ export const GET_LISTS= gql`
               status
             }
             siteURL
+            content
             place{
               alias
               fullAddress

@@ -48,6 +48,13 @@ export interface DetailPageProps {
 }
 
 
+// sort 
+export interface SortStatus{
+  statusName:string,
+  status:string,
+  statusArr:Array<boolean>
+}
+
 
 
 
