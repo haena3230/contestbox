@@ -1,11 +1,11 @@
 // main home page
 import React from 'react';
-import {View, TouchableOpacity, Text} from 'react-native';
+import {View, TouchableOpacity, Text,StyleSheet, Image} from 'react-native';
 import styled from 'styled-components/native';
 import { ScrollView } from 'react-native-gesture-handler';
 // component
 import Header from '~/Components/Header';
-import {Container,Styles,Color} from '~/Styles';
+import {Container,Styles,Color,DWidth,ComponentContainer} from '~/Styles';
 import Swiper from 'react-native-swiper';
 import {HashTag} from '~/Components/HashTag';
 import Loading from '~/Components/Loading';
@@ -29,9 +29,11 @@ const HomePage = ({navigation}:HomaPageProps) => {
   }
   // catrgory && hot data
   const { loading, error, data } = useQuery(GET_HOTS,{
-    variables:{sort:'HITS',edge:{
-      first:10
-    },applicationStatuses:['NOTSTARTED','INPROGRESS']}
+    variables:{
+      sort:'HITS',
+      applicationStatuses:['NOTSTARTED','INPROGRESS'],
+      first:15
+    }
   });
   let categoriesData=[];
   let hotData='';
@@ -65,26 +67,28 @@ const HomePage = ({navigation}:HomaPageProps) => {
   }
   return (
     <Container>
-      <Header />
-      <BannerBox>
+      <ComponentContainer flex={1} padding={0}>
+        <Header/>
+      </ComponentContainer>
+      <View style={{flex:3,justifyContent:'center'}}>
         <Banner />
-      </BannerBox>
-      <CategoryContainer>
+      </View>
+      <ComponentContainer flex={2} padding={10}>
         <Title>
           카테고리
         </Title>
-        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={{paddingVertical:10}}>
+        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={{padding:10}}>
           {categoriesData}
         </ScrollView>
-      </CategoryContainer>
-      <View style={{padding:10,height:'50%'}}>
+      </ComponentContainer>
+      <ComponentContainer flex={7} padding={10}>
         <Title>
           인기대회
         </Title>
         <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
           {hotData}
         </ScrollView>
-      </View>
+      </ComponentContainer>
     </Container>
   );
 };
@@ -92,21 +96,23 @@ const HomePage = ({navigation}:HomaPageProps) => {
 const Banner = ()=>{
   const renderPagination = (index, total)=> {
     return (
-      <BannerPagination>
+      <View style={styles.bannerPg}>
         <BannerText>{index+1}/{total}</BannerText>
-      </BannerPagination>
+      </View>
     )
 }
   return(
-    <Swiper style={{height:80}} autoplay={true} renderPagination={renderPagination}>
+    <Swiper autoplay={true} renderPagination={renderPagination}>
         <TouchableOpacity onPress={() =>null}>
-          <BannerImg
-            source={require('~/Assets/poster.png')}
+          <Image
+            style={styles.bannerImg}
+            source={require('~/Assets/SearchBanner.png')}
           />
         </TouchableOpacity>
         <TouchableOpacity onPress={() =>null}>
-          <BannerImg
-            source={require('~/Assets/poster.png')}
+          <Image
+            style={styles.bannerImg}
+            source={require('~/Assets/RegBanner.png')}
           />
         </TouchableOpacity>
     </Swiper>
@@ -114,30 +120,24 @@ const Banner = ()=>{
 }
 
 // banner
-const BannerBox=styled.View`
-  height:80px;
-`
-const BannerImg=styled.Image`
-  width:100%;
-`
-const BannerPagination=styled.View`
-  background-color:${Color.g3_color};
-  opacity:0.7;
-  border-radius:10px;
-  padding-horizontal:10px;
-  position:absolute;
-  right:10px;
-  top:50px;
-`
+const styles=StyleSheet.create({
+  bannerImg:{
+    width:DWidth,
+    height:DWidth*(100/300)
+  },
+  bannerPg:{
+    backgroundColor:Color.g4_color,
+    opacity:0.5,
+    borderRadius:10,
+    paddingHorizontal:10,
+    position:'absolute',
+    right:10,
+    top:DWidth*(100/300)*(7/10),
+  }
+})
 const BannerText=styled.Text`
   ${Styles.s_font};
   color:${Color.w_color};
-`
-// category
-const CategoryContainer=styled.View`
-  margin-top:20px;
-  padding:10px;
-  height:20%;
 `
 const Title=styled.Text`
   ${Styles.m_font};
@@ -146,15 +146,14 @@ const Title=styled.Text`
 // poster
 const PosterContainer=styled.TouchableOpacity`
   height:100%;
-  aspect-ratio:0.6;
+  aspect-ratio:0.55;
   padding-vertical:10px;
   margin-horizontal:10px;
 `
 const PosterBox=styled.View`
   border-radius:5px;
-  height:90%;
-  aspect-ratio:0.7;
   overflow:hidden;
+  height:90%;
 `
 const Poster=styled.Image`
   width:100%;

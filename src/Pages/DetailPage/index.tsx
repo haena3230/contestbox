@@ -3,10 +3,9 @@ import React,{useRef} from 'react';
 import {View,Text} from 'react-native';
 import moment from 'moment';
 // style
-import {Color,Container, Styles,IconSize} from '~/Styles';
+import {Color,Container, Styles,IconSize,DWidth} from '~/Styles';
 import styled from 'styled-components/native';
 // components
-import Header from '~/Components/Header';
 import ToTop from '~/Components/ToTop';
 import { ScrollView } from 'react-native-gesture-handler';
 import {HashTag} from '~/Components/HashTag';
@@ -51,7 +50,6 @@ const DetailPage =(props:DetailPageProps)=>{
     
     return(
         <Container>
-            <Header />            
             <Box>
                 <ScrollView ref={scrollRef}>
                     {data.contest.posterURL!==null?(
@@ -106,7 +104,65 @@ const DetailPage =(props:DetailPageProps)=>{
                     {data.contest.content!==null?(
                         <View>
                             <ContentTitle>상세내용</ContentTitle>
-                            <Markdown>
+                            <Markdown
+                                style={{
+                                    heading1: {
+                                        fontSize: DWidth > 480 ? 24 : 20,
+                                        fontWeight:'bold',
+                                        marginVertical:10,
+                                        paddingVertical:10,
+                                        borderTopWidth:2,
+                                        borderColor:Color.g1_color
+                                    },
+                                    heading2: {
+                                        fontSize: DWidth > 480 ? 22 : 18,
+                                        fontWeight:'bold',
+                                        marginVertical:10,
+                                        paddingVertical:10,
+                                        borderTopWidth:2,
+                                        borderColor:Color.g1_color
+                                    },
+                                    heading3: {
+                                        fontSize: DWidth > 480 ? 20 : 16,
+                                        fontWeight:'bold',
+                                        marginVertical:10,
+                                        paddingVertical:10,
+                                        borderTopWidth:2,
+                                        borderColor:Color.g1_color
+                                    },
+                                    heading4: {
+                                        fontSize: DWidth > 480 ? 20 : 16,
+                                        fontWeight:'bold',
+                                        marginVertical:10,
+                                        paddingVertical:10,
+                                        borderTopWidth:2,
+                                        borderColor:Color.g1_color
+                                    },
+                                    heading5: {
+                                        fontSize: DWidth > 480 ? 18 : 16,
+                                        fontWeight:'bold',
+                                        marginVertical:10,
+                                        paddingVertical:10,
+                                        borderTopWidth:2,
+                                        borderColor:Color.g1_color
+                                    },
+                                    heading6: {
+                                        fontSize: DWidth > 480 ? 16 : 12,
+                                        fontWeight:'bold',
+                                        marginVertical:10,
+                                        paddingVertical:10,
+                                        borderTopWidth:2,
+                                        borderColor:Color.g1_color
+                                    },
+                                    code_block:{
+                                        backgroundColor:Color.g2_color,
+                                    },
+                                    code_inline:{
+                                        backgroundColor:Color.g4_color,
+                                        color:Color.w_color
+                                    }
+                                }}    
+                            >
                                 {data.contest.content}
                             </Markdown>
                         </View>
@@ -208,20 +264,17 @@ const MapPart=({alias,place,lat,lng}:MapPartProps)=>{
 
 // detail page
 const Box=styled.View`
-    margin:10px;
-    margin-bottom:50px;
+    margin:5px;
     background-color:${Color.w_color};
     border-radius:7px;
-    padding-horizontal:10px;
+    padding:10px;
     border-width:1px;
     border-color:${Color.g1_color};
 `
 
 const Poster =styled.Image`
     width:100%;
-    height:450px;
-    resizeMode:contain
-    margin-vertical:10px;
+    aspect-ratio:0.7;
     border-radius:10px;
     overflow:hidden;
 `

@@ -1,13 +1,13 @@
 import { gql } from '@apollo/client';
 
 export const GET_HOTS = gql`
-  query ($sort:ContestsSortType, $edge:EdgeInput, $applicationStatuses:[ContestApplicationStatus!]){
+  query ($sort:ContestsSortType, $first:Int, $applicationStatuses:[ContestApplicationStatus!]){
     categories {
       id
       label
       parentID
     }
-    contests(sort:$sort,edge:$edge,applicationStatuses:$applicationStatuses){
+    contests(sort:$sort,first:$first,applicationStatuses:$applicationStatuses){
       edges{
         node{
           id

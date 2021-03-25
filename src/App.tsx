@@ -9,7 +9,7 @@ import {queryReducers} from './Store/reducers';
 
 // graphql
 const client = new ApolloClient({
-  uri: 'https://api-dev.contestbox.co.kr/graphql',
+  uri: 'https://api.contestbox.co.kr/graphql',
   cache: new InMemoryCache()
 });
 

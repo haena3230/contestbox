@@ -1,7 +1,6 @@
 // 스타일 모음
 import {PixelRatio, StyleSheet} from 'react-native';
 import styled from 'styled-components/native';
-
   
 // 디바이스 맞춤 너비
 import { Dimensions } from 'react-native';
@@ -46,7 +45,16 @@ export const Styles = StyleSheet.create({
   height:100%;
   background-color:${Color.l_color};
 `
-
+// 비율 
+interface flexProps{
+  flex:number;
+  padding:number;
+}
+export const ComponentContainer=styled.View`
+  justify-content:center;
+  padding:${(props:flexProps)=>props.padding}px;
+  flex:${(props:flexProps)=>props.flex};
+`
 // 아이콘 사이즈
 export const IconSize={
   icon:DWidth>480?25:20,

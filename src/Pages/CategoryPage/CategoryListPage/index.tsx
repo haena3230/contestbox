@@ -1,5 +1,5 @@
 import React,{useState,useRef, useEffect} from 'react';
-import {Text, View} from 'react-native';
+import {FlatList, View,Text} from 'react-native';
 import styled from 'styled-components/native';
 import {Styles,Container} from '~/Styles';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
@@ -95,7 +95,6 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
     }
     //map
     const [map,setMap]=useState(false);
-    
     const { loading, error, data } = useQuery(GET_LISTS,{
         variables:{
             sort:sortState.status,
