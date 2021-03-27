@@ -1,5 +1,5 @@
 import React,{useState,useRef, useEffect} from 'react';
-import {FlatList, View,Text} from 'react-native';
+import {View} from 'react-native';
 import styled from 'styled-components/native';
 import {Styles,Container} from '~/Styles';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
@@ -15,12 +15,17 @@ import {SortStatus} from '~/Types';
 // component
 import {SortComponent} from '~/Components/Sort'
 import {FilterBtn,ListBtn,SortBtn,MapBtn} from '~/Components/Btn';
-import Loading from '~/Components/Loading';
+import Loading, { LastData } from '~/Components/Loading';
 import TextList,{TagBox,ListBox} from '~/Components/TextList';
 import {HashTag} from '~/Components/HashTag';
 import ToTop from '~/Components/ToTop';
 import {Map} from '~/Components/Map';
 import {newStateArray, pickedIdArray} from '~/Components/Filter';
+
+interface pageInfoProps{
+    endCursor:string,
+    hasNextPage:boolean
+}
 
 const CategoryListPage=(props:CategoryListPageProps)=>{
     // 마운트를 위한 상태
@@ -93,17 +98,24 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
     const onPressSort=()=>{
         setSort(!sort);
     }
-    //map
+    // map
     const [map,setMap]=useState(false);
-    const { loading, error, data } = useQuery(GET_LISTS,{
+    // list data
+    let listData=``;
+    let pageInfo:pageInfoProps={
+        endCursor:null,
+        hasNextPage:null
+    }
+    const { loading, error, data,fetchMore } = useQuery(GET_LISTS,{
         variables:{
+            after:pageInfo.endCursor,
+            first:10,
             sort:sortState.status,
             categories:categoryState,
             conditions:pickedIdArray(conditions),
             types:pickedIdArray(types)
         }
     });
-    let listData=``;
     if (loading) return <Loading />;
     if (error){
         console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
@@ -118,33 +130,50 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
     }
     if(data&&data.contests.edges){
         listData=data.contests.edges.map((data)=>
-        <ListBox key = {data.node.id.toString()} onPress={()=>{
-            props.navigation.navigate('DetailPage',{
-                listId:data.node.id,
-            })
-        }}>
-        <TextList 
-            recruit={data.node.application.status} 
-            deadline={data.node.application.period.endAt}
-            title={data.node.title} 
-            viewcount={data.node.hits}
-            />
-            {data.node.categories!==null?(
-            <TagBox>
-                {data.node.categories.slice(0,3).map((tag)=>
-                <HashTag key={tag.id.toString()} hashtag={tag.label} picked={false}/>
-                )}
-                {data.node.categories.length>3?(
-                <HashTag hashtag={'+'+ (data.node.categories.length-3)} picked={false}/>
-                ):(
-                null
-                )}
-            </TagBox>
-            ):null}
-        </ListBox>
+            <ListBox key = {data.node.id.toString()} onPress={()=>{
+                props.navigation.navigate('DetailPage',{
+                    listId:data.node.id,
+                })
+            }}>
+            <TextList 
+                recruit={data.node.application.status} 
+                deadline={data.node.application.period.endAt}
+                title={data.node.title} 
+                viewcount={data.node.hits}
+                />
+                {data.node.categories!==null?(
+                <TagBox>
+                    {data.node.categories.slice(0,3).map((tag)=>
+                    <HashTag key={tag.id.toString()} hashtag={tag.label} picked={false}/>
+                    )}
+                    {data.node.categories.length>3?(
+                    <HashTag hashtag={'+'+ (data.node.categories.length-3)} picked={false}/>
+                    ):(
+                    null
+                    )}
+                </TagBox>
+                ):null}
+            </ListBox>
         )
+        pageInfo=data.contests.pageInfo;
         if(listData.length>3) totop=true;
         else totop=false;
+    }
+    // pagination
+    const onEndReached=()=>{
+        if(pageInfo.hasNextPage===true)
+            {   
+                fetchMore({
+                    variables:{
+                        after:pageInfo.endCursor,
+                        first:10,
+                        sort:sortState.status,
+                        categories:categoryState,
+                        conditions:pickedIdArray(conditions),
+                        types:pickedIdArray(types)
+                    }
+                })
+            }
     }
     return(
         <Container>
@@ -194,7 +223,15 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
                 </View>
             ):(
                 <View>
-                    <ScrollView style={{padding:5}} ref={scrollRef}>
+                    <ScrollView 
+                        style={{padding:5}} 
+                        ref={scrollRef}
+                        onScroll={(e)=>{
+                            if (e.nativeEvent.contentOffset.y + e.nativeEvent.layoutMeasurement.height >= e.nativeEvent.contentSize.height){
+                                onEndReached()
+                            }                            
+                        }}
+                        >
                         <View style={{paddingTop:20}}>
                             <CategoryBox>
                                 <Category># {categories[0].label}</Category>
@@ -240,6 +277,7 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
                         onPressTagTwo={onPressTagTwo}
                         onPressTagThree={onPressTagThree}
                         />
+                        {pageInfo.hasNextPage?<Loading />:<LastData />}
                     </ScrollView>
                     {totop?(
                         <ToTop onPressToTop={onPressToTop}/>

@@ -21,8 +21,8 @@ import { SearchFilterPageProps } from '~/Types';
 
 const SearchFilterPage =({navigation}:SearchFilterPageProps)=>{
     // 상태 불러오기
-    let orgCategories =useSelector((state:RootState)=>state.query.categoriesArray)
-    let categories=useSelector((state:RootState)=>state.query.SLCategoryArray)
+    // let orgCategories =useSelector((state:RootState)=>state.query.categoriesArray)
+    // let categories=useSelector((state:RootState)=>state.query.SLCategoryArray)
     let types= useSelector((state:RootState)=>state.query.SLTypeArray)
     let conditions= useSelector((state:RootState)=>state.query.SLConditionArray)
     // 상태 업데이트
@@ -38,18 +38,18 @@ const SearchFilterPage =({navigation}:SearchFilterPageProps)=>{
     const [conditionMenu,setConditionMenu]=useState<boolean>(false);
     // 상태 저장하기
     const dispatch=useDispatch();
-    const storeSLCategoryNewArray=(Array:Array<any>)=>{
-        dispatch(SLCategoryAction(Array))
-    }
+    // const storeSLCategoryNewArray=(Array:Array<any>)=>{
+    //     dispatch(SLCategoryAction(Array))
+    // }
     const storeSLTypeNewArray=(Array:Array<any>)=>{
         dispatch(SLTypeAction(Array))
     }
     const storeSLConditionNewArray=(Array:Array<any>)=>{
         dispatch(SLConditionAction(Array))
     }
-    if(categories.length===0){
-        categories=CategoryStateArray(orgCategories)
-    }
+    // if(categories.length===0){
+    //     categories=CategoryStateArray(orgCategories)
+    // }
     return(
         <Container>
             <FilterHeader />
@@ -81,7 +81,7 @@ const SearchFilterPage =({navigation}:SearchFilterPageProps)=>{
                             null
                         )}
                 </MenuContainer>
-                {/* 카테고리 */}
+                {/* 카테고리
                 <MenuContainer>
                     <MenuBox  onPress={()=>setCategoryMenu(!categoryMenu)}>
                         <MenuTitle>
@@ -110,7 +110,7 @@ const SearchFilterPage =({navigation}:SearchFilterPageProps)=>{
                                         }}
                                         onPressSecond={()=>{
                                             setState(!state);
-                                            console.log('test')
+                                            console.log(index)
                                         }}
                                     />
                                 )
@@ -122,7 +122,7 @@ const SearchFilterPage =({navigation}:SearchFilterPageProps)=>{
                     console.log(CategoryStateArray(orgCategories))
                 }}>
                     <Text>test</Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
                 {/* 참여조건 */}
                 <MenuContainer>
                     <MenuBox  onPress={()=>setConditionMenu(!conditionMenu)}>

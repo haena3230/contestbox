@@ -6,11 +6,20 @@ import SplashScreen from 'react-native-splash-screen';
 import {createStore,combineReducers,Reducer,Store} from 'redux'
 import {Provider} from 'react-redux'
 import {queryReducers} from './Store/reducers';
+import { relayStylePagination } from '@apollo/client/utilities';
 
 // graphql
 const client = new ApolloClient({
-  uri: 'https://api.contestbox.co.kr/graphql',
-  cache: new InMemoryCache()
+  uri: 'https://api-dev.contestbox.co.kr/graphql',
+  cache: new InMemoryCache({
+    typePolicies:{
+      Query:{
+        fields:{
+          contests: relayStylePagination(),
+        }
+      }
+    }
+  })
 });
 
 // redux

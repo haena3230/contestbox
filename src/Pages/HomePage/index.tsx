@@ -67,9 +67,7 @@ const HomePage = ({navigation}:HomaPageProps) => {
   }
   return (
     <Container>
-      <ComponentContainer flex={1} padding={0}>
-        <Header/>
-      </ComponentContainer>
+      <Header/>
       <View style={{flex:3,justifyContent:'center'}}>
         <Banner />
       </View>
@@ -151,7 +149,7 @@ const PosterContainer=styled.TouchableOpacity`
   margin-horizontal:10px;
 `
 const PosterBox=styled.View`
-  border-radius:5px;
+  border-radius:10px;
   overflow:hidden;
   height:90%;
 `
@@ -162,7 +160,6 @@ const Poster=styled.Image`
 `
 const PosterText=styled.Text`
   ${Styles.s_font};
-  font-weight:bold;
   margin-horizontal:3px;
 `
 export default HomePage;
