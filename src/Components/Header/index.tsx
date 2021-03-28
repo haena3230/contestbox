@@ -56,7 +56,7 @@ interface HeaderContainerProps{
 }
 const HeaderContainer=styled.View`
     width:100%;
-    padding-Vertical:10px;
+    padding-vertical:15px;
     flex-direction:row;
     justify-content:space-between;
     align-items:center;

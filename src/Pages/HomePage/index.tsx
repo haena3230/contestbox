@@ -1,23 +1,93 @@
 // main home page
 import React from 'react';
-import {View, Text, TouchableOpacity, Image,StyleSheet} from 'react-native';
+import {View, TouchableOpacity, Text,StyleSheet, Image} from 'react-native';
 import styled from 'styled-components/native';
 import { ScrollView } from 'react-native-gesture-handler';
 // component
 import Header from '~/Components/Header';
-import {Container,Styles,Color} from '~/Styles';
+import {Container,Styles,Color,DWidth,ComponentContainer} from '~/Styles';
 import Swiper from 'react-native-swiper';
 import {HashTag} from '~/Components/HashTag';
+import Loading from '~/Components/Loading';
+import {CategoryView} from '~/Components/Filter';
+// data
+import {useQuery} from '@apollo/client';
+import {GET_HOTS} from '~/queries';
+import {HomaPageProps} from '~/Types';
+import {useDispatch} from 'react-redux'
+import { categoryAction,CLCategoryAction } from '~/Store/actions';
+import {newStateArray} from '~/Components/Filter';
 
-const HomePage = () => {
+const HomePage = ({navigation}:HomaPageProps) => {
+  // redux
+  const dispatch = useDispatch()
+  const storeCategories=(Array:Array<string>)=>{
+    dispatch(categoryAction(Array))
+  }
+  const storeNewArrayCategories=(Array:Array<any>)=>{
+    dispatch(CLCategoryAction(Array))
+  }
+  // catrgory && hot data
+  const { loading, error, data } = useQuery(GET_HOTS,{
+    variables:{
+      existPoster:true,
+      sort:'HITS',
+      applicationStatuses:['NOTSTARTED','INPROGRESS'],
+      first:15
+    }
+  });
+  let categoriesData=[];
+  let hotData='';
+  if(loading) return <Loading />
+  if(error)return <Text>err</Text>
+  if(data.categories){
+    // max 10개
+    categoriesData=CategoryView(data.categories).slice(0,9).map((cate)=>
+    <TouchableOpacity  key = {cate[0].id} onPress={()=>{
+        navigation.navigate('CategoryListPage'),
+        storeNewArrayCategories(newStateArray(cate))
+        }}>
+      <HashTag hashtag={cate[0].label} picked={false}/>
+    </TouchableOpacity>
+    ),
+    storeCategories(CategoryView(data.categories));
+  }
+  if(data.contests){
+    hotData=data.contests.edges.map((contest)=>
+    <PosterContainer key = {contest.node.id.toString()} onPress={()=>
+      navigation.navigate('DetailPage',{
+        listId:contest.node.id
+      })
+    }>
+      <PosterBox>
+        <Poster source={{uri:`contest.node.posterURL`+',w_297,h_420'}}/>
+      </PosterBox>
+      <PosterText numberOfLines={2} ellipsizeMode="tail">{contest.node.title}</PosterText>
+    </PosterContainer>
+    )
+  }
   return (
     <Container>
-      <Header />
-      <BannerBox>
+      <Header/>
+      <View style={{flex:3,justifyContent:'center'}}>
         <Banner />
-      </BannerBox>
-      <Category />
-      <BestContest />
+      </View>
+      <ComponentContainer flex={2} padding={10}>
+        <Title>
+          카테고리
+        </Title>
+        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={{padding:10}}>
+          {categoriesData}
+        </ScrollView>
+      </ComponentContainer>
+      <ComponentContainer flex={7} padding={10}>
+        <Title>
+          인기대회
+        </Title>
+        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+          {hotData}
+        </ScrollView>
+      </ComponentContainer>
     </Container>
   );
 };
@@ -25,96 +95,48 @@ const HomePage = () => {
 const Banner = ()=>{
   const renderPagination = (index, total)=> {
     return (
-      <BannerPagination>
+      <View style={styles.bannerPg}>
         <BannerText>{index+1}/{total}</BannerText>
-      </BannerPagination>
+      </View>
     )
 }
   return(
-    <Swiper style={{height:80}} autoplay={true} renderPagination={renderPagination}>
+    <Swiper autoplay={true} renderPagination={renderPagination}>
         <TouchableOpacity onPress={() =>null}>
-          <BannerImg
-            source={require('~/Assets/poster.png')}
+          <Image
+            style={styles.bannerImg}
+            source={require('~/Assets/SearchBanner.png')}
           />
         </TouchableOpacity>
         <TouchableOpacity onPress={() =>null}>
-          <BannerImg
-            source={require('~/Assets/poster.png')}
+          <Image
+            style={styles.bannerImg}
+            source={require('~/Assets/RegBanner.png')}
           />
         </TouchableOpacity>
     </Swiper>
   )
 }
 
-const Category=()=>{
-  return(
-    <CategoryContainer>
-      <Title>
-        카테고리
-      </Title>
-      <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={{paddingVertical:10}}>
-        <TouchableOpacity>
-          <HashTag hashtag={'test'} picked={false}/>
-        </TouchableOpacity>
-      </ScrollView>
-    </CategoryContainer>
-  )
-}
-
-const BestContest=()=>{
-  return(
-    <View style={{padding:10,height:'50%'}}>
-      <Title>
-        인기대회
-      </Title>
-      <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-        <PosterContainer>
-          <PosterBox>
-            <Poster source={require('~/Assets/poster.png')}/>
-          </PosterBox>
-          <PosterText>이름입니다</PosterText>
-        </PosterContainer>
-        <PosterContainer>
-          <PosterBox>
-            <Poster source={require('~/Assets/poster.png')}/>
-          </PosterBox>
-          <PosterText>이름입니다</PosterText>
-        </PosterContainer>
-        <PosterContainer>
-          <PosterBox>
-            <Poster source={require('~/Assets/poster.png')}/>
-          </PosterBox>
-          <PosterText>이름입니다</PosterText>
-        </PosterContainer>
-      </ScrollView>
-    </View>
-  )
-}
 // banner
-const BannerBox=styled.View`
-  height:80px;
-`
-const BannerImg=styled.Image`
-  width:100%;
-`
-const BannerPagination=styled.View`
-  background-color:${Color.g3_color};
-  opacity:0.7;
-  border-radius:10px;
-  padding-horizontal:10px;
-  position:absolute;
-  right:10px;
-  top:50px;
-`
+const styles=StyleSheet.create({
+  bannerImg:{
+    width:DWidth,
+    height:DWidth*(100/300)
+  },
+  bannerPg:{
+    backgroundColor:Color.g4_color,
+    opacity:0.5,
+    borderRadius:10,
+    paddingHorizontal:10,
+    position:'absolute',
+    right:10,
+    top:DWidth*(100/300)*(7/10),
+  }
+})
 const BannerText=styled.Text`
   ${Styles.s_font};
   color:${Color.w_color};
-`
-// category
-const CategoryContainer=styled.View`
-  margin-top:20px;
-  padding:10px;
-  height:20%;
 `
 const Title=styled.Text`
   ${Styles.m_font};
@@ -122,14 +144,15 @@ const Title=styled.Text`
 `
 // poster
 const PosterContainer=styled.TouchableOpacity`
+  height:100%;
+  aspect-ratio:0.55;
   padding-vertical:10px;
   margin-horizontal:10px;
 `
 const PosterBox=styled.View`
-  border-radius:5px;
-  height:90%;
-  aspect-ratio:0.7;
+  border-radius:10px;
   overflow:hidden;
+  height:90%;
 `
 const Poster=styled.Image`
   width:100%;
@@ -138,6 +161,6 @@ const Poster=styled.Image`
 `
 const PosterText=styled.Text`
   ${Styles.s_font};
-  font-weight:bold;
+  margin-horizontal:3px;
 `
 export default HomePage;

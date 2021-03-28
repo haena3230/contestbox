@@ -1,27 +1,87 @@
 // filterpage component
 import React, { useState } from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { Text, TouchableOpacity} from 'react-native';
 import styled from 'styled-components/native';
 import { Styles,Color } from '~/Styles';
-import {useNavigation} from '@react-navigation/native';
+
 // components
-import {FilterBtn, ShortBtn, SortDownBtn, SortUpBtn} from  '~/Components/Btn';
-import {HashTag} from '~/Components/HashTag';
-import {SortBtn} from '~/Components/Btn';
-import {FilterCategory} from '~/Components/Filter/FilterCategory';
+import {FilterBtn, ShortBtn} from  '~/Components/Btn';
+
+// 함수
+
+// category treeview 저장
+export const CategoryView=(array:Array<{id,label,parentID}>)=>{
+  let i=0;
+  let categories = new Array();
+  while(array[i]!==undefined){
+    let tmp = new Array();
+    let j=0;
+    if(array[i].parentID===null){
+      tmp.push(array[i]);
+      while(array[j]!==undefined){
+        if(array[i].id===array[j].parentID){
+          tmp.push(array[j]);
+        } j++;
+      }
+      categories.push(tmp);
+    }
+    i++
+  }
+  return categories;
+}
+// value 들어간 배열 생성함수
+export const newStateArray=(array:Array<any>)=>{
+    let i=0;
+    let state=[]
+    for(i=0;i<array.length;i++){
+        state.push({
+            id:array[i].id,
+            label:array[i].label,
+            value:false
+        })
+    }
+    return state;
+}
+
+// 선택된 id만 포함된 배열
+export const pickedIdArray=(array:Array<any>)=>{
+    let idArray=[];
+    let result=array.filter(d=>{
+    return d.value===true
+    });
+    result.forEach((e)=>{
+        idArray.push(e.id)
+    });
+    return(idArray);
+}
+
+// 선택된 id만 포함된 배열(다차원)
+export const pickedIdArraies=(array:Array<any>)=>{
+    let idArray=[];
+    let i=0;
+    while(array[i]!=undefined){
+        let result=array[i].filter(d=>{
+        return d.value===true
+        });
+        result.forEach((e)=>{
+            idArray.push(e.id)
+        });
+        i++;
+    };
+    return(idArray);
+}
+
 
 // 필터페이지 헤더
 export const FilterHeader=()=>{
-    const navigation=useNavigation();
     return(
         <HeaderContainer>
             <HeaderTitle>
                 <HeaderBox>
-                    <FilterBtn onPressFilter={()=>null}/> 
+                    <FilterBtn onPressFilter={()=>null} number={0}/> 
                 </HeaderBox>
                 <Text style={Styles.b_font}>필터</Text>
             </HeaderTitle>
-            <Close onPressClose={()=>navigation.goBack()}/>
         </HeaderContainer>
     )   
 }
@@ -40,75 +100,16 @@ const Close = ({onPressClose}:CloseBtnProps)=>{
     )
 }
 
-// 리스트 메뉴 (종류,참여조건)
-interface FilterMenuTypeProps{
-    title:string;
-}
-export const FilterMenuType=({title}:FilterMenuTypeProps)=>{
-    const [menu,setMenu]=useState<Boolean>(false);
-    return(
-        <MenuContainer>
-            <MenuBox  onPress={()=>setMenu(!menu)}>
-                <MenuTitle>
-                    {title}
-                </MenuTitle>
-                {menu?
-                    <SortUpBtn />
-                    :<SortDownBtn />
-                }
-            </MenuBox>
-            {menu?(
-                <Type>
-                    <TagState />
-                </Type>
-            ):null}
-        </MenuContainer>
-    )
-}
-
-const TagState=()=>{
-    const[state,setState]=useState<boolean>(false);
-    return(
-        <TouchableOpacity onPress={()=>setState(!state)}>
-            {state?(
-                <HashTag hashtag={'test'} picked={true}/>
-            ):(
-                <HashTag hashtag={'test'} picked={false}/>
-            )}
-            
-        </TouchableOpacity>
-    )
-}
-
-// 리스트메뉴 (카테고리)
-export const FilterMenuCategory=()=>{
-    const [menu,setMenu]=useState<Boolean>(false);
-    return(
-        <MenuContainer>
-            <MenuBox  onPress={()=>setMenu(!menu)}>
-                <MenuTitle>
-                    카테고리
-                </MenuTitle>
-                {menu?
-                    <SortUpBtn />
-                    :<SortDownBtn />
-                }
-            </MenuBox>
-            {menu?(
-                <CategoryBox>
-                    <FilterCategory />
-                </CategoryBox>
-            ):null}
-        </MenuContainer>
-    )
-}
-
 // bottom btn
-export const FilterBottom=()=>{
+interface FilterBottomProps{
+    onPressReset:()=>void;
+    onPressConfirm:()=>void;
+}
+export const FilterBottom=({onPressReset,onPressConfirm}:FilterBottomProps)=>{
     return(
         <BottomContainer>
-            <ShortBtn color={Color.g2_color} text={' 초기화 '} onPress={()=>null}/>
-            <ShortBtn color={Color.p_color} text={'적용하기'} onPress={()=>null}/>
+            <ShortBtn color={Color.g2_color} text={' 초기화 '} onPress={onPressReset}/>
+            <ShortBtn color={Color.p_color} text={'적용하기'} onPress={onPressConfirm}/>
         </BottomContainer>
     )
 }
@@ -136,31 +137,26 @@ const CloseBtn=styled.Text`
     font-weight:bold;
 `
 // filter menu
-const MenuContainer=styled.View`
+export const MenuContainer=styled.View`
     border-bottom-width:1px;
     border-color:${Color.g2_color};
 `
-const MenuBox=styled.TouchableOpacity`
+export const MenuBox=styled.TouchableOpacity`
     flex-direction:row;
     align-items:center;
     justify-content:space-between;
     padding-horizontal:20px;
     padding-vertical:10px;
 `
-const MenuTitle=styled.Text`
+export const MenuTitle=styled.Text`
     ${Styles.m_font};
     color:${Color.g4_color};
     font-weight:bold;
 `
-
 // 종류
-const Type = styled.View`
+export const Type = styled.View`
     flex-direction:row;
     flex-wrap:wrap;
-    padding:15px;
-`
-// 카테고리
-const CategoryBox =styled.View`
     padding:15px;
 `
 // bottom
@@ -176,3 +172,4 @@ const BottomContainer=styled.View`
     position:absolute;
     bottom:0;
 `
+

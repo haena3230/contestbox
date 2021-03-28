@@ -1,21 +1,21 @@
 // list detail Page
-import React,{useCallback, useRef} from 'react';
-import {View,Text, Linking, Alert} from 'react-native';
+import React,{useRef, useState} from 'react';
+import {View,Text} from 'react-native';
 import moment from 'moment';
 // style
-import {Color,Container, Styles} from '~/Styles';
+import {Color,Container, Styles,IconSize,DWidth} from '~/Styles';
 import styled from 'styled-components/native';
 // components
-import Header from '~/Components/Header';
 import ToTop from '~/Components/ToTop';
 import { ScrollView } from 'react-native-gesture-handler';
 import {HashTag} from '~/Components/HashTag';
-import {ShortBtn} from '~/Components/Btn';
 import Loading from '~/Components/Loading';
+import {OpenURLBtn} from '~/Components/Btn';
+import MarkIcon from '~/Assets/map-marker-alt-solid.svg';
+import Markdown from 'react-native-markdown-display';
 // navi
 import {DetailPageProps} from '~/Types';
-import {SndMap} from '~/Components/Map';
-
+import {SmallMap} from '~/Components/Map';
 // data
 import { useQuery } from '@apollo/client';
 import {GET_DETAILS} from '~/queries';
@@ -23,6 +23,7 @@ import {GET_DETAILS} from '~/queries';
 const DetailPage =(props:DetailPageProps)=>{
     // totop
     const scrollRef=useRef<ScrollView>();
+    const[totop,setTotop]=useState<Boolean>(false);
     const onPressToTop=()=>{
         scrollRef.current.scrollTo({
             y: 0,
@@ -34,19 +35,7 @@ const DetailPage =(props:DetailPageProps)=>{
     const { loading, error, data } = useQuery(GET_DETAILS,{
         variables:{id:listId}
     });
-    // link
-    const OpenURLButton = ({ url, children }) => {
-        const handlePress = useCallback(async () => {
-            const supported = await Linking.canOpenURL(url);
-            if (supported) {
-            await Linking.openURL(url);
-            } else {
-            Alert.alert(`Don't know how to open this URL: ${url}`);
-            }
-        }, [url]);
-        
-    return <ShortBtn text={children} onPress={handlePress}/>;
-    };
+    
     // period
     const PeriodSplit=(At)=>{
         let Period =At.split('T');
@@ -62,13 +51,21 @@ const DetailPage =(props:DetailPageProps)=>{
     
     return(
         <Container>
-            <Header />            
             <Box>
-                <ScrollView ref={scrollRef}>
-                    {data.contest.posterURL!==""?(
-                        <Poster source={{uri:data.contest.posterURL}}/>    
+                <ScrollView 
+                    ref={scrollRef}
+                    onScroll={(e)=>{
+                        if (e.nativeEvent.contentOffset.y===0){
+                            setTotop(false);
+                        }                            
+                    }}
+                    onScrollBeginDrag={()=>setTotop(true)}
+                    >
+                    {data.contest.posterURL!==null?(
+                        <Poster source={{
+                            uri:`data.contest.posterURL`+',w_594,h_840'
+                        }}/>
                     ):(
-                        // <Poster source={require('~/Assets/poster.png')}/>
                         null      
                     )}
                     
@@ -108,22 +105,91 @@ const DetailPage =(props:DetailPageProps)=>{
                     <Period Start={PeriodSplit(data.contest.application.period.startAt)} End={PeriodSplit(data.contest.application.period.endAt)}/>
                     {data.contest.siteURL!==""?(
                         <View style={{width:'100%',alignItems:'flex-end'}}>
-                            <View style={{width:'30%'}}>
-                                <OpenURLButton url={data.contest.siteURL}>홈페이지</OpenURLButton>
-                            </View>
+                            <OpenURLBtn url={data.contest.siteURL}>홈페이지</OpenURLBtn>
                         </View>
                     ):(
                        null
                     )}
-                    <ContentTitle>상세내용</ContentTitle>
+                    {data.contest.content!==null?(
+                        <View>
+                            <ContentTitle>상세내용</ContentTitle>
+                            <Markdown
+                                style={{
+                                    heading1: {
+                                        fontSize: DWidth > 480 ? 24 : 20,
+                                        fontWeight:'bold',
+                                        marginVertical:10,
+                                        paddingVertical:10,
+                                        borderTopWidth:2,
+                                        borderColor:Color.g1_color
+                                    },
+                                    heading2: {
+                                        fontSize: DWidth > 480 ? 22 : 18,
+                                        fontWeight:'bold',
+                                        marginVertical:10,
+                                        paddingVertical:10,
+                                        borderTopWidth:2,
+                                        borderColor:Color.g1_color
+                                    },
+                                    heading3: {
+                                        fontSize: DWidth > 480 ? 20 : 16,
+                                        fontWeight:'bold',
+                                        marginVertical:10,
+                                        paddingVertical:10,
+                                        borderTopWidth:2,
+                                        borderColor:Color.g1_color
+                                    },
+                                    heading4: {
+                                        fontSize: DWidth > 480 ? 20 : 16,
+                                        fontWeight:'bold',
+                                        marginVertical:10,
+                                        paddingVertical:10,
+                                        borderTopWidth:2,
+                                        borderColor:Color.g1_color
+                                    },
+                                    heading5: {
+                                        fontSize: DWidth > 480 ? 18 : 16,
+                                        fontWeight:'bold',
+                                        marginVertical:10,
+                                        paddingVertical:10,
+                                        borderTopWidth:2,
+                                        borderColor:Color.g1_color
+                                    },
+                                    heading6: {
+                                        fontSize: DWidth > 480 ? 16 : 12,
+                                        fontWeight:'bold',
+                                        marginVertical:10,
+                                        paddingVertical:10,
+                                        borderTopWidth:2,
+                                        borderColor:Color.g1_color
+                                    },
+                                    code_block:{
+                                        backgroundColor:Color.g2_color,
+                                    },
+                                    code_inline:{
+                                        backgroundColor:Color.g4_color,
+                                        color:Color.w_color
+                                    }
+                                }}    
+                            >
+                                {data.contest.content}
+                            </Markdown>
+                        </View>
+                    ):null}
+                    {data.contest.place!==null?(
+                        <MapPart 
+                            alias={data.contest.place.alias}
+                            place={data.contest.place.fullAddress} 
+                            lat={data.contest.place.latLng.lat} 
+                            lng={data.contest.place.latLng.lng}
+                            />
+                    ):(
+                        null
+                    )}
                     
-                    <ContentTitle>대회 장소</ContentTitle>
-                    <MapBox>
-                        <SndMap latitude={37.565051} longitude={126.978567}/>
-                    </MapBox>
                 </ScrollView>
             </Box>
-            <ToTop onPressToTop={onPressToTop}/>
+            {totop?<ToTop onPressToTop={onPressToTop}/>:null}
         </Container>
     )
 }
@@ -175,23 +241,51 @@ const Period = ({Start,End}:PeriodProps)=>{
         </PeriodContainer>
     )
 }
+// map part
+interface MapPartProps{
+    alias:string;
+    place:string;
+    lat:number;
+    lng:number;
+}
+const MapPart=({alias,place,lat,lng}:MapPartProps)=>{
+    return(
+        <View style={{marginBottom:30}}>
+            <View style={{flexDirection:'row',alignItems:'flex-end',justifyContent:'space-between'}}>
+                <ContentTitle>대회 장소</ContentTitle>
+                <MapText>{alias}</MapText>
+            </View>
+            <MapBox>
+                <SmallMap 
+                    latitude={lat} 
+                    longitude={lng}
+                    title={alias}
+                    description={place}
+                    />
+            </MapBox>
+            <View style={{flexDirection:'row',alignItems:'flex-start'}}>
+                <MarkIcon width={IconSize.sicon} height={IconSize.sicon} color={Color.g4_color} />
+                <MapText>{place}</MapText>
+            </View>
+        </View>
+    )
+}
 
 // detail page
 const Box=styled.View`
-    margin:10px;
-    margin-bottom:50px;
+    margin:5px;
     background-color:${Color.w_color};
     border-radius:7px;
-    padding-horizontal:10px;
+    padding:10px;
     border-width:1px;
     border-color:${Color.g1_color};
 `
 
 const Poster =styled.Image`
     width:100%;
-    height:450px;
-    resizeMode:contain
-    margin-vertical:10px;
+    aspect-ratio:0.7;
+    border-radius:10px;
+    overflow:hidden;
 `
 const TextBox=styled.View`
     margin-vertical:5px;
@@ -219,8 +313,7 @@ const MapBox=styled.View`
     border-color:${Color.g1_color};
     overflow:hidden;
     height:200px;
-    margin-top:10px;
-    margin-bottom:30px;
+    margin-vertical:10px;
 `
 
 // period
@@ -238,6 +331,12 @@ const Time=styled.View`
 const TimeText =styled.Text`
     ${Styles.ss_font};
     margin-horizontal:3px;
+`
 
+// map
+const MapText=styled.Text`
+    ${Styles.s_font};
+    color:${Color.g4_color};
+    margin-horizontal:3px;
 `
 export default DetailPage;

@@ -1,56 +1,32 @@
   // 첫번째 메인 탭 MainPage.tsx
-import React,{useState} from 'react';
+import React from 'react';
 import {View, Text} from 'react-native';
 import styled from 'styled-components/native';
 // Component
 import Header from '~/Components/Header';
 import {HashTag} from '~/Components/HashTag';
 import {SearchBar} from '~/Components/SearchBar';
-import Loading from '~/Components/Loading';
+
 // style 
 import {Color,Styles,Container,DWidth} from '~/Styles';
 import {TouchableOpacity } from 'react-native-gesture-handler';
 // data
-import { useQuery,useMutation } from '@apollo/client';
-import {GET_CATEGORIES} from '~/queries';
 import {SearchPageProps} from '~/Types';
-
-// test
-import {ADD_CONTEST} from '~/queries';
-function Add(){
-  const[addContest]=useMutation(ADD_CONTEST);
-  return(
-    <TouchableOpacity onPress={()=>{
-      addContest();
-    }}>
-      <Text>test</Text>
-    </TouchableOpacity>
-  )
-}
-
+import {useSelector,useDispatch} from 'react-redux';
+import {RootState} from '~/App';
+import {CLCategoryAction} from '~/Store/actions';
+import {newStateArray} from '~/Components/Filter';
 
 const SearchPage = ({navigation}:SearchPageProps) => {
-  // catrgory data
-  const { loading, error, data } = useQuery(GET_CATEGORIES);
-  let template=``;
-
-  if (loading) return <Loading />
-  if (error) return <Text>Error</Text>;
-  if(data&&data.categories){
-    // max 10개
-    let max = data.categories.slice(0,10);
-    template=max.map((data)=>
-      <HashTag key = {data.id.toString()} hashtag={data.label} picked={false}/>
-    )
+  const dispatch=useDispatch();
+  const storeNewArrayCategories=(Array:Array<string>)=>{
+    dispatch(CLCategoryAction(Array))
   }
-  // const [test,setTest]=useState<Array<any>>([]);
-  // useEffect(()=>{
-  //   setTest(testdata);
-  // },[])
+  // catrgory data
+  const categories= useSelector((state:RootState)=>state.query.categoriesArray)
   return (
       <Container>
         <Header />
-        {/* <Add /> */}
         <MainContainer>
           <Title>
             <Text style={Styles.b_font}>어떤 </Text>
@@ -58,24 +34,24 @@ const SearchPage = ({navigation}:SearchPageProps) => {
             <Text style={Styles.b_font}>를 찾고계신가요?</Text>
           </Title>
           <View style={{alignItems:'center'}}>
-            <SearchBar onPress={()=>navigation.navigate('SearchListPage',{
-              search:'test'
-            })} />
+            <SearchBar navigation={navigation}/>
           </View>
           <Category>
             <Title>
               <Text style={Styles.m_font}>카테고리</Text>
             </Title>
-            <View style={{flexDirection:'row', flexWrap:'wrap',marginVertical:20}}>
-              {template}
-              {/* {
-                test.map((data)=>{
-                  return(
-                    <HashTag key = {data.id.toString()} hashtag={data.label} picked={false}/>
-                  )
-                })
-              } */}
-            </View>
+                <View style={{flexDirection:'row', flexWrap:'wrap',marginVertical:20}}>
+                  {categories.map((cate)=>{
+                    return(
+                      <TouchableOpacity  key = {cate[0].id} onPress={()=>{
+                          navigation.navigate('CategoryListPage'),
+                          storeNewArrayCategories(newStateArray(cate))
+                          }}>
+                        <HashTag hashtag={cate[0].label} picked={false}/>
+                      </TouchableOpacity>
+                    )
+                  })}                  
+                </View>
           </Category>
         </MainContainer>
       </Container>
@@ -105,31 +81,3 @@ const Category=styled.View`
 
 
 export default SearchPage;
-
-const testdata=[
-  {
-    id:1,
-    label:'test',
-  },
-  {
-    id:2,
-    label:'test',
-  },
-  {
-    id:3,
-    label:'test',
-  },
-  {
-    id:4,
-    label:'test',
-  },
-  {
-    id:5,
-    label:'test',
-  },
-  {
-    id:6,
-    label:'test',
-  },
-
-]

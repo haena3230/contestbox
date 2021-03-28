@@ -1,16 +1,18 @@
 // category page categotry component
+
 import React from 'react';
 import styled from 'styled-components/native';
 import {Styles, Color} from '~/Styles';
 
 interface CategoryProps{
     onPress:()=>void;
+    label:string;
 }
-const Category=({onPress}:CategoryProps)=>{
+const Category=({onPress,label}:CategoryProps)=>{
     
     return( 
         <Box onPress={onPress}>
-            <Text>test</Text>
+            <Text>{label}</Text>
         </Box> 
     )
 }

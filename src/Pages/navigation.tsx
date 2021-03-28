@@ -1,6 +1,5 @@
 // navigation을 다루는 페이지
 import React from 'react';
-import {Text} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 
@@ -78,12 +77,24 @@ function MainTabNavi() {
         })}
       >
         <Tab.Screen name="검색" component={SearchStackNavi} />
-        <Tab.Screen name="홈" component={HomePage} />
+        <Tab.Screen name="홈" component={HomePageStackNavi} />
         <Tab.Screen name="카테고리" component={CategoryStackNavi} />
     </Tab.Navigator>
   );
 }
 
+const HomePageStackNavi=()=>{
+  return(
+    <Stack.Navigator
+      screenOptions={{
+        headerShown:false,
+      }}>
+      <Stack.Screen name="HomePage" component={HomePage}/>
+      <Stack.Screen name="CategoryListPage" component={CategoryListPage} />
+      <Stack.Screen name="DetailPage" component={DetailPage} />
+    </Stack.Navigator>
+  )
+}
 const SearchStackNavi=()=>{
   return(
     <Stack.Navigator
@@ -91,6 +102,7 @@ const SearchStackNavi=()=>{
         headerShown:false,
       }}>
         <Stack.Screen name="SearchPage" component={SearchPage} />
+        <Stack.Screen name="CategoryListPage" component={CategoryListPage} />
         <Stack.Screen name="SearchListPage" component={SearchListPage} />
         <Stack.Screen name="DetailPage" component={DetailPage} />
     </Stack.Navigator>
