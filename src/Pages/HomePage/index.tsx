@@ -30,6 +30,7 @@ const HomePage = ({navigation}:HomaPageProps) => {
   // catrgory && hot data
   const { loading, error, data } = useQuery(GET_HOTS,{
     variables:{
+      existPoster:true,
       sort:'HITS',
       applicationStatuses:['NOTSTARTED','INPROGRESS'],
       first:15
@@ -52,18 +53,18 @@ const HomePage = ({navigation}:HomaPageProps) => {
     storeCategories(CategoryView(data.categories));
   }
   if(data.contests){
-    hotData=data.contests.edges.map((contest)=>
-    <PosterContainer key = {contest.node.id.toString()} onPress={()=>
-      navigation.navigate('DetailPage',{
-        listId:contest.node.id
-      })
-    }>
-      <PosterBox>
-        <Poster source={{uri:contest.node.posterURL}}/>
-      </PosterBox>
-      <PosterText numberOfLines={2} ellipsizeMode="tail">{contest.node.title}</PosterText>
-    </PosterContainer>
-    )
+    // hotData=data.contests.edges.map((contest)=>
+    // <PosterContainer key = {contest.node.id.toString()} onPress={()=>
+    //   navigation.navigate('DetailPage',{
+    //     listId:contest.node.id
+    //   })
+    // }>
+    //   <PosterBox>
+    //     <Poster source={{uri:contest.node.posterURL}}/>
+    //   </PosterBox>
+    //   <PosterText numberOfLines={2} ellipsizeMode="tail">{contest.node.title}</PosterText>
+    // </PosterContainer>
+    // )
   }
   return (
     <Container>
@@ -84,7 +85,7 @@ const HomePage = ({navigation}:HomaPageProps) => {
           인기대회
         </Title>
         <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-          {hotData}
+          {/* {hotData} */}
         </ScrollView>
       </ComponentContainer>
     </Container>

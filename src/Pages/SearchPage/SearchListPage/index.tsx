@@ -1,6 +1,6 @@
 // SearchListPage
-import React,{useState,useRef, useEffect} from 'react';
-import {View,ScrollView, Text} from 'react-native';
+import React,{useState,useRef} from 'react';
+import {View,ScrollView,RefreshControl,Text} from 'react-native';
 import {Container,Styles,Color} from '~/Styles';
 import styled from 'styled-components/native';
 // data
@@ -17,11 +17,14 @@ import {SortComponent} from '~/Components/Sort';
 import TextList,{TagBox,ListBox} from '~/Components/TextList';
 import {HashTag} from '~/Components/HashTag';
 import ToTop from '~/Components/ToTop';
-import Loading from '~/Components/Loading';
+import Loading, { LastData } from '~/Components/Loading';
 import {pickedIdArray,pickedIdArraies,newStateArray} from '~/Components/Filter';
 import { SLConditionAction, SLTypeAction } from '~/Store/actions';
 import {Map} from '~/Components/Map';
-
+interface pageInfoProps{
+    endCursor:string,
+    hasNextPage:boolean
+}
 const SearchListPage =(props:SearchListPageProps)=>{
     const search=useSelector((state:RootState)=>state.query.SearchText)
     // 마운트를 위한 상태
@@ -34,7 +37,7 @@ const SearchListPage =(props:SearchListPageProps)=>{
     const storeSLConditionNewArray=(Array:Array<any>)=>{
         dispatch(SLConditionAction(Array))
     }
-    const categories =useSelector((state:RootState)=>state.query.SLCategoryArray)
+    // const categories =useSelector((state:RootState)=>state.query.SLCategoryArray)
     const types= useSelector((state:RootState)=>state.query.SLTypeArray)
     const conditions= useSelector((state:RootState)=>state.query.SLConditionArray)
     // 필터 선택
@@ -42,7 +45,7 @@ const SearchListPage =(props:SearchListPageProps)=>{
         props.navigation.navigate('SearchFilterPage');
     }
     // totop
-    let totop=false;
+    const [totop,setTotop]=useState<boolean>(false);
     const scrollRef=useRef<ScrollView>();
     const onPressToTop=()=>{
         scrollRef.current.scrollTo({
@@ -86,16 +89,38 @@ const SearchListPage =(props:SearchListPageProps)=>{
         setSort(!sort);
     }
     // list data
-    const {loading,error,data}=useQuery(GET_LISTS,{
+    let listData='';
+    let pageInfo:pageInfoProps={
+        endCursor:null,
+        hasNextPage:null
+    }
+    const {loading,error,data,fetchMore,refetch }=useQuery(GET_LISTS,{
         variables:{
+            after:pageInfo.endCursor,
+            first:10,
             search:search,
             sort:sortState.status,
-            categories:pickedIdArray(categories),
             conditions:pickedIdArray(conditions),
             types:pickedIdArray(types)
         }
     })
-    let listData='';
+    // refetch
+    const [refreshing,setRefreshing]=useState(false);
+    const onRefresh=async ()=>{
+        console.log('refetch')
+        setRefreshing(true);
+        try{
+            await refetch({
+                first:10,
+                sort:sortState.status,
+                conditions:pickedIdArray(conditions),
+                types:pickedIdArray(types)
+            })
+            setRefreshing(false);
+        } catch(e){
+            console.log('refetch err')
+        }
+    }
     if(loading) return <Loading />
     if(error) return <Text>err</Text>
     if(data&&types.length===0){
@@ -131,8 +156,23 @@ const SearchListPage =(props:SearchListPageProps)=>{
             ):null}
         </ListBox>
     )
-        if(listData.length>3) totop=true
-        else totop=false;
+    pageInfo=data.contests.pageInfo;
+    }
+    // pagination
+    const onEndReached=()=>{
+        if(pageInfo.hasNextPage===true)
+            {   
+                fetchMore({
+                    variables:{
+                        after:pageInfo.endCursor,
+                        first:10,
+                        search:search,
+                        sort:sortState.status,
+                        conditions:pickedIdArray(conditions),
+                        types:pickedIdArray(types)
+                    }
+                })
+            }
     }
     return(
         <Container>
@@ -147,19 +187,35 @@ const SearchListPage =(props:SearchListPageProps)=>{
                         onPressSort={()=>setSort(!sort)}
                         onPressMap={()=>setMap(!map)}
                         sortState={sortState.statusName}
-                        badgeNumber={pickedIdArraies(categories).length+pickedIdArray(conditions).length+pickedIdArray(types).length}
+                        badgeNumber={pickedIdArray(conditions).length+pickedIdArray(types).length}
                         />
                     <View style={{height:'80%', width:'100%', padding:5}}>
                         <Map 
                             search={search}
-                            categoryState={pickedIdArray(categories)}
+                            categoryState={null}
                             conditions={pickedIdArray(conditions)}
                             types={pickedIdArray(types)}
                             />
                     </View>
                 </View>
             ):(
-                <ScrollView ref={scrollRef}>
+                <ScrollView 
+                    ref={scrollRef}
+                    onScroll={(e)=>{
+                        if (e.nativeEvent.contentOffset.y + e.nativeEvent.layoutMeasurement.height >= e.nativeEvent.contentSize.height){
+                            onEndReached()
+                        }                            
+                    }}
+                    refreshControl={
+                        <RefreshControl 
+                            refreshing={refreshing} 
+                            onRefresh={onRefresh}
+                            colors={[Color.p_color]}
+                            
+                            />
+                    }
+                    onScrollBeginDrag={()=>setTotop(true)}
+                    >
                     <SearchBarSmall navigation={props.navigation}/>
                     <SearchListBar
                         isMap={false} 
@@ -169,11 +225,12 @@ const SearchListPage =(props:SearchListPageProps)=>{
                         onPressSort={()=>setSort(!sort)}
                         onPressMap={()=>setMap(!map)}
                         sortState={sortState.statusName}
-                        badgeNumber={pickedIdArraies(categories).length+pickedIdArray(conditions).length+pickedIdArray(types).length}
+                        badgeNumber={pickedIdArray(conditions).length+pickedIdArray(types).length}
                         />
                     <View style={{padding:5}}>
                         {listData}
                     </View>
+                    {pageInfo.hasNextPage?<Loading />:<LastData />}
                 </ScrollView>
             )}
             <SortComponent 

@@ -1,9 +1,8 @@
 import React,{useState,useRef, useEffect} from 'react';
-import {View} from 'react-native';
+import {View,ScrollView,RefreshControl, Text} from 'react-native';
 import styled from 'styled-components/native';
-import {Styles,Container} from '~/Styles';
-import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
-
+import {Styles,Container, Color} from '~/Styles';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 // data
 import { useQuery } from '@apollo/client';
 import {GET_LISTS} from '~/queries';
@@ -45,18 +44,13 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
     // state
     const [category,setCategory]=useState<Array<{id:string,label:string,value:boolean}>>(categories)
     // category 선택시 빼주기 위한 변수
-    let categoryState=[categories[0].id];
-    if(pickedIdArray(category)===[]){
-        categoryState=[categories[0].id];
-    }
-    else{
-        categoryState=pickedIdArray(category);
-    }
+    const initCateId=categories[0].id;
+    const [categoryId,setCategoryId]=useState<Array<string>>([categories[0].id]);
     useEffect(()=>{
         console.log('@@@@@@@@@@@@@@@@@@@@@@@@')
     },[state])
     // totop
-    let totop=false;
+    const [totop,setTotop]=useState<boolean>(false);
     const scrollRef=useRef<ScrollView>();
     const onPressToTop=()=>{
         scrollRef.current.scrollTo({
@@ -106,16 +100,34 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
         endCursor:null,
         hasNextPage:null
     }
-    const { loading, error, data,fetchMore } = useQuery(GET_LISTS,{
+    const { loading, error, data,fetchMore,refetch } = useQuery(GET_LISTS,{
         variables:{
             after:pageInfo.endCursor,
             first:10,
             sort:sortState.status,
-            categories:categoryState,
+            categories:categoryId,
             conditions:pickedIdArray(conditions),
             types:pickedIdArray(types)
         }
     });
+    // refetch
+    const [refreshing,setRefreshing]=useState(false);
+    const onRefresh=async ()=>{
+        console.log('refetch')
+        setRefreshing(true);
+        try{
+            await refetch({
+                first:10,
+                sort:sortState.status,
+                categories:categoryId,
+                conditions:pickedIdArray(conditions),
+                types:pickedIdArray(types)
+            })
+            setRefreshing(false);
+        } catch(e){
+            console.log('refetch err')
+        }
+    }
     if (loading) return <Loading />;
     if (error){
         console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
@@ -156,8 +168,6 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
             </ListBox>
         )
         pageInfo=data.contests.pageInfo;
-        if(listData.length>3) totop=true;
-        else totop=false;
     }
     // pagination
     const onEndReached=()=>{
@@ -168,7 +178,7 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
                         after:pageInfo.endCursor,
                         first:10,
                         sort:sortState.status,
-                        categories:categoryState,
+                        categories:categoryId,
                         conditions:pickedIdArray(conditions),
                         types:pickedIdArray(types)
                     }
@@ -192,6 +202,18 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
                                                     let tmpArray=category;
                                                     tmpArray[index+1].value=!data.value;
                                                     setCategory(tmpArray)
+                                                    if(categoryId[0]===initCateId){
+                                                        setCategoryId(pickedIdArray(tmpArray.slice(1)))
+                                                        console.log('기본입니다.')
+                                                    }
+                                                    else if(categoryId.length===1&&categoryId[0]!==initCateId){
+                                                        console.log('취소했습니다')
+                                                        setCategoryId([initCateId]);
+                                                    }
+                                                    else{
+                                                        setCategoryId(pickedIdArray(tmpArray))
+                                                        console.log('선택햇습니다.')
+                                                    }
                                                     setState(!state)
                                                 }} key={data.id}>
                                                     <HashTag hashtag={data.label} picked={data.value}/>
@@ -215,7 +237,7 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
                     <View style={{width:'100%',height:'75%', padding:5}}>
                         <Map 
                             search={null}
-                            categoryState={categoryState}
+                            categoryState={categoryId}
                             conditions={pickedIdArray(conditions)}
                             types={pickedIdArray(types)}
                             />
@@ -231,6 +253,15 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
                                 onEndReached()
                             }                            
                         }}
+                        refreshControl={
+                            <RefreshControl 
+                                refreshing={refreshing} 
+                                onRefresh={onRefresh}
+                                colors={[Color.p_color]}
+                                
+                                />
+                        }
+                        onScrollBeginDrag={()=>setTotop(true)}
                         >
                         <View style={{paddingTop:20}}>
                             <CategoryBox>
@@ -244,6 +275,18 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
                                                     let tmpArray=category;
                                                     tmpArray[index+1].value=!data.value;
                                                     setCategory(tmpArray)
+                                                    if(categoryId[0]===initCateId){
+                                                        setCategoryId(pickedIdArray(tmpArray.slice(1)))
+                                                        console.log('기본입니다.')
+                                                    }
+                                                    else if(categoryId.length===1&&categoryId[0]!==initCateId){
+                                                        console.log('취소했습니다')
+                                                        setCategoryId([initCateId]);
+                                                    }
+                                                    else{
+                                                        setCategoryId(pickedIdArray(tmpArray))
+                                                        console.log('선택햇습니다.')
+                                                    }
                                                     setState(!state)
                                                 }} key={data.id}>
                                                     <HashTag hashtag={data.label} picked={data.value}/>
@@ -332,3 +375,4 @@ const Category=styled.Text`
     padding-vertical:10px;
 `
 export default CategoryListPage;
+
