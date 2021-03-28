@@ -251,7 +251,10 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
                         onScroll={(e)=>{
                             if (e.nativeEvent.contentOffset.y + e.nativeEvent.layoutMeasurement.height >= e.nativeEvent.contentSize.height){
                                 onEndReached()
-                            }                            
+                            }        
+                            if (e.nativeEvent.contentOffset.y===0){
+                                setTotop(false);
+                            }                    
                         }}
                         refreshControl={
                             <RefreshControl 

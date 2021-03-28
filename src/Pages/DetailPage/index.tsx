@@ -1,5 +1,5 @@
 // list detail Page
-import React,{useRef} from 'react';
+import React,{useRef, useState} from 'react';
 import {View,Text} from 'react-native';
 import moment from 'moment';
 // style
@@ -23,6 +23,7 @@ import {GET_DETAILS} from '~/queries';
 const DetailPage =(props:DetailPageProps)=>{
     // totop
     const scrollRef=useRef<ScrollView>();
+    const[totop,setTotop]=useState<Boolean>(false);
     const onPressToTop=()=>{
         scrollRef.current.scrollTo({
             y: 0,
@@ -51,10 +52,18 @@ const DetailPage =(props:DetailPageProps)=>{
     return(
         <Container>
             <Box>
-                <ScrollView ref={scrollRef}>
+                <ScrollView 
+                    ref={scrollRef}
+                    onScroll={(e)=>{
+                        if (e.nativeEvent.contentOffset.y===0){
+                            setTotop(false);
+                        }                            
+                    }}
+                    onScrollBeginDrag={()=>setTotop(true)}
+                    >
                     {data.contest.posterURL!==null?(
                         <Poster source={{
-                            uri:data.contest.posterURL
+                            uri:`data.contest.posterURL`+',w_594,h_840'
                         }}/>
                     ):(
                         null      
@@ -180,7 +189,7 @@ const DetailPage =(props:DetailPageProps)=>{
                     
                 </ScrollView>
             </Box>
-            <ToTop onPressToTop={onPressToTop}/>
+            {totop?<ToTop onPressToTop={onPressToTop}/>:null}
         </Container>
     )
 }
