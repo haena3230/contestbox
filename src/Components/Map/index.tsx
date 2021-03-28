@@ -133,6 +133,12 @@ export const Map = ({search,categoryState,conditions,types}:MapProps) => {
                             deadline:data.node.application.period.endAt,
                         })
                         setMenu(!menu)
+                        setLocation({
+                            latitude: data.node.place.latLng.lat, 
+                            latitudeDelta:0.0922, 
+                            longitude: data.node.place.latLng.lng,
+                            longitudeDelta:0.107
+                        })
                         console.log(menu)
                     }}
                     />
@@ -144,6 +150,8 @@ export const Map = ({search,categoryState,conditions,types}:MapProps) => {
         <MapContainer>
             <MapView
                 style={{flex:1}}
+                minZoomLevel={2} 
+                maxZoomLevel={15}
                 showsUserLocation={true}
                 region={location}
                 onPress={()=>setMenu(false)}

@@ -280,7 +280,7 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
                                                     setCategory(tmpArray)
                                                     if(categoryId[0]===initCateId){
                                                         setCategoryId(pickedIdArray(tmpArray.slice(1)))
-                                                        console.log('기본입니다.')
+                                                        console.log('새로 선택했습니다.')
                                                     }
                                                     else if(categoryId.length===1&&categoryId[0]!==initCateId){
                                                         console.log('취소했습니다')
