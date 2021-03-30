@@ -21,7 +21,7 @@ export const GET_HOTS = gql`
 `;
 
 export const GET_LISTS= gql`
-  query ($first:Int,$after:ID,$categories:[ID!],$search:String,$sort:ContestsSortType,$conditions:[ID!],$types:[ID!],$place:LatLngBoxInput){
+  query GetLists ($first:Int,$after:ID,$categories:[ID!],$search:String,$sort:ContestsSortType,$conditions:[ID!],$types:[ID!],$place:LatLngBoxInput){
     types{
         id
         label

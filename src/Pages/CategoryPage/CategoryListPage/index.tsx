@@ -6,11 +6,10 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 // data
 import { useQuery } from '@apollo/client';
 import {GET_LISTS} from '~/queries';
-import {CategoryListPageProps} from '~/Types';
+import {CategoryListPageProps, SortStatus,} from '~/Types';
 import {useSelector,useDispatch} from 'react-redux';
 import {RootState} from '~/App';
-import { CLConditionAction, CLTypeAction } from '~/Store/actions';
-import {SortStatus} from '~/Types';
+import { CLConditionAction, CLTypeAction,fetchStateAction} from '~/Store/actions';
 // component
 import {SortComponent} from '~/Components/Sort'
 import {FilterBtn,ListBtn,SortBtn,MapBtn} from '~/Components/Btn';
@@ -31,24 +30,37 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
     const [state,setState]=useState(false);
     // 저장
     const dispatch=useDispatch();
-    const storeCLTypeNewArray=(Array:Array<any>)=>{
-        dispatch(CLTypeAction(Array))
+    const storeCLNewArray=(TArray:Array<any>,CArray:Array<any>)=>{
+        dispatch(CLTypeAction(TArray))
+        dispatch(CLConditionAction(CArray))
     }
-    const storeCLConditionNewArray=(Array:Array<any>)=>{
-        dispatch(CLConditionAction(Array))
+    const storeFetchNum=(num:number)=>{
+        dispatch(fetchStateAction(num));
     }
-    // category & type & condition
+
+    // category & type & condition & chgState
     const categories =useSelector((state:RootState)=>state.query.CLCategoryArray)
     const types= useSelector((state:RootState)=>state.query.CLTypeArray)
     const conditions= useSelector((state:RootState)=>state.query.CLConditionArray)
+    const fetchNum= useSelector((state:RootState)=>state.query.fetchStateNum)
     // state
     const [category,setCategory]=useState<Array<{id:string,label:string,value:boolean}>>(categories)
-    // category 선택시 빼주기 위한 변수
-    const initCateId=categories[0].id;
-    const [categoryId,setCategoryId]=useState<Array<string>>([categories[0].id]);
-    useEffect(()=>{
-        console.log('@@@@@@@@@@@@@@@@@@@@@@@@')
-    },[state])
+    const [categoryId,setCategoryId]=useState<Array<string>>([category[0].id]);
+    const test =category[0].id
+    const onPressCateBtn=(data,index)=>{
+        let tmpArray=category;
+        tmpArray[index+1].value=!data.value;
+        setCategory(tmpArray)
+        // 남은 하나 취소
+        if(categoryId.length===1&&categoryId[0]!==categories[0].id){
+            setCategoryId([test]);
+            console.log('남은 하나 취소입니다.')
+        }
+        else{
+            setCategoryId(pickedIdArray(tmpArray))
+            console.log('처음으로 선택하거나 또 다시 선택이거나 여러개 중 하나 취소입니다.')
+        }
+    }
     // totop
     const [totop,setTotop]=useState<boolean>(false);
     const scrollRef=useRef<ScrollView>();
@@ -64,31 +76,8 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
         status:'LATEST',
         statusArr:[true,false,false]
     });
+    const[sortStatus,setSortStatus]=useState('LATEST');
     const[sort,setSort]=useState<boolean>(false);
-    const onPressTagOne=()=>{
-        setSortState({
-            statusName:'추천순',
-            status:'LATEST',
-            statusArr:[true,false,false]
-        })
-        setSort(!sort);
-    }
-    const onPressTagTwo=()=>{
-        setSortState({
-            statusName:'조회순',
-            status:'HITS',
-            statusArr:[false,true,false]
-        })
-        setSort(!sort);
-    }
-    const onPressTagThree=()=>{
-        setSortState({
-            statusName:'등록순',
-            status:'LATEST',
-            statusArr:[false,false,true]
-        }) 
-        setSort(!sort);
-    }
     const onPressSort=()=>{
         setSort(!sort);
     }
@@ -104,12 +93,54 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
         variables:{
             after:pageInfo.endCursor,
             first:10,
-            sort:sortState.status,
+            sort:sortStatus,
             categories:categoryId,
             conditions:pickedIdArray(conditions),
             types:pickedIdArray(types)
-        }
+        },
+        fetchPolicy:'cache-and-network'
     });
+    useEffect(()=>{
+        console.log('@@@@@@@@@@@@@@@@@@@@@@@@')
+        if(fetchNum!==pickedIdArray(types).length+pickedIdArray(conditions).length){
+            fetchMore({
+                variables:{
+                first:10,
+                sort:sortStatus,
+                categories:categoryId,
+                conditions:pickedIdArray(conditions),
+                types:pickedIdArray(types)
+            }})
+        }
+    },[state])
+    // 정렬버튼 함수
+    const onPressTagOne=async ()=>{
+        setSortState({
+            statusName:'추천순',
+            status:'LATEST',
+            statusArr:[true,false,false]
+        })
+        setSortStatus('LATEST')
+        setSort(!sort);
+    }
+    const onPressTagTwo=()=>{
+        setSortState({
+            statusName:'조회순',
+            status:'HITS',
+            statusArr:[false,true,false]
+        })
+        setSortStatus('HITS')
+        setSort(!sort);
+    }
+    const onPressTagThree=()=>{
+        setSortState({
+            statusName:'등록순',
+            status:'LATEST',
+            statusArr:[false,false,true]
+        }) 
+        setSortStatus('LATEST')
+        setSort(!sort);
+    }
     // refetch
     const [refreshing,setRefreshing]=useState(false);
     const onRefresh=async ()=>{
@@ -118,16 +149,19 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
         try{
             await refetch({
                 first:10,
-                sort:sortState.status,
+                sort:sortStatus,
                 categories:categoryId,
                 conditions:pickedIdArray(conditions),
                 types:pickedIdArray(types)
             })
             setRefreshing(false);
+            console.log('test')
         } catch(e){
             console.log('refetch err')
         }
     }
+    
+    
     if (loading) return <Loading />;
     if (error){
         console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
@@ -135,10 +169,7 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
         console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
     }
     if(data&&types.length===0){
-        storeCLTypeNewArray(newStateArray(data.types));
-    }
-    if(data&&conditions.length===0){
-        storeCLConditionNewArray(newStateArray(data.conditions));
+        storeCLNewArray(newStateArray(data.types),newStateArray(data.conditions));
     }
     if(data&&data.contests.edges){
         listData=data.contests.edges.map((data)=>
@@ -177,7 +208,7 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
                     variables:{
                         after:pageInfo.endCursor,
                         first:10,
-                        sort:sortState.status,
+                        sort:sortStatus,
                         categories:categoryId,
                         conditions:pickedIdArray(conditions),
                         types:pickedIdArray(types)
@@ -187,6 +218,14 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
     }
     return(
         <Container>
+            <TouchableOpacity onPress={()=>{
+                console.log(category)
+                console.log(categoryId)
+            }}>
+                <Text>
+                    test
+                </Text>
+            </TouchableOpacity>
             {map?(
                 <View>
                     <View style={{height:'17%',justifyContent:'flex-end'}}>
@@ -198,24 +237,7 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
                                     <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} >
                                         {category.slice(1).map((data,index)=>{
                                             return(
-                                                <TouchableOpacity onPress={()=>{
-                                                    let tmpArray=category;
-                                                    tmpArray[index+1].value=!data.value;
-                                                    setCategory(tmpArray)
-                                                    if(categoryId[0]===initCateId){
-                                                        setCategoryId(pickedIdArray(tmpArray.slice(1)))
-                                                        console.log('기본입니다.')
-                                                    }
-                                                    else if(categoryId.length===1&&categoryId[0]!==initCateId){
-                                                        console.log('취소했습니다')
-                                                        setCategoryId([initCateId]);
-                                                    }
-                                                    else{
-                                                        setCategoryId(pickedIdArray(tmpArray))
-                                                        console.log('선택햇습니다.')
-                                                    }
-                                                    setState(!state)
-                                                }} key={data.id}>
+                                                <TouchableOpacity onPress={()=>onPressCateBtn(data,index)} key={data.id}>
                                                     <HashTag hashtag={data.label} picked={data.value}/>
                                                 </TouchableOpacity>
                                             )
@@ -230,7 +252,10 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
                         height ={'8%'} 
                         isMap={true} 
                         onPressMap={()=>setMap(!map)} 
-                        onPressFilter={()=>props.navigation.navigate('CategoryFilterPage')}
+                        onPressFilter={()=>{
+                            storeFetchNum(pickedIdArray(types).length+pickedIdArray(conditions).length);
+                            props.navigation.navigate('CategoryFilterPage');
+                        }}
                         onPressSort={()=>null} 
                         sortState={null}
                         badgeNumber={pickedIdArray(category).length+pickedIdArray(conditions).length+pickedIdArray(types).length} />
@@ -274,24 +299,7 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
                                     <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
                                         {category.slice(1).map((data,index)=>{
                                             return(
-                                                <TouchableOpacity onPress={()=>{
-                                                    let tmpArray=category;
-                                                    tmpArray[index+1].value=!data.value;
-                                                    setCategory(tmpArray)
-                                                    if(categoryId[0]===initCateId){
-                                                        setCategoryId(pickedIdArray(tmpArray.slice(1)))
-                                                        console.log('새로 선택했습니다.')
-                                                    }
-                                                    else if(categoryId.length===1&&categoryId[0]!==initCateId){
-                                                        console.log('취소했습니다')
-                                                        setCategoryId([initCateId]);
-                                                    }
-                                                    else{
-                                                        setCategoryId(pickedIdArray(tmpArray))
-                                                        console.log('선택햇습니다.')
-                                                    }
-                                                    setState(!state)
-                                                }} key={data.id}>
+                                                <TouchableOpacity onPress={()=>onPressCateBtn(data,index)} key={data.id}>
                                                     <HashTag hashtag={data.label} picked={data.value}/>
                                                 </TouchableOpacity>
                                             )
@@ -305,7 +313,10 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
                             height={30}
                             isMap={false} 
                             onPressMap={()=>setMap(!map)}
-                            onPressFilter={()=>props.navigation.navigate('CategoryFilterPage')}
+                            onPressFilter={()=>{
+                                storeFetchNum(pickedIdArray(types).length+pickedIdArray(conditions).length);
+                                props.navigation.navigate('CategoryFilterPage')
+                            }}
                             onPressSort={()=>setSort(!sort)} 
                             sortState={sortState.statusName}
                             badgeNumber={pickedIdArray(category).length+pickedIdArray(conditions).length+pickedIdArray(types).length}
@@ -378,4 +389,8 @@ const Category=styled.Text`
     padding-vertical:10px;
 `
 export default CategoryListPage;
+
+function fetchNumAction(fetchNumAction: any) {
+    throw new Error('Function not implemented.');
+}
 

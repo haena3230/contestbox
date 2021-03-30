@@ -14,13 +14,16 @@ import {TouchableOpacity } from 'react-native-gesture-handler';
 import {SearchPageProps} from '~/Types';
 import {useSelector,useDispatch} from 'react-redux';
 import {RootState} from '~/App';
-import {CLCategoryAction} from '~/Store/actions';
+import {CLCategoryAction, CLConditionAction, CLTypeAction, fetchStateAction} from '~/Store/actions';
 import {newStateArray} from '~/Components/Filter';
 
 const SearchPage = ({navigation}:SearchPageProps) => {
   const dispatch=useDispatch();
   const storeNewArrayCategories=(Array:Array<string>)=>{
     dispatch(CLCategoryAction(Array))
+    dispatch(CLTypeAction([]))
+    dispatch(CLConditionAction([]))
+    dispatch(fetchStateAction(0))
   }
   // catrgory data
   const categories= useSelector((state:RootState)=>state.query.categoriesArray)

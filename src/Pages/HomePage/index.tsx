@@ -15,7 +15,7 @@ import {useQuery} from '@apollo/client';
 import {GET_HOTS} from '~/queries';
 import {HomaPageProps} from '~/Types';
 import {useDispatch} from 'react-redux'
-import { categoryAction,CLCategoryAction } from '~/Store/actions';
+import { categoryAction,CLCategoryAction, CLConditionAction, CLTypeAction,fetchStateAction } from '~/Store/actions';
 import {newStateArray} from '~/Components/Filter';
 
 const HomePage = ({navigation}:HomaPageProps) => {
@@ -26,6 +26,9 @@ const HomePage = ({navigation}:HomaPageProps) => {
   }
   const storeNewArrayCategories=(Array:Array<any>)=>{
     dispatch(CLCategoryAction(Array))
+    dispatch(CLTypeAction([]))
+    dispatch(CLConditionAction([]))
+    dispatch(fetchStateAction(0))
   }
   // catrgory && hot data
   const { loading, error, data } = useQuery(GET_HOTS,{
@@ -76,7 +79,7 @@ const HomePage = ({navigation}:HomaPageProps) => {
         <Title>
           카테고리
         </Title>
-        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={{padding:10}}>
+        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={{marginVertical:10}}>
           {categoriesData}
         </ScrollView>
       </ComponentContainer>

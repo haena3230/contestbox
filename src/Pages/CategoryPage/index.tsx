@@ -12,7 +12,7 @@ import {newStateArray} from '~/Components/Filter';
 // data
 import {useSelector,useDispatch} from 'react-redux';
 import {RootState} from '~/App';
-import { CLCategoryAction } from '~/Store/actions';
+import { CLCategoryAction ,CLTypeAction,CLConditionAction, fetchStateAction,} from '~/Store/actions';
 
 const CategoryPage =({navigation}:CategoryPageProps)=>{
     // category data
@@ -20,6 +20,9 @@ const CategoryPage =({navigation}:CategoryPageProps)=>{
     const dispatch = useDispatch();
     const storeNewArrayCategories=(Array:Array<any>)=>{
         dispatch(CLCategoryAction(Array))
+        dispatch(CLTypeAction([]))
+        dispatch(CLConditionAction([]))
+        dispatch(fetchStateAction(0))
     }
     return(
         <Container>

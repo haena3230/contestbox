@@ -7,6 +7,7 @@ export const Search='Search'
 export const SLCategory='SLCategory'
 export const SLType='SLType'
 export const SLCondition='SLCondition'
+export const fetchState='fetchState'
 
 export const categoryAction= (categories:Array<string>)=>{
     return{
@@ -64,5 +65,13 @@ export const SLConditionAction= (array:Array<string>)=>{
     return{
         type:SLCondition,
         SLConditionArray:array,
+    }
+}
+
+// fetchMore 하기 전 숫자 체크 
+export const fetchStateAction=(num:number)=>{
+    return{
+        type:fetchState,
+        fetchStateNum:num,
     }
 }

@@ -1,5 +1,5 @@
 // 리듀서
-import {CATEGORIES,CLCategory,CLType,CLCondition,Search,SLCategory,SLType,SLCondition} from '../actions'
+import {CATEGORIES,CLCategory,CLType,CLCondition,Search,SLCategory,SLType,SLCondition,fetchState} from '../actions'
 
 const initState={
     categoriesArray:[],
@@ -10,6 +10,7 @@ const initState={
     SLCategoryArray:[],
     SLTypeArray:[],
     SLConditionArray:[],
+    fetchStateNum:0
 }
 export const queryReducers = (state=initState,action: any)=>{
     switch(action.type){
@@ -53,6 +54,11 @@ export const queryReducers = (state=initState,action: any)=>{
                 ...state,
                 SLConditionArray:action.SLConditionArray,
             }  
+        case fetchState:
+            return{
+                ...state,
+                fetchStateNum:action.fetchStateNum
+            }
         default:
             return state; 
     }

@@ -2,7 +2,7 @@
 import React,{useEffect, useState} from 'react';
 import {Container} from '~/Styles';
 // component
-import {FilterHeader,FilterBottom,MenuContainer,MenuBox,MenuTitle,Type} from '~/Components/Filter';
+import {FilterHeader,FilterBottom,MenuContainer,MenuBox,MenuTitle,Type, pickedIdArray} from '~/Components/Filter';
 import { ScrollView } from 'react-native-gesture-handler';
 import {SortDownBtn, SortUpBtn} from  '~/Components/Btn';
 // data
@@ -10,7 +10,7 @@ import {useSelector,useDispatch} from 'react-redux';
 import {RootState} from '~/App';
 import {CLTypeAction,CLConditionAction} from '~/Store/actions';
 import {newStateArray} from '~/Components/Filter';
-import { Text, TouchableOpacity } from 'react-native';
+import { TouchableOpacity } from 'react-native';
 import { HashTag } from '~/Components/HashTag';
 import {CategoryFilterPageProps} from '~/Types';
 
@@ -30,11 +30,9 @@ const CategoryFilterPage =({navigation}:CategoryFilterPageProps)=>{
     const [conditionMenu,setConditionMenu]=useState<Boolean>(false);
     // 상태 저장하기
     const dispatch=useDispatch();
-    const storeCLTypeNewArray=(Array:Array<any>)=>{
-        dispatch(CLTypeAction(Array))
-    }
-    const storeCLConditionNewArray=(Array:Array<any>)=>{
-        dispatch(CLConditionAction(Array))
+    const storeCLNewArray=(TArray:Array<any>,CArray:Array<any>)=>{
+        dispatch(CLTypeAction(TArray))
+        dispatch(CLConditionAction(CArray))
     }
     return(
         <Container>
@@ -101,13 +99,11 @@ const CategoryFilterPage =({navigation}:CategoryFilterPageProps)=>{
                 onPressReset={async ()=>{
                     await setTypeArray(newStateArray(types));
                     await setConditionArray(newStateArray(conditions));
-                    storeCLTypeNewArray(typeArray);
-                    storeCLConditionNewArray(conditionArray);
+                    storeCLNewArray(typeArray,conditionArray);
                     setState(!state);
                 }}
                 onPressConfirm={()=>{
-                    storeCLTypeNewArray(typeArray);
-                    storeCLConditionNewArray(conditionArray);
+                    storeCLNewArray(typeArray,conditionArray);
                     navigation.replace('CategoryListPage');
                     navigation.navigate('CategoryListPage');
                 }}
