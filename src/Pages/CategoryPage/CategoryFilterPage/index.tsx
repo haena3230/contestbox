@@ -2,38 +2,25 @@
 import React,{useEffect, useState} from 'react';
 import {Container} from '~/Styles';
 // component
-import {FilterHeader,FilterBottom,MenuContainer,MenuBox,MenuTitle,Type, pickedIdArray} from '~/Components/Filter';
+import {FilterHeader,FilterBottom,MenuContainer,MenuBox,MenuTitle,Type,newStateArray} from '~/Components/Filter';
 import { ScrollView } from 'react-native-gesture-handler';
 import {SortDownBtn, SortUpBtn} from  '~/Components/Btn';
 // data
-import {useSelector,useDispatch} from 'react-redux';
-import {RootState} from '~/App';
-import {CLTypeAction,CLConditionAction} from '~/Store/actions';
-import {newStateArray} from '~/Components/Filter';
-import { TouchableOpacity } from 'react-native';
+import { Text, TouchableOpacity } from 'react-native';
 import { HashTag } from '~/Components/HashTag';
 import {CategoryFilterPageProps} from '~/Types';
 
-const CategoryFilterPage =({navigation}:CategoryFilterPageProps)=>{
-    // 상태 불러오기
-    let types= useSelector((state:RootState)=>state.query.CLTypeArray)
-    let conditions= useSelector((state:RootState)=>state.query.CLConditionArray)
-    // 상태 업데이트
+const CategoryFilterPage =(props:CategoryFilterPageProps)=>{
+    const {categoryArray,typeArray,conditionArray} =props.route.params;
     const[state,setState]=useState(false);
-    const[typeArray,setTypeArray]=useState<Array<{id:string,label:string,value:boolean}>>(types);
-    const[conditionArray,setConditionArray]=useState<Array<{id:string,label:string,value:boolean}>>(conditions);
+    const[typeArrayState,setTypeArrayState]=useState<Array<{id:string,label:string,value:boolean}>>(typeArray);
+    const[conditionArrayState,setConditionArrayState]=useState<Array<{id:string,label:string,value:boolean}>>(conditionArray);
     useEffect(()=>{
         console.log('@@@@@@@@@@@@@@@@@@');
     },[state])
     // menu state
     const [typeMenu,setTypeMenu]=useState<Boolean>(false);
     const [conditionMenu,setConditionMenu]=useState<Boolean>(false);
-    // 상태 저장하기
-    const dispatch=useDispatch();
-    const storeCLNewArray=(TArray:Array<any>,CArray:Array<any>)=>{
-        dispatch(CLTypeAction(TArray))
-        dispatch(CLConditionAction(CArray))
-    }
     return(
         <Container>
             <FilterHeader />
@@ -49,22 +36,21 @@ const CategoryFilterPage =({navigation}:CategoryFilterPageProps)=>{
                             :<SortDownBtn />
                         }
                     </MenuBox>
-                        {typeMenu?(
+                        {typeMenu&&typeArray?(
                             <Type>
-                            {typeArray.map((data,index)=>
-                                <TouchableOpacity onPress={()=>{
-                                    let tmpArray=typeArray;
-                                    tmpArray[index].value=!data.value;
-                                    setTypeArray(tmpArray);
-                                    setState(!state);
-                                }} key={data.id}>
-                                    <HashTag hashtag={data.label} picked={data.value}/>
-                                </TouchableOpacity>
-                            )}
+                            {typeArrayState.map((data,index)=>{
+                                return(
+                                    <TouchableOpacity onPress={()=>{
+                                        let tmpArray=typeArrayState;
+                                        tmpArray[index].value=!data.value;
+                                        setTypeArrayState(tmpArray);
+                                        setState(!state);
+                                    }} key={data.id}>
+                                        <HashTag hashtag={data.label} picked={data.value}/>
+                                    </TouchableOpacity>
+                                )})}
                         </Type>
-                        ):(
-                            null
-                        )}
+                        ):(null)}
                 </MenuContainer>
                 {/* 참여조건 */}
                 <MenuContainer>
@@ -79,16 +65,17 @@ const CategoryFilterPage =({navigation}:CategoryFilterPageProps)=>{
                     </MenuBox>
                         {conditionMenu?(
                             <Type>
-                            {conditionArray.map((data,index)=>
-                                <TouchableOpacity onPress={()=>{
-                                    let tmpArray=conditionArray;
-                                    tmpArray[index].value=!data.value;
-                                    setConditionArray(tmpArray);
-                                    setState(!state);
-                                }} key={data.id}>
-                                    <HashTag hashtag={data.label} picked={data.value}/>
-                                </TouchableOpacity>
-                            )}
+                            {conditionArrayState.map((data,index)=>{
+                                return(
+                                    <TouchableOpacity onPress={()=>{
+                                        let tmpArray=conditionArrayState
+                                        tmpArray[index].value=!data.value;
+                                        setConditionArrayState(tmpArray);
+                                        setState(!state);
+                                    }} key={data.id}>
+                                        <HashTag hashtag={data.label} picked={data.value}/>
+                                    </TouchableOpacity>
+                                )})} 
                         </Type>
                         ):(
                             null
@@ -97,15 +84,17 @@ const CategoryFilterPage =({navigation}:CategoryFilterPageProps)=>{
             </ScrollView>
             <FilterBottom 
                 onPressReset={async ()=>{
-                    await setTypeArray(newStateArray(types));
-                    await setConditionArray(newStateArray(conditions));
-                    storeCLNewArray(typeArray,conditionArray);
+                    await setTypeArrayState(newStateArray(typeArray));
+                    await setConditionArrayState(newStateArray(conditionArray));
                     setState(!state);
+                    console.log(categoryArray)
                 }}
                 onPressConfirm={()=>{
-                    storeCLNewArray(typeArray,conditionArray);
-                    navigation.replace('CategoryListPage');
-                    navigation.navigate('CategoryListPage');
+                    props.navigation.navigate('CategoryListPage',{
+                        categoryArray:categoryArray,
+                        typeArray:typeArrayState,
+                        conditionArray:conditionArrayState
+                    });
                 }}
             />
         </Container>

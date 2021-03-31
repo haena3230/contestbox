@@ -14,23 +14,9 @@ import {CategoryView} from '~/Components/Filter';
 import {useQuery} from '@apollo/client';
 import {GET_HOTS} from '~/queries';
 import {HomaPageProps} from '~/Types';
-import {useDispatch} from 'react-redux'
-import { categoryAction,CLCategoryAction, CLConditionAction, CLTypeAction,fetchStateAction } from '~/Store/actions';
 import {newStateArray} from '~/Components/Filter';
 
 const HomePage = ({navigation}:HomaPageProps) => {
-
-  // redux
-  const dispatch = useDispatch()
-  const storeCategories=(Array:Array<string>)=>{
-    dispatch(categoryAction(Array))
-  }
-  const storeNewArrayCategories=(Array:Array<any>)=>{
-    dispatch(CLCategoryAction(Array))
-    dispatch(CLTypeAction([]))
-    dispatch(CLConditionAction([]))
-    dispatch(fetchStateAction(0))
-  }
   // catrgory && hot data
   const { loading, error, data } = useQuery(GET_HOTS,{
     variables:{
@@ -38,7 +24,8 @@ const HomePage = ({navigation}:HomaPageProps) => {
       sort:'HITS',
       applicationStatuses:['NOTSTARTED','INPROGRESS'],
       first:15
-    }
+    },
+    fetchPolicy:'cache-and-network'
   });
   let categoriesData=[];
   let hotData='';
@@ -46,11 +33,14 @@ const HomePage = ({navigation}:HomaPageProps) => {
   if(error)return <Text>err</Text>
   if(data.categories){
     // max 10개
-    storeCategories(CategoryView(data.categories));
+    console.log('homepage')
     categoriesData=CategoryView(data.categories).slice(0,9).map((cate)=>
     <TouchableOpacity  key = {cate[0].id} onPress={()=>{
-        navigation.navigate('CategoryListPage'),
-        storeNewArrayCategories(newStateArray(cate))
+        navigation.push('CategoryListPage',{
+          categoryArray:newStateArray(cate),
+          typeArray:null,
+          conditionArray:null,
+        });
         }}>
       <HashTag hashtag={cate[0].label} picked={false}/>
     </TouchableOpacity>
@@ -59,7 +49,7 @@ const HomePage = ({navigation}:HomaPageProps) => {
   if(data.contests){
     hotData=data.contests.edges.map((contest)=>
     <PosterContainer key = {contest.node.id.toString()} onPress={()=>
-      navigation.navigate('DetailPage',{
+      navigation.push('DetailPage',{
         listId:contest.node.id
       })
     }>

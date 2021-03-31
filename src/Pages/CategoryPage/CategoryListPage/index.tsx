@@ -7,9 +7,6 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useQuery } from '@apollo/client';
 import {GET_LISTS} from '~/queries';
 import {CategoryListPageProps, SortStatus,} from '~/Types';
-import {useSelector,useDispatch} from 'react-redux';
-import {RootState} from '~/App';
-import { CLConditionAction, CLTypeAction,fetchStateAction} from '~/Store/actions';
 // component
 import {SortComponent} from '~/Components/Sort'
 import {FilterBtn,ListBtn,SortBtn,MapBtn} from '~/Components/Btn';
@@ -18,7 +15,7 @@ import TextList,{TagBox,ListBox} from '~/Components/TextList';
 import {HashTag} from '~/Components/HashTag';
 import ToTop from '~/Components/ToTop';
 import {Map} from '~/Components/Map';
-import {newStateArray, pickedIdArray} from '~/Components/Filter';
+import { newStateArray, pickedIdArray} from '~/Components/Filter';
 
 interface pageInfoProps{
     endCursor:string,
@@ -26,34 +23,36 @@ interface pageInfoProps{
 }
 
 const CategoryListPage=(props:CategoryListPageProps)=>{
-    // 마운트를 위한 상태
-    const [state,setState]=useState(false);
-    // 저장
-    const dispatch=useDispatch();
-    const storeCLNewArray=(TArray:Array<any>,CArray:Array<any>)=>{
-        dispatch(CLTypeAction(TArray))
-        dispatch(CLConditionAction(CArray))
-    }
-    const storeFetchNum=(num:number)=>{
-        dispatch(fetchStateAction(num));
-    }
-
-    // category & type & condition & chgState
-    const categories =useSelector((state:RootState)=>state.query.CLCategoryArray)
-    const types= useSelector((state:RootState)=>state.query.CLTypeArray)
-    const conditions= useSelector((state:RootState)=>state.query.CLConditionArray)
-    const fetchNum= useSelector((state:RootState)=>state.query.fetchStateNum)
+    // category & type & condition 
+    const {categoryArray,typeArray,conditionArray} =props.route.params;
     // state
-    const [category,setCategory]=useState<Array<{id:string,label:string,value:boolean}>>(categories)
+    const [category,setCategory]=useState<Array<{id:string,label:string,value:boolean}>>(categoryArray)
     const [categoryId,setCategoryId]=useState<Array<string>>([category[0].id]);
-    const test =category[0].id
+    const pickedTypeId = pickedIdArray(typeArray);
+    const pickedConditionId=pickedIdArray(conditionArray);
+    // 필터페이지 버튼
+    const onPressFilter=()=>{
+        if(!!!typeArray){
+            props.navigation.navigate('CategoryFilterPage',{
+                categoryArray:category,
+                typeArray:initTypeArray,
+                conditionArray:initConditionArray
+            })}
+        else{
+            props.navigation.navigate('CategoryFilterPage',{
+            categoryArray:category,
+            typeArray:typeArray,
+            conditionArray:conditionArray
+        })}
+    }
+    // 카테고리 선택
     const onPressCateBtn=(data,index)=>{
         let tmpArray=category;
         tmpArray[index+1].value=!data.value;
         setCategory(tmpArray)
         // 남은 하나 취소
-        if(categoryId.length===1&&categoryId[0]!==categories[0].id){
-            setCategoryId([test]);
+        if(categoryId.length===1&&categoryId[0]!==categoryArray[0].id){
+            setCategoryId([categoryArray[0].id]);
             console.log('남은 하나 취소입니다.')
         }
         else{
@@ -85,6 +84,9 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
     const [map,setMap]=useState(false);
     // list data
     let listData=``;
+    let initTypeArray=[];
+    let initConditionArray=[];
+
     let pageInfo:pageInfoProps={
         endCursor:null,
         hasNextPage:null
@@ -95,24 +97,11 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
             first:10,
             sort:sortStatus,
             categories:categoryId,
-            conditions:pickedIdArray(conditions),
-            types:pickedIdArray(types)
+            conditions:pickedConditionId,
+            types:pickedTypeId
         },
         fetchPolicy:'cache-and-network'
     });
-    useEffect(()=>{
-        console.log('@@@@@@@@@@@@@@@@@@@@@@@@')
-        if(fetchNum!==pickedIdArray(types).length+pickedIdArray(conditions).length){
-            fetchMore({
-                variables:{
-                first:10,
-                sort:sortStatus,
-                categories:categoryId,
-                conditions:pickedIdArray(conditions),
-                types:pickedIdArray(types)
-            }})
-        }
-    },[state])
     // 정렬버튼 함수
     const onPressTagOne=async ()=>{
         setSortState({
@@ -151,8 +140,8 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
                 first:10,
                 sort:sortStatus,
                 categories:categoryId,
-                conditions:pickedIdArray(conditions),
-                types:pickedIdArray(types)
+                conditions:pickedConditionId,
+                types:pickedTypeId
             })
             setRefreshing(false);
             console.log('test')
@@ -167,9 +156,6 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
         console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
         console.log(error.graphQLErrors)
         console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
-    }
-    if(data&&types.length===0){
-        storeCLNewArray(newStateArray(data.types),newStateArray(data.conditions));
     }
     if(data&&data.contests.edges){
         listData=data.contests.edges.map((data)=>
@@ -199,6 +185,8 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
             </ListBox>
         )
         pageInfo=data.contests.pageInfo;
+        initTypeArray=newStateArray(data.types);
+        initConditionArray=newStateArray(data.conditions);
     }
     // pagination
     const onEndReached=()=>{
@@ -210,8 +198,8 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
                         first:10,
                         sort:sortStatus,
                         categories:categoryId,
-                        conditions:pickedIdArray(conditions),
-                        types:pickedIdArray(types)
+                        conditions:pickedConditionId,
+                        types:pickedTypeId
                     }
                 })
             }
@@ -230,10 +218,10 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
                 <View>
                     <View style={{height:'17%',justifyContent:'flex-end'}}>
                         <CategoryBox>
-                            <Category># {categories[0].label}</Category>
+                            <Category># {categoryArray[0].label}</Category>
                         </CategoryBox>
                         <View>
-                            {category.length===categories.length?(
+                            {categoryArray.length>1?(
                                     <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} >
                                         {category.slice(1).map((data,index)=>{
                                             return(
@@ -252,19 +240,16 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
                         height ={'8%'} 
                         isMap={true} 
                         onPressMap={()=>setMap(!map)} 
-                        onPressFilter={()=>{
-                            storeFetchNum(pickedIdArray(types).length+pickedIdArray(conditions).length);
-                            props.navigation.navigate('CategoryFilterPage');
-                        }}
+                        onPressFilter={onPressFilter}
                         onPressSort={()=>null} 
                         sortState={null}
-                        badgeNumber={pickedIdArray(category).length+pickedIdArray(conditions).length+pickedIdArray(types).length} />
+                        badgeNumber={pickedIdArray(category).length+pickedConditionId.length+pickedTypeId.length} />
                     <View style={{width:'100%',height:'75%', padding:5}}>
                         <Map 
                             search={null}
                             categoryState={categoryId}
-                            conditions={pickedIdArray(conditions)}
-                            types={pickedIdArray(types)}
+                            conditions={pickedConditionId}
+                            types={pickedTypeId}
                             />
                     </View>
                 </View>
@@ -293,9 +278,9 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
                         >
                         <View style={{paddingTop:20}}>
                             <CategoryBox>
-                                <Category># {categories[0].label}</Category>
+                                <Category># {categoryArray[0].label}</Category>
                             </CategoryBox>
-                            {category.length===categories.length?(
+                            {categoryArray.length>1?(
                                     <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
                                         {category.slice(1).map((data,index)=>{
                                             return(
@@ -313,31 +298,28 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
                             height={30}
                             isMap={false} 
                             onPressMap={()=>setMap(!map)}
-                            onPressFilter={()=>{
-                                storeFetchNum(pickedIdArray(types).length+pickedIdArray(conditions).length);
-                                props.navigation.navigate('CategoryFilterPage')
-                            }}
+                            onPressFilter={onPressFilter}
                             onPressSort={()=>setSort(!sort)} 
                             sortState={sortState.statusName}
-                            badgeNumber={pickedIdArray(category).length+pickedIdArray(conditions).length+pickedIdArray(types).length}
+                            badgeNumber={pickedIdArray(category).length+pickedConditionId.length+pickedTypeId.length}
                         />
                         <View style={{marginBottom:10}}>
                             {listData}
                         </View>
                         <SortComponent 
-                        onPressCancle={onPressSort} 
+                        onPressCancle={()=>onPressSort()} 
                         modalVisible={sort} 
                         one={sortState.statusArr[0]}
                         two={sortState.statusArr[1]}
                         three={sortState.statusArr[2]}
-                        onPressTagOne={onPressTagOne}
-                        onPressTagTwo={onPressTagTwo}
-                        onPressTagThree={onPressTagThree}
+                        onPressTagOne={()=>onPressTagOne()}
+                        onPressTagTwo={()=>onPressTagTwo()}
+                        onPressTagThree={()=>onPressTagThree()}
                         />
                         {pageInfo.hasNextPage?<Loading />:<LastData />}
                     </ScrollView>
                     {totop?(
-                        <ToTop onPressToTop={onPressToTop}/>
+                        <ToTop onPressToTop={()=>onPressToTop()}/>
                     ):(
                         null
                     )}
@@ -366,13 +348,13 @@ const BarBox=({isMap,onPressMap,onPressFilter,onPressSort,sortState,height,badge
             marginLeft:5,
             height:height,
             }}>
-            {isMap?(<View />):(<SortBtn onPressSort={onPressSort} state={sortState}/>)}
+            {isMap?(<View />):(<SortBtn onPressSort={()=>onPressSort()} state={sortState}/>)}
             <View style={{flexDirection:'row'}}>
-                <FilterBtn onPressFilter={onPressFilter} number={badgeNumber}/>
+                <FilterBtn onPressFilter={()=>onPressFilter()} number={badgeNumber}/>
                 {isMap?(
-                    <ListBtn onPressMap={onPressMap}/>
+                    <ListBtn onPressMap={()=>onPressMap()}/>
                 ):(
-                    <MapBtn onPressMap={onPressMap}/>
+                    <MapBtn onPressMap={()=>onPressMap()}/>
                 )}
             </View>
         </View>

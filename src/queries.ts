@@ -19,7 +19,6 @@ export const GET_HOTS = gql`
     }
   }
 `;
-
 export const GET_LISTS= gql`
   query GetLists ($first:Int,$after:ID,$categories:[ID!],$search:String,$sort:ContestsSortType,$conditions:[ID!],$types:[ID!],$place:LatLngBoxInput){
     types{

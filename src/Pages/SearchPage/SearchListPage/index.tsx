@@ -1,48 +1,50 @@
 // SearchListPage
-import React,{useState,useRef} from 'react';
-import {View,ScrollView,RefreshControl,Text} from 'react-native';
-import {Container,Styles,Color} from '~/Styles';
+import React,{useState,useRef, useEffect} from 'react';
+import {View,ScrollView,RefreshControl,Text, TouchableOpacity} from 'react-native';
+import {Container,Styles,Color, IconSize} from '~/Styles';
 import styled from 'styled-components/native';
 // data
-import {SearchListPageProps} from '~/Types';
+import {SearchListPageProps, SearchPageProps} from '~/Types';
 import {GET_LISTS} from '~/queries';
 import {useQuery} from '@apollo/client';
-import {useSelector,useDispatch} from 'react-redux';
-import {RootState} from '~/App';
 import {SortStatus} from '~/Types';
 // components
-import {SearchBarSmall} from '~/Components/SearchBar';
+import Arrow from '~/Assets/chevron-left-solid.svg';
+import Search from '~/Assets/search-solid.svg';
 import {SortBtn,FilterBtn,MapBtn, ListBtn} from  '~/Components/Btn';
 import {SortComponent} from '~/Components/Sort';
 import TextList,{TagBox,ListBox} from '~/Components/TextList';
 import {HashTag} from '~/Components/HashTag';
 import ToTop from '~/Components/ToTop';
 import Loading, { LastData } from '~/Components/Loading';
-import {pickedIdArray,pickedIdArraies,newStateArray} from '~/Components/Filter';
-import { SLConditionAction, SLTypeAction } from '~/Store/actions';
+import {pickedIdArray,newStateArray} from '~/Components/Filter';
 import {Map} from '~/Components/Map';
+
 interface pageInfoProps{
     endCursor:string,
     hasNextPage:boolean
 }
 const SearchListPage =(props:SearchListPageProps)=>{
-    const search=useSelector((state:RootState)=>state.query.SearchText)
-    // 마운트를 위한 상태
+    const {search,typeArray,conditionArray}=props.route.params;
+    const pickedTypeId=pickedIdArray(typeArray);
+    const pickedConditionId=pickedIdArray(conditionArray);
     const[map,setMap]=useState<boolean>(false);
-    // category & type & condition
-    const dispatch=useDispatch();
-    const storeSLTypeNewArray=(Array:Array<any>)=>{
-        dispatch(SLTypeAction(Array))
-    }
-    const storeSLConditionNewArray=(Array:Array<any>)=>{
-        dispatch(SLConditionAction(Array))
-    }
-    // const categories =useSelector((state:RootState)=>state.query.SLCategoryArray)
-    const types= useSelector((state:RootState)=>state.query.SLTypeArray)
-    const conditions= useSelector((state:RootState)=>state.query.SLConditionArray)
     // 필터 선택
     const onPressFilter =()=>{
-        props.navigation.navigate('SearchFilterPage');
+        if(!!!typeArray){
+            props.navigation.push('SearchFilterPage',{
+                search:search,
+                typeArray:initTypeArray,
+                conditionArray:initConditionArray
+            });
+        }
+        else{
+            props.navigation.push('SearchFilterPage',{
+                search:search,
+                typeArray:typeArray,
+                conditionArray:conditionArray
+            });
+        }
     }
     // totop
     const [totop,setTotop]=useState<boolean>(false);
@@ -55,41 +57,19 @@ const SearchListPage =(props:SearchListPageProps)=>{
     };
     // sort
     // 정렬 버튼
+    const[sortStatus,setSortStatus]=useState('LATEST');
     const[sortState,setSortState]=useState<SortStatus>({
         statusName:'추천순',
         status:'LATEST',
         statusArr:[true,false,false]
     });
     const[sort,setSort]=useState<boolean>(false);
-    const onPressTagOne=()=>{
-        setSortState({
-            statusName:'추천순',
-            status:'LATEST',
-            statusArr:[true,false,false]
-        })
-        setSort(!sort);
-    }
-    const onPressTagTwo=()=>{
-        setSortState({
-            statusName:'조회순',
-            status:'HITS',
-            statusArr:[false,true,false]
-        })
-        setSort(!sort);
-    }
-    const onPressTagThree=()=>{
-        setSortState({
-            statusName:'등록순',
-            status:'LATEST',
-            statusArr:[false,false,true]
-        }) 
-        setSort(!sort);
-    }
-    const onPressSort=()=>{
-        setSort(!sort);
-    }
+    
     // list data
     let listData='';
+    let initTypeArray=[];
+    let initConditionArray=[];
+
     let pageInfo:pageInfoProps={
         endCursor:null,
         hasNextPage:null
@@ -99,11 +79,43 @@ const SearchListPage =(props:SearchListPageProps)=>{
             after:pageInfo.endCursor,
             first:10,
             search:search,
-            sort:sortState.status,
-            conditions:pickedIdArray(conditions),
-            types:pickedIdArray(types)
-        }
+            sort:sortStatus,
+            types:pickedTypeId,
+            conditions:pickedConditionId
+        },
+        fetchPolicy:'cache-and-network'
     })
+    // 정렬버튼 함수
+    const onPressTagOne=()=>{
+        setSortState({
+            statusName:'추천순',
+            status:'LATEST',
+            statusArr:[true,false,false]
+        })
+        setSortStatus('LATEST')
+        setSort(!sort);
+    }
+    const onPressTagTwo=()=>{
+        setSortState({
+            statusName:'조회순',
+            status:'HITS',
+            statusArr:[false,true,false]
+        })
+        setSortStatus('HITS')
+        setSort(!sort);
+    }
+    const onPressTagThree=()=>{
+        setSortState({
+            statusName:'등록순',
+            status:'LATEST',
+            statusArr:[false,false,true]
+        }) 
+        setSortStatus('LATEST')
+        setSort(!sort);
+    }
+    const onPressSort=()=>{
+        setSort(!sort);
+    }
     // refetch
     const [refreshing,setRefreshing]=useState(false);
     const onRefresh=async ()=>{
@@ -112,9 +124,9 @@ const SearchListPage =(props:SearchListPageProps)=>{
         try{
             await refetch({
                 first:10,
-                sort:sortState.status,
-                conditions:pickedIdArray(conditions),
-                types:pickedIdArray(types)
+                sort:sortStatus,
+                types:pickedTypeId,
+                conditions:pickedConditionId
             })
             setRefreshing(false);
         } catch(e){
@@ -123,16 +135,10 @@ const SearchListPage =(props:SearchListPageProps)=>{
     }
     if(loading) return <Loading />
     if(error) return <Text>err</Text>
-    if(data&&types.length===0){
-        storeSLTypeNewArray(newStateArray(data.types));
-    }
-    if(data&&conditions.length===0){
-        storeSLConditionNewArray(newStateArray(data.conditions));
-    }
     if(data&&data.contests){
     listData=data.contests.edges.map((data)=>
         <ListBox key = {data.node.id.toString()} onPress={()=>{
-            props.navigation.navigate('DetailPage',{
+            props.navigation.push('DetailPage',{
                 listId:data.node.id,
             })
         }}>
@@ -157,6 +163,8 @@ const SearchListPage =(props:SearchListPageProps)=>{
         </ListBox>
     )
     pageInfo=data.contests.pageInfo;
+    initTypeArray=newStateArray(data.types);
+    initConditionArray=newStateArray(data.conditions);
     }
     // pagination
     const onEndReached=()=>{
@@ -168,8 +176,8 @@ const SearchListPage =(props:SearchListPageProps)=>{
                         first:10,
                         search:search,
                         sort:sortState.status,
-                        conditions:pickedIdArray(conditions),
-                        types:pickedIdArray(types)
+                        types:pickedTypeId,
+                        conditions:pickedConditionId
                     }
                 })
             }
@@ -187,14 +195,14 @@ const SearchListPage =(props:SearchListPageProps)=>{
                         onPressSort={()=>setSort(!sort)}
                         onPressMap={()=>setMap(!map)}
                         sortState={sortState.statusName}
-                        badgeNumber={pickedIdArray(conditions).length+pickedIdArray(types).length}
+                        badgeNumber={pickedTypeId.length+pickedConditionId.length}
                         />
                     <View style={{height:'80%', width:'100%', padding:5}}>
                         <Map 
                             search={search}
                             categoryState={null}
-                            conditions={pickedIdArray(conditions)}
-                            types={pickedIdArray(types)}
+                            conditions={pickedConditionId}
+                            types={pickedTypeId}
                             />
                     </View>
                 </View>
@@ -228,7 +236,7 @@ const SearchListPage =(props:SearchListPageProps)=>{
                         onPressSort={()=>setSort(!sort)}
                         onPressMap={()=>setMap(!map)}
                         sortState={sortState.statusName}
-                        badgeNumber={pickedIdArray(conditions).length+pickedIdArray(types).length}
+                        badgeNumber={pickedConditionId.length+pickedTypeId.length}
                         />
                     <View style={{padding:5}}>
                         {listData}
@@ -285,6 +293,28 @@ const SearchListBar=({isMap,search,count,onPressFilter,onPressSort,onPressMap,so
     )
 }
 
+export const SearchBarSmall=(props:SearchPageProps)=>{
+    const[searchText,setSearchText]=useState('');
+    return(
+        <SearchHeader>
+            <Arrow onPress={()=>props.navigation.goBack()} height={IconSize.sicon} width={IconSize.sicon} color={Color.g3_color}/>
+            <SmallSearchBarStyle>
+                <TouchableOpacity onPress={()=>{
+                  props.navigation.replace('SearchListPage',{
+                    search:searchText,
+                    typeArray:null,
+                    conditionArray:null,
+                  });
+                  }} style={{paddingHorizontal:15}}>
+                    <Search height={IconSize.sicon} width={IconSize.sicon} color={Color.g3_color}/>
+                </TouchableOpacity>
+                <SearchHeaderText placeholder={'검색어를 입력해 주세요.'} value={searchText} onChangeText={(text)=>{setSearchText(text)}} />
+            </SmallSearchBarStyle>
+        </SearchHeader>
+    )
+}
+
+// status bar
 const BarBox=styled.View`
     flex-direction:row;
     justify-content:space-between;
@@ -298,5 +328,27 @@ const BarBoxText=styled.Text`
 const BarBoxCount=styled.Text`
     ${Styles.m_font};
     color:${Color.g3_color};
+`
+// search bar
+const SearchHeader=styled.View`
+    width:100%;
+    flex-direction:row;
+    justify-content:space-around;
+    align-items:center;
+`
+const SmallSearchBarStyle=styled.View`
+  width:90%;
+  background-color:${Color.w_color};
+  border-radius:15px;
+  flex-direction:row;
+  align-items:center;
+  margin-vertical:10px;
+  border-width:1px;
+  border-color:${Color.g1_color};
+`
+const SearchHeaderText=styled.TextInput`
+    ${Styles.m_font};
+    padding:0
+
 `
 export default SearchListPage;
