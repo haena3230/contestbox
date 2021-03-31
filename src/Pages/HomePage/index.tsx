@@ -1,5 +1,5 @@
 // main home page
-import React from 'react';
+import React, { useEffect } from 'react';
 import {View, TouchableOpacity, Text,StyleSheet, Image} from 'react-native';
 import styled from 'styled-components/native';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -19,6 +19,7 @@ import { categoryAction,CLCategoryAction, CLConditionAction, CLTypeAction,fetchS
 import {newStateArray} from '~/Components/Filter';
 
 const HomePage = ({navigation}:HomaPageProps) => {
+
   // redux
   const dispatch = useDispatch()
   const storeCategories=(Array:Array<string>)=>{
@@ -45,6 +46,7 @@ const HomePage = ({navigation}:HomaPageProps) => {
   if(error)return <Text>err</Text>
   if(data.categories){
     // max 10개
+    storeCategories(CategoryView(data.categories));
     categoriesData=CategoryView(data.categories).slice(0,9).map((cate)=>
     <TouchableOpacity  key = {cate[0].id} onPress={()=>{
         navigation.navigate('CategoryListPage'),
@@ -52,8 +54,7 @@ const HomePage = ({navigation}:HomaPageProps) => {
         }}>
       <HashTag hashtag={cate[0].label} picked={false}/>
     </TouchableOpacity>
-    ),
-    storeCategories(CategoryView(data.categories));
+    )
   }
   if(data.contests){
     hotData=data.contests.edges.map((contest)=>
