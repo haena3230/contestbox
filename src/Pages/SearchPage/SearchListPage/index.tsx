@@ -19,12 +19,16 @@ import ToTop from '~/Components/ToTop';
 import Loading, { LastData } from '~/Components/Loading';
 import {pickedIdArray,newStateArray} from '~/Components/Filter';
 import {Map} from '~/Components/Map';
+import { InfoModalComponent } from '~/Components/Modal';
 
 interface pageInfoProps{
     endCursor:string,
     hasNextPage:boolean
 }
 const SearchListPage =(props:SearchListPageProps)=>{
+    useEffect(()=>{
+        console.log('searchListPage');
+    },[])
     const {search,typeArray,conditionArray}=props.route.params;
     const pickedTypeId=pickedIdArray(typeArray);
     const pickedConditionId=pickedIdArray(conditionArray);
@@ -232,7 +236,7 @@ const SearchListPage =(props:SearchListPageProps)=>{
                         isMap={false} 
                         search={search} 
                         count={data.contests.edges.length} 
-                        onPressFilter={onPressFilter}
+                        onPressFilter={()=>onPressFilter()}
                         onPressSort={()=>setSort(!sort)}
                         onPressMap={()=>setMap(!map)}
                         sortState={sortState.statusName}
@@ -294,22 +298,42 @@ const SearchListBar=({isMap,search,count,onPressFilter,onPressSort,onPressMap,so
 }
 
 export const SearchBarSmall=(props:SearchPageProps)=>{
-    const[searchText,setSearchText]=useState('');
+    const[infoModal,setInfoModal]=useState<boolean>(false);
+    const[searchText,setSearchText]=useState<string|null>();
+    const onSubmet=()=>{
+        if(!searchText){
+            setInfoModal(true);
+            setTimeout(()=>{
+                setInfoModal(false);
+            },1500);
+        }
+        else{
+        props.navigation.navigate('SearchListPage',{
+            search:searchText,
+            typeArray:null,
+            conditionArray:null,
+            });
+        }
+    }
     return(
         <SearchHeader>
             <Arrow onPress={()=>props.navigation.goBack()} height={IconSize.sicon} width={IconSize.sicon} color={Color.g3_color}/>
             <SmallSearchBarStyle>
-                <TouchableOpacity onPress={()=>{
-                  props.navigation.replace('SearchListPage',{
-                    search:searchText,
-                    typeArray:null,
-                    conditionArray:null,
-                  });
-                  }} style={{paddingHorizontal:15}}>
+                <TouchableOpacity onPress={onSubmet} style={{paddingHorizontal:15}}>
                     <Search height={IconSize.sicon} width={IconSize.sicon} color={Color.g3_color}/>
                 </TouchableOpacity>
-                <SearchHeaderText placeholder={'검색어를 입력해 주세요.'} value={searchText} onChangeText={(text)=>{setSearchText(text)}} />
+                <SearchHeaderText 
+                    placeholder={'검색어를 입력해 주세요.'} 
+                    value={searchText} 
+                    onChangeText={(text)=>{setSearchText(text)}} 
+                    maxLength={35}
+                    onSubmitEditing={onSubmet}
+                    />
             </SmallSearchBarStyle>
+            <InfoModalComponent 
+                Info={'검색어를 입력해 주세요.'}
+                modalVisible={infoModal}
+                />
         </SearchHeader>
     )
 }

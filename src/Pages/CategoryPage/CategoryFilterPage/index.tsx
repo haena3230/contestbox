@@ -9,6 +9,7 @@ import {SortDownBtn, SortUpBtn} from  '~/Components/Btn';
 import { Text, TouchableOpacity } from 'react-native';
 import { HashTag } from '~/Components/HashTag';
 import {CategoryFilterPageProps} from '~/Types';
+import ModalComponent from '~/Components/Modal';
 
 const CategoryFilterPage =(props:CategoryFilterPageProps)=>{
     const {categoryArray,typeArray,conditionArray} =props.route.params;
@@ -21,6 +22,9 @@ const CategoryFilterPage =(props:CategoryFilterPageProps)=>{
     // menu state
     const [typeMenu,setTypeMenu]=useState<Boolean>(false);
     const [conditionMenu,setConditionMenu]=useState<Boolean>(false);
+    // reset confirm modal
+    const [resetModal,setResetModal]=useState<boolean>(false);
+
     return(
         <Container>
             <FilterHeader />
@@ -82,15 +86,27 @@ const CategoryFilterPage =(props:CategoryFilterPageProps)=>{
                         )}
                 </MenuContainer>
             </ScrollView>
+            <ModalComponent 
+                modalVisible={resetModal}
+                onPressCancle={()=>setResetModal(false)}
+                onPressConfirm={()=>{
+                    props.navigation.pop()
+                    props.navigation.replace('CategoryListPage',{
+                        categoryArray:categoryArray,
+                        typeArray:newStateArray(typeArray),
+                        conditionArray:newStateArray(conditionArray)
+                    });
+                }}
+                tag={null}
+                title={'조건을 초기화 하시겠습니까?'}
+            />
             <FilterBottom 
-                onPressReset={async ()=>{
-                    await setTypeArrayState(newStateArray(typeArray));
-                    await setConditionArrayState(newStateArray(conditionArray));
-                    setState(!state);
-                    console.log(categoryArray)
+                onPressReset={()=>{
+                    setResetModal(true);
                 }}
                 onPressConfirm={()=>{
-                    props.navigation.navigate('CategoryListPage',{
+                    props.navigation.pop()
+                    props.navigation.replace('CategoryListPage',{
                         categoryArray:categoryArray,
                         typeArray:typeArrayState,
                         conditionArray:conditionArrayState

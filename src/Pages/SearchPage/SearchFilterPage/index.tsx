@@ -9,6 +9,7 @@ import {HashTag} from '~/Components/HashTag';
 
 // data
 import { SearchFilterPageProps } from '~/Types';
+import ModalComponent from '~/Components/Modal';
 
 
 const SearchFilterPage =(props:SearchFilterPageProps)=>{
@@ -19,11 +20,13 @@ const SearchFilterPage =(props:SearchFilterPageProps)=>{
     const[typeArrayState,setTypeArrayState]=useState<Array<{id:string,label:string,value:boolean}>>(typeArray);
     const[conditionArrayState,setConditionArrayState]=useState<Array<{id:string,label:string,value:boolean}>>(conditionArray);
     useEffect(()=>{
-        console.log('@@@@@@@@@@@@@@@@@@');
+        console.log('SerchFilterPage');
     },[state])
     // 메뉴상태
     const [typeMenu,setTypeMenu]=useState<boolean>(false);
     const [conditionMenu,setConditionMenu]=useState<boolean>(false);
+    // reset modal 
+    const [resetModal,setResetModal]=useState<boolean>(false);
     return(
         <Container>
             <FilterHeader />
@@ -40,9 +43,9 @@ const SearchFilterPage =(props:SearchFilterPageProps)=>{
                     </MenuBox>
                         {typeMenu?(
                             <Type>
-                            {typeArray.map((data,index)=>
+                            {typeArrayState.map((data,index)=>
                                 <TouchableOpacity onPress={()=>{
-                                    let tmpArray=typeArray;
+                                    let tmpArray=typeArrayState;
                                     tmpArray[index].value=!data.value;
                                     setTypeArrayState(tmpArray);
                                     setState(!state)
@@ -110,9 +113,9 @@ const SearchFilterPage =(props:SearchFilterPageProps)=>{
                     </MenuBox>
                         {conditionMenu?(
                             <Type>
-                            {conditionArray.map((data,index)=>
+                            {conditionArrayState.map((data,index)=>
                                 <TouchableOpacity onPress={()=>{
-                                    let tmpArray=conditionArray;
+                                    let tmpArray=conditionArrayState;
                                     tmpArray[index].value=!data.value;
                                     setConditionArrayState(tmpArray)
                                     setState(!state)
@@ -126,14 +129,27 @@ const SearchFilterPage =(props:SearchFilterPageProps)=>{
                         )}
                 </MenuContainer>
             </ScrollView>
+            <ModalComponent 
+                modalVisible={resetModal}
+                onPressCancle={()=>setResetModal(false)}
+                onPressConfirm={()=>{
+                    props.navigation.pop()
+                    props.navigation.replace('SearchListPage',{
+                        search:search,
+                        typeArray:newStateArray(typeArray),
+                        conditionArray:newStateArray(conditionArray)
+                    });
+                }}
+                tag={null}
+                title={'조건을 초기화 하시겠습니까?'}
+            />
             <FilterBottom 
-                onPressReset={async ()=>{
-                    await setTypeArrayState(newStateArray(typeArray));
-                    await setConditionArrayState(newStateArray(conditionArray));
-                    setState(!state);
+                onPressReset={()=>{
+                   setResetModal(true);
                 }}
                 onPressConfirm={()=>{
-                    props.navigation.navigate('SearchListPage',{
+                    props.navigation.pop()
+                    props.navigation.replace('SearchListPage',{
                         search:search,
                         typeArray:typeArrayState,
                         conditionArray:conditionArrayState

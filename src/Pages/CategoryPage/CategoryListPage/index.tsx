@@ -23,6 +23,9 @@ interface pageInfoProps{
 }
 
 const CategoryListPage=(props:CategoryListPageProps)=>{
+    useEffect(()=>{
+        console.log('categoryListPage');
+    },[])
     // category & type & condition 
     const {categoryArray,typeArray,conditionArray} =props.route.params;
     // state
@@ -206,14 +209,6 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
     }
     return(
         <Container>
-            <TouchableOpacity onPress={()=>{
-                console.log(category)
-                console.log(categoryId)
-            }}>
-                <Text>
-                    test
-                </Text>
-            </TouchableOpacity>
             {map?(
                 <View>
                     <View style={{height:'17%',justifyContent:'flex-end'}}>

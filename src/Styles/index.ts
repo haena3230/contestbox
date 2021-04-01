@@ -41,8 +41,7 @@ export const Styles = StyleSheet.create({
 
  // 페이지 스타일
  export const Container=styled.View`
-  width:100%;
-  height:100%;
+  flex:1;
   background-color:${Color.l_color};
 `
 // 비율 

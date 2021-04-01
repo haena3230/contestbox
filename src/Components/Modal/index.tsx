@@ -9,7 +9,7 @@ import Modal from 'react-native-modal';
 interface MadalProps{
     modalVisible:boolean;
     title:string;
-    tag:Array<string>;
+    tag:null|Array<string>;
     onPressConfirm:()=>void;
     onPressCancle:()=>void;
 }
@@ -22,16 +22,18 @@ const ModalComponent = ({modalVisible,title,tag,onPressConfirm,onPressCancle}:Ma
         >
             <View style={{ flex: 1,justifyContent: "center", alignItems: "center"}}>
                 <ModalView>
-                    <ModalTitle>{title}</ModalTitle>
-                    <ModalTag>
+                        <ModalTitle>{title}</ModalTitle>
+                    {!tag?null:(
+                        <ModalTag>
                         {tag.map((tag)=>{
                             return(
                                 <View key = {tag}>
-                                    <HashTag hashtag={tag} />
+                                    <HashTag picked={false} hashtag={tag} />
                                 </View>
                             )
                         })}
                     </ModalTag>
+                    )}
                     <ModalConfirm>
                         <TouchableOpacity onPress={onPressConfirm}>
                             <Confirm>적용</Confirm>
@@ -46,6 +48,29 @@ const ModalComponent = ({modalVisible,title,tag,onPressConfirm,onPressCancle}:Ma
   );
 };
 
+
+interface InfoMadalProps{
+    modalVisible:boolean;
+    Info:string;
+}
+export const InfoModalComponent = ({modalVisible,Info}:InfoMadalProps) => {
+  return (
+        <Modal
+            isVisible={modalVisible}
+            backdropOpacity={0.6}
+        >
+            <View style={{ flex: 1,justifyContent: "center", alignItems: "center"}}>
+                <ModalView>
+                        <ModalTitle>{Info}</ModalTitle>
+                </ModalView>
+            </View>
+        </Modal>
+  );
+};
+
+
+
+
 const ModalView =styled.View`
     width:90%;
     background-color:white;
@@ -53,7 +78,7 @@ const ModalView =styled.View`
     border-radius:10px;
 `
 const ModalTitle =styled.Text`
-    ${Styles.b_font};
+    ${Styles.m_font};
     padding-bottom:20px;
 `
 const ModalTag =styled.View`

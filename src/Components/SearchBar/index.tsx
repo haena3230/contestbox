@@ -4,21 +4,32 @@ import {TouchableOpacity,TextInput} from 'react-native';
 import {Color,IconSize,Styles} from '~/Styles';
 import styled from 'styled-components/native';
 import {SearchPageProps} from '~/Types';
-// icon
+// component
 import Search from '~/Assets/search-solid.svg';
+import {InfoModalComponent} from '~/Components/Modal';
 
 
 export const SearchBar=({navigation}:SearchPageProps)=>{
-  const[searchText,setSearchText]=useState('');
-  return(
-    <SearchBarStyle>
-      <TouchableOpacity onPress={()=>{
-        navigation.push('SearchListPage',{
+  const[searchText,setSearchText]=useState<null|string>();
+  const[infoModal,setInfoModal]=useState<boolean>(false);
+  const onSubmet=()=>{
+    if(!searchText){
+      setInfoModal(true);
+      setTimeout(()=>{
+        setInfoModal(false);
+      },1500);
+    }
+    else{
+      navigation.navigate('SearchListPage',{
           search:searchText,
           typeArray:null,
           conditionArray:null,
         });
-      }} style={{paddingHorizontal:15}}>
+    }
+  }
+  return(
+    <SearchBarStyle>
+      <TouchableOpacity onPress={onSubmet} style={{paddingHorizontal:15}}>
         <Search height={IconSize.icon} width={IconSize.icon} color={Color.g3_color}/>
       </TouchableOpacity>
       <TextInput 
@@ -26,7 +37,12 @@ export const SearchBar=({navigation}:SearchPageProps)=>{
         placeholder={'검색어를 입력해 주세요.'} 
         value={searchText} 
         onChangeText={(text)=>{setSearchText(text)}} 
-        
+        onSubmitEditing={onSubmet}
+        maxLength={35}
+        />
+        <InfoModalComponent 
+          Info={'검색어를 입력해 주세요.'}
+          modalVisible={infoModal}
         />
     </SearchBarStyle>
   )

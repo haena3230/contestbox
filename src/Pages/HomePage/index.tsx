@@ -17,6 +17,9 @@ import {HomaPageProps} from '~/Types';
 import {newStateArray} from '~/Components/Filter';
 
 const HomePage = ({navigation}:HomaPageProps) => {
+  useEffect(()=>{
+    console.log('home')
+  },[])
   // catrgory && hot data
   const { loading, error, data } = useQuery(GET_HOTS,{
     variables:{
@@ -33,10 +36,9 @@ const HomePage = ({navigation}:HomaPageProps) => {
   if(error)return <Text>err</Text>
   if(data.categories){
     // max 10개
-    console.log('homepage')
     categoriesData=CategoryView(data.categories).slice(0,9).map((cate)=>
     <TouchableOpacity  key = {cate[0].id} onPress={()=>{
-        navigation.push('CategoryListPage',{
+        navigation.navigate('CategoryListPage',{
           categoryArray:newStateArray(cate),
           typeArray:null,
           conditionArray:null,

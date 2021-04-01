@@ -14,12 +14,12 @@ import {TouchableOpacity } from 'react-native-gesture-handler';
 import {SearchPageProps} from '~/Types';
 import {newStateArray,CategoryView} from '~/Components/Filter';
 import { useQuery } from '@apollo/client';
-import { GET_HOTS } from '~/queries';
+import { GET_CATEGORIES} from '~/queries';
 import Loading from '~/Components/Loading';
 
 const SearchPage = ({navigation}:SearchPageProps) => {
   // catrgory data
-  const {loading,error,data} =useQuery(GET_HOTS,{
+  const {loading,error,data} =useQuery(GET_CATEGORIES,{
     fetchPolicy:'cache-and-network'
   })
   let cateData=[];
@@ -28,7 +28,7 @@ const SearchPage = ({navigation}:SearchPageProps) => {
   if(data.categories){
     cateData=CategoryView(data.categories).slice(0,9).map((cate)=>
       <TouchableOpacity  key = {cate[0].id} onPress={()=>{
-          navigation.push('CategoryListPage',{
+          navigation.navigate('CategoryListPage',{
             categoryArray:newStateArray(cate),
             typeArray:null,
             conditionArray:null,

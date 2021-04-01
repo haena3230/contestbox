@@ -1,5 +1,13 @@
 import { gql } from '@apollo/client';
-
+export const GET_CATEGORIES=gql`
+  query GetCategories{
+    categories {
+      id
+      label
+      parentID
+    }
+  }
+`
 export const GET_HOTS = gql`
   query ($existPoster:Boolean,$sort:ContestsSortType, $first:Int, $applicationStatuses:[ContestApplicationStatus!]){
     categories {
