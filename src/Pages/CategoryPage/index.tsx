@@ -13,18 +13,25 @@ import {newStateArray,CategoryView} from '~/Components/Filter';
 import { useQuery } from '@apollo/client';
 import { GET_CATEGORIES } from '~/queries';
 import Loading from '~/Components/Loading';
+import { ErrorPage } from '~/Components/Error';
 
 const CategoryPage =({navigation}:CategoryPageProps)=>{
     useEffect(()=>{
         console.log('categoryPage')
     },[])
     // category data
-    const {loading, error,data}=useQuery(GET_CATEGORIES,{
+    const {loading, error,data,refetch}=useQuery(GET_CATEGORIES,{
         fetchPolicy:'cache-and-network'
     });
     let categoryData=[];
     if(loading) return <Loading />
-    if(error) return <Text>err</Text>
+    if(error) return <ErrorPage onPress={async ()=>{
+    try{
+        await refetch()
+        console.log('refetch')
+    } catch(e){
+        console.log('refetch err')
+    }}} />
     if(data.categories){
         // console.log(CategoryView(data.categories))
         categoryData=CategoryView(data.categories).map((data)=>

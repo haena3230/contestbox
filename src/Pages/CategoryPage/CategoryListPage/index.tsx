@@ -16,6 +16,7 @@ import {HashTag} from '~/Components/HashTag';
 import ToTop from '~/Components/ToTop';
 import {Map} from '~/Components/Map';
 import { newStateArray, pickedIdArray} from '~/Components/Filter';
+import { ErrorPage } from '~/Components/Error';
 
 interface pageInfoProps{
     endCursor:string,
@@ -147,19 +148,13 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
                 types:pickedTypeId
             })
             setRefreshing(false);
-            console.log('test')
+            console.log('refetch')
         } catch(e){
             console.log('refetch err')
         }
     }
-    
-    
     if (loading) return <Loading />;
-    if (error){
-        console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
-        console.log(error.graphQLErrors)
-        console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
-    }
+    if (error) return <ErrorPage onPress={onRefresh} />
     if(data&&data.contests.edges){
         listData=data.contests.edges.map((data)=>
             <ListBox key = {data.node.id.toString()} onPress={()=>{

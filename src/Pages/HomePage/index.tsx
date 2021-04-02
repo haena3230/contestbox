@@ -10,6 +10,7 @@ import Swiper from 'react-native-swiper';
 import {HashTag} from '~/Components/HashTag';
 import Loading from '~/Components/Loading';
 import {CategoryView} from '~/Components/Filter';
+import {ErrorPage} from '~/Components/Error';
 // data
 import {useQuery} from '@apollo/client';
 import {GET_HOTS} from '~/queries';
@@ -21,7 +22,7 @@ const HomePage = ({navigation}:HomaPageProps) => {
     console.log('home')
   },[])
   // catrgory && hot data
-  const { loading, error, data } = useQuery(GET_HOTS,{
+  const { loading, error, data,refetch } = useQuery(GET_HOTS,{
     variables:{
       existPoster:true,
       sort:'HITS',
@@ -33,7 +34,18 @@ const HomePage = ({navigation}:HomaPageProps) => {
   let categoriesData=[];
   let hotData='';
   if(loading) return <Loading />
-  if(error)return <Text>err</Text>
+  if(error)return <ErrorPage onPress={async ()=>{
+    try{
+        await refetch({
+            existPoster:true,
+            sort:'HITS',
+            applicationStatuses:['NOTSTARTED','INPROGRESS'],
+            first:15
+        })
+        console.log('refetch')
+    } catch(e){
+        console.log('refetch err')
+    }}} />
   if(data.categories){
     // max 10개
     categoriesData=CategoryView(data.categories).slice(0,9).map((cate)=>
@@ -56,7 +68,7 @@ const HomePage = ({navigation}:HomaPageProps) => {
       })
     }>
       <PosterBox>
-        <Poster source={{uri:`contest.node.posterURL`+',w_297,h_420'}}/>
+        <Poster source={{uri:`${contest.node.posterURL},w_297,h_420`}}/>
       </PosterBox>
       <PosterText numberOfLines={2} ellipsizeMode="tail">{contest.node.title}</PosterText>
     </PosterContainer>

@@ -20,6 +20,7 @@ import Loading, { LastData } from '~/Components/Loading';
 import {pickedIdArray,newStateArray} from '~/Components/Filter';
 import {Map} from '~/Components/Map';
 import { InfoModalComponent } from '~/Components/Modal';
+import { ErrorPage } from '~/Components/Error';
 
 interface pageInfoProps{
     endCursor:string,
@@ -138,7 +139,7 @@ const SearchListPage =(props:SearchListPageProps)=>{
         }
     }
     if(loading) return <Loading />
-    if(error) return <Text>err</Text>
+    if(error) return <ErrorPage onPress={onRefresh} />
     if(data&&data.contests){
     listData=data.contests.edges.map((data)=>
         <ListBox key = {data.node.id.toString()} onPress={()=>{
