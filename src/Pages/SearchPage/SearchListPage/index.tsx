@@ -5,7 +5,7 @@ import {Container,Styles,Color, IconSize} from '~/Styles';
 import styled from 'styled-components/native';
 // data
 import {SearchListPageProps, SearchPageProps} from '~/Types';
-import {GET_LISTS} from '~/queries';
+import {GET_SEARCH_LISTS} from '~/queries';
 import {useQuery} from '@apollo/client';
 import {SortStatus} from '~/Types';
 // components
@@ -18,7 +18,7 @@ import {HashTag} from '~/Components/HashTag';
 import ToTop from '~/Components/ToTop';
 import Loading, { LastData } from '~/Components/Loading';
 import {pickedIdArray,newStateArray} from '~/Components/Filter';
-import {Map} from '~/Components/Map';
+import {SearchMap} from '~/Components/Map';
 import { InfoModalComponent } from '~/Components/Modal';
 import { ErrorPage } from '~/Components/Error';
 
@@ -79,7 +79,7 @@ const SearchListPage =(props:SearchListPageProps)=>{
         endCursor:null,
         hasNextPage:null
     }
-    const {loading,error,data,fetchMore,refetch }=useQuery(GET_LISTS,{
+    const {loading,error,data,fetchMore,refetch }=useQuery(GET_SEARCH_LISTS,{
         variables:{
             after:pageInfo.endCursor,
             first:10,
@@ -142,30 +142,20 @@ const SearchListPage =(props:SearchListPageProps)=>{
     if(error) return <ErrorPage onPress={onRefresh} />
     if(data&&data.contests){
     listData=data.contests.edges.map((data)=>
-        <ListBox key = {data.node.id.toString()} onPress={()=>{
-            props.navigation.push('DetailPage',{
-                listId:data.node.id,
-            })
-        }}>
-        <TextList 
+        <TextList
+            key = {data.node.id.toString()} 
+            onPress={()=>{
+                props.navigation.navigate('DetailPage',{
+                    listId:data.node.id,
+                })
+            }}
             recruit={data.node.application.status} 
             deadline={data.node.application.period.endAt}
             title={data.node.title} 
             viewcount={data.node.hits}
+            categories={data.node.categories}
+            poster={data.node.posterURL}
             />
-            {data.node.categories!==null?(
-            <TagBox>
-                {data.node.categories.slice(0,3).map((tag)=>
-                <HashTag key={tag.id.toString()} hashtag={tag.label} picked={false}/>
-                )}
-                {data.node.categories.length>3?(
-                <HashTag hashtag={'+'+ (data.node.categories.length-3)} picked={false}/>
-                ):(
-                null
-                )}
-            </TagBox>
-            ):null}
-        </ListBox>
     )
     pageInfo=data.contests.pageInfo;
     initTypeArray=newStateArray(data.types);
@@ -203,7 +193,7 @@ const SearchListPage =(props:SearchListPageProps)=>{
                         badgeNumber={pickedTypeId.length+pickedConditionId.length}
                         />
                     <View style={{height:'80%', width:'100%', padding:5}}>
-                        <Map 
+                        <SearchMap 
                             search={search}
                             categoryState={null}
                             conditions={pickedConditionId}
@@ -318,7 +308,7 @@ export const SearchBarSmall=(props:SearchPageProps)=>{
     }
     return(
         <SearchHeader>
-            <Arrow onPress={()=>props.navigation.goBack()} height={IconSize.sicon} width={IconSize.sicon} color={Color.g3_color}/>
+            <Arrow onPress={()=>props.navigation.goBack()} height={IconSize.icon} width={IconSize.icon} color={Color.g3_color}/>
             <SmallSearchBarStyle>
                 <TouchableOpacity onPress={onSubmet} style={{paddingHorizontal:15}}>
                     <Search height={IconSize.sicon} width={IconSize.sicon} color={Color.g3_color}/>
@@ -373,7 +363,7 @@ const SmallSearchBarStyle=styled.View`
 `
 const SearchHeaderText=styled.TextInput`
     ${Styles.m_font};
-    padding:0
+    padding:3px;
 
 `
 export default SearchListPage;

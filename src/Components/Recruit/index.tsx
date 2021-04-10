@@ -1,12 +1,11 @@
 import React from 'react';
-import {View,Text} from 'react-native';
-import { Color } from '~/Styles';
+import { Color,Styles } from '~/Styles';
 import styled from 'styled-components/native'
 
 export const PreRecruit=()=>{
     return(
-        <Box color={'#86C2FF'}>
-            <Text style={{color:Color.w_color,fontSize:10}}>접수예정</Text>
+        <Box color={Color.p_l_color}>
+            <DText>접수예정</DText>
         </Box>
     )
 }
@@ -14,23 +13,23 @@ export const PreRecruit=()=>{
 export const Recruit=()=>{
     return(
         <Box color={Color.p_color}>
-            <Text style={{color:Color.w_color,fontSize:10}}>접수중</Text>
+            <Text>접수중</Text>
         </Box>
     )
 }
 
 export const NoRecruit=()=>{
     return(
-        <Box color={Color.g4_color}>
-            <Text style={{color:Color.w_color,fontSize:10}}>접수마감</Text>
+        <Box color={Color.g3_color}>
+            <Text>접수마감</Text>
         </Box>
     )
 }
 
 export const CancelRecruit=()=>{
     return(
-        <Box color={Color.g4_color}>
-            <Text style={{color:Color.w_color,fontSize:10}}>취소</Text>
+        <Box color={Color.g3_color}>
+            <Text>취소</Text>
         </Box>
     )
 }
@@ -38,7 +37,7 @@ export const CancelRecruit=()=>{
 export const ImmenentRecruit=()=>{
     return(
         <Box color={Color.r_color}>
-            <Text style={{color:Color.w_color,fontSize:10}}>마감임박</Text>
+            <Text>마감임박</Text>
         </Box>
     )
 }
@@ -48,11 +47,23 @@ interface BoxColor{
 }
 const Box = styled.View`
     margin-right:15px;
+    
     width:60px;
-    height:15px
     background-color:${(props:BoxColor)=>props.color};
     border-radius:10px;
     justify-content:center;
     align-items:center;
 
+`
+
+const Text=styled.Text`
+    ${Styles.ss_font};
+    color:${Color.w_color};
+    font-weight:bold;
+`
+
+const DText=styled.Text`
+    ${Styles.ss_font};
+    color:${Color.p_color};
+    font-weight:bold;
 `

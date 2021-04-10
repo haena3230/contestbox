@@ -26,16 +26,16 @@ export const Color = {
 // 텍스트 스타일
 export const Styles = StyleSheet.create({
   ss_font:{
-    fontSize: DWidth > 480 ? 14 : 10,
+    fontSize: DWidth > 480 ? 15 : 11,
   },
   s_font: {
-    fontSize: DWidth > 480 ? 16 : 12,
+    fontSize: DWidth > 480 ? 17 : 13,
   },
   m_font: {
-    fontSize: DWidth > 480 ? 18 : 14,
+    fontSize: DWidth > 480 ? 20 : 16,
   },
   b_font: {
-    fontSize: DWidth > 480 ? 22 : 18,
+    fontSize: DWidth > 480 ? 24 : 20,
   },
 });
 
@@ -56,7 +56,7 @@ export const ComponentContainer=styled.View`
 `
 // 아이콘 사이즈
 export const IconSize={
-  icon:DWidth>480?25:20,
-  sicon:DWidth>480?20:15,
+  icon:DWidth>480?27:22,
+  sicon:DWidth>480?22:17,
 }
 

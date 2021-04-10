@@ -27,7 +27,7 @@ export const GET_HOTS = gql`
     }
   }
 `;
-export const GET_LISTS= gql`
+export const GET_SEARCH_LISTS= gql`
   query GetLists ($first:Int,$after:ID,$categories:[ID!],$search:String,$sort:ContestsSortType,$conditions:[ID!],$types:[ID!],$place:LatLngBoxInput){
     types{
         id
@@ -57,6 +57,52 @@ export const GET_LISTS= gql`
               endAt
             }
           }
+          posterURL
+          place{
+              alias
+              fullAddress
+              latLng{
+                lat
+                lng
+              }
+            }
+        }
+      }
+    }
+  }
+`;
+
+export const GET_CATEGORY_LISTS= gql`
+  query GetLists ($first:Int,$after:ID,$categories:[ID!],$search:String,$sort:ContestsSortType,$conditions:[ID!],$types:[ID!],$place:LatLngBoxInput){
+    types{
+        id
+        label
+      }
+      conditions{
+        id
+        label
+      }
+    contests(first:$first,after:$after,categories:$categories,search:$search,sort:$sort,conditions:$conditions,types:$types,place:$place) {
+      pageInfo{
+        endCursor
+        hasNextPage
+      }
+      edges{
+        node{
+          id
+          title
+          hits
+          categories{
+            id
+            label
+          }
+          application{
+            status
+            period{
+              endAt
+            }
+          }
+          posterURL
           place{
               alias
               fullAddress

@@ -49,7 +49,8 @@ const HomePage = ({navigation}:HomaPageProps) => {
   if(data.categories){
     // max 10개
     categoriesData=CategoryView(data.categories).slice(0,9).map((cate)=>
-    <TouchableOpacity  key = {cate[0].id} onPress={()=>{
+    <TouchableOpacity  
+        key = {cate[0].id} onPress={()=>{
         navigation.navigate('CategoryListPage',{
           categoryArray:newStateArray(cate),
           typeArray:null,
@@ -67,10 +68,8 @@ const HomePage = ({navigation}:HomaPageProps) => {
         listId:contest.node.id
       })
     }>
-      <PosterBox>
-        <Poster source={{uri:`${contest.node.posterURL},w_297,h_420`}}/>
-      </PosterBox>
-      <PosterText numberOfLines={2} ellipsizeMode="tail">{contest.node.title}</PosterText>
+      <Poster source={{uri:`${contest.node.posterURL},w_297,h_420`}}/>
+      <PosterText numberOfLines={2}>{contest.node.title}</PosterText>
     </PosterContainer>
     )
   }
@@ -84,7 +83,7 @@ const HomePage = ({navigation}:HomaPageProps) => {
         <Title>
           카테고리
         </Title>
-        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={{marginVertical:10}}>
+        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={{marginVertical:20}}>
           {categoriesData}
         </ScrollView>
       </ComponentContainer>
@@ -154,18 +153,14 @@ const Title=styled.Text`
 const PosterContainer=styled.TouchableOpacity`
   height:100%;
   aspect-ratio:0.55;
-  padding-vertical:10px;
-  margin-horizontal:10px;
-`
-const PosterBox=styled.View`
-  border-radius:10px;
-  overflow:hidden;
-  height:90%;
+  margin:15px;
+  
 `
 const Poster=styled.Image`
-  width:100%;
-  height:100%;
-  resize-mode:contain;
+  height:85%;
+  aspect-ratio:0.7;
+  border-radius:10px;
+  overflow:hidden;
 `
 const PosterText=styled.Text`
   ${Styles.s_font};

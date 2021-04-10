@@ -40,7 +40,9 @@ const SearchPage = ({navigation}:SearchPageProps) => {
             typeArray:null,
             conditionArray:null,
           })
-      }}>
+      }}
+      style={{paddingVertical:5}}
+      >
         <HashTag hashtag={cate[0].label} picked={false}/>
       </TouchableOpacity>
     )

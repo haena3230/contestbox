@@ -68,7 +68,7 @@ const DetailPage =(props:DetailPageProps)=>{
                     }}
                     onScrollBeginDrag={()=>setTotop(true)}
                     >
-                    {!!!data.contest.posterURL?null:(
+                    {!data.contest.posterURL?null:(
                         <Poster source={{
                             uri:`${data.contest.posterURL},w_594,h_840`
                         }}/>      
@@ -78,7 +78,7 @@ const DetailPage =(props:DetailPageProps)=>{
                     <TextBox>
                         <Text style={Styles.s_font}>조회수 {data.contest.hits}</Text>
                     </TextBox>
-                    {!!!data.contest.categories?null:(
+                    {!data.contest.categories?null:(
                         <View>
                             <ContentTitle>카테고리</ContentTitle>
                             <TagBox>
@@ -90,7 +90,7 @@ const DetailPage =(props:DetailPageProps)=>{
                             </TagBox>
                         </View>
                     )}
-                    {!!!data.contest.types?null:(
+                    {!data.contest.types?null:(
                         <View>
                             <ContentTitle>참여조건</ContentTitle>
                             <TagBox>
@@ -104,12 +104,12 @@ const DetailPage =(props:DetailPageProps)=>{
                     )}
                     
                     <Period Start={PeriodSplit(data.contest.application.period.startAt)} End={PeriodSplit(data.contest.application.period.endAt)}/>
-                    {!!!data.contest.siteURL?null:(
+                    {!data.contest.siteURL?null:(
                        <View style={{width:'100%',alignItems:'flex-end'}}>
                             <OpenURLBtn url={data.contest.siteURL}>홈페이지</OpenURLBtn>
                         </View>
                     )}
-                    {!!!data.contest.content?null:(
+                    {!data.contest.content?null:(
                         <View>
                             <ContentTitle>상세내용</ContentTitle>
                             <Markdown
@@ -175,7 +175,7 @@ const DetailPage =(props:DetailPageProps)=>{
                             </Markdown>
                         </View>
                     )}
-                    {!!!data.contest.place?null:(
+                    {!data.contest.place?null:(
                         <MapPart 
                             alias={data.contest.place.alias}
                             place={data.contest.place.fullAddress} 

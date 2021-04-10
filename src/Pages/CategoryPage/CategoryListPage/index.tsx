@@ -5,16 +5,16 @@ import {Styles,Container, Color} from '~/Styles';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 // data
 import { useQuery } from '@apollo/client';
-import {GET_LISTS} from '~/queries';
+import {GET_CATEGORY_LISTS} from '~/queries';
 import {CategoryListPageProps, SortStatus,} from '~/Types';
 // component
 import {SortComponent} from '~/Components/Sort'
 import {FilterBtn,ListBtn,SortBtn,MapBtn} from '~/Components/Btn';
 import Loading, { LastData } from '~/Components/Loading';
-import TextList,{TagBox,ListBox} from '~/Components/TextList';
+import TextList from '~/Components/TextList';
 import {HashTag} from '~/Components/HashTag';
 import ToTop from '~/Components/ToTop';
-import {Map} from '~/Components/Map';
+import {CategoryMap} from '~/Components/Map';
 import { newStateArray, pickedIdArray} from '~/Components/Filter';
 import { ErrorPage } from '~/Components/Error';
 
@@ -26,6 +26,7 @@ interface pageInfoProps{
 const CategoryListPage=(props:CategoryListPageProps)=>{
     useEffect(()=>{
         console.log('categoryListPage');
+        console.log(typeArray,conditionArray,categoryArray)
     },[])
     // category & type & condition 
     const {categoryArray,typeArray,conditionArray} =props.route.params;
@@ -95,7 +96,7 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
         endCursor:null,
         hasNextPage:null
     }
-    const { loading, error, data,fetchMore,refetch } = useQuery(GET_LISTS,{
+    const { loading, error, data,fetchMore,refetch } = useQuery(GET_CATEGORY_LISTS,{
         variables:{
             after:pageInfo.endCursor,
             first:10,
@@ -157,30 +158,20 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
     if (error) return <ErrorPage onPress={onRefresh} />
     if(data&&data.contests.edges){
         listData=data.contests.edges.map((data)=>
-            <ListBox key = {data.node.id.toString()} onPress={()=>{
-                props.navigation.navigate('DetailPage',{
-                    listId:data.node.id,
-                })
-            }}>
-            <TextList 
+            <TextList
+                key = {data.node.id.toString()} 
+                onPress={()=>{
+                    props.navigation.navigate('DetailPage',{
+                        listId:data.node.id,
+                    })
+                }}
                 recruit={data.node.application.status} 
                 deadline={data.node.application.period.endAt}
                 title={data.node.title} 
                 viewcount={data.node.hits}
+                categories={data.node.categories}
+                poster={data.node.posterURL}
                 />
-                {data.node.categories!==null?(
-                <TagBox>
-                    {data.node.categories.slice(0,3).map((tag)=>
-                    <HashTag key={tag.id.toString()} hashtag={tag.label} picked={false}/>
-                    )}
-                    {data.node.categories.length>3?(
-                    <HashTag hashtag={'+'+ (data.node.categories.length-3)} picked={false}/>
-                    ):(
-                    null
-                    )}
-                </TagBox>
-                ):null}
-            </ListBox>
         )
         pageInfo=data.contests.pageInfo;
         initTypeArray=newStateArray(data.types);
@@ -235,7 +226,7 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
                         sortState={null}
                         badgeNumber={pickedIdArray(category).length+pickedConditionId.length+pickedTypeId.length} />
                     <View style={{width:'100%',height:'75%', padding:5}}>
-                        <Map 
+                        <CategoryMap 
                             search={null}
                             categoryState={categoryId}
                             conditions={pickedConditionId}

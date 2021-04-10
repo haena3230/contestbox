@@ -11,7 +11,7 @@ const Loading = () => (
 export const LastData=()=>{
   return(
     <View style={{alignItems:'center', paddingHorizontal:20,paddingBottom:20}}>
-        <Text style={Styles.ss_font}>
+        <Text style={Styles.s_font}>
             더이상 대회가 없습니다.
         </Text>
     </View>
