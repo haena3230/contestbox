@@ -5,21 +5,18 @@ import {Styles,Container, Color} from '~/Styles';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 // data
 import { useQuery } from '@apollo/client';
-import {GET_LISTS} from '~/queries';
-import {CategoryListPageProps} from '~/Types';
-import {useSelector,useDispatch} from 'react-redux';
-import {RootState} from '~/App';
-import { CLConditionAction, CLTypeAction } from '~/Store/actions';
-import {SortStatus} from '~/Types';
+import {GET_CATEGORY_LISTS} from '~/queries';
+import {CategoryListPageProps, SortStatus,} from '~/Types';
 // component
 import {SortComponent} from '~/Components/Sort'
 import {FilterBtn,ListBtn,SortBtn,MapBtn} from '~/Components/Btn';
 import Loading, { LastData } from '~/Components/Loading';
-import TextList,{TagBox,ListBox} from '~/Components/TextList';
+import TextList from '~/Components/TextList';
 import {HashTag} from '~/Components/HashTag';
 import ToTop from '~/Components/ToTop';
-import {Map} from '~/Components/Map';
-import {newStateArray, pickedIdArray} from '~/Components/Filter';
+import {CategoryMap} from '~/Components/Map';
+import { newStateArray, pickedIdArray} from '~/Components/Filter';
+import { ErrorPage } from '~/Components/Error';
 
 interface pageInfoProps{
     endCursor:string,
@@ -27,28 +24,47 @@ interface pageInfoProps{
 }
 
 const CategoryListPage=(props:CategoryListPageProps)=>{
-    // 마운트를 위한 상태
-    const [state,setState]=useState(false);
-    // 저장
-    const dispatch=useDispatch();
-    const storeCLTypeNewArray=(Array:Array<any>)=>{
-        dispatch(CLTypeAction(Array))
-    }
-    const storeCLConditionNewArray=(Array:Array<any>)=>{
-        dispatch(CLConditionAction(Array))
-    }
-    // category & type & condition
-    const categories =useSelector((state:RootState)=>state.query.CLCategoryArray)
-    const types= useSelector((state:RootState)=>state.query.CLTypeArray)
-    const conditions= useSelector((state:RootState)=>state.query.CLConditionArray)
-    // state
-    const [category,setCategory]=useState<Array<{id:string,label:string,value:boolean}>>(categories)
-    // category 선택시 빼주기 위한 변수
-    const initCateId=categories[0].id;
-    const [categoryId,setCategoryId]=useState<Array<string>>([categories[0].id]);
     useEffect(()=>{
-        console.log('@@@@@@@@@@@@@@@@@@@@@@@@')
-    },[state])
+        console.log('categoryListPage');
+        console.log(typeArray,conditionArray,categoryArray)
+    },[])
+    // category & type & condition 
+    const {categoryArray,typeArray,conditionArray} =props.route.params;
+    // state
+    const [category,setCategory]=useState<Array<{id:string,label:string,value:boolean}>>(categoryArray)
+    const [categoryId,setCategoryId]=useState<Array<string>>([category[0].id]);
+    const pickedTypeId = pickedIdArray(typeArray);
+    const pickedConditionId=pickedIdArray(conditionArray);
+    // 필터페이지 버튼
+    const onPressFilter=()=>{
+        if(!!!typeArray){
+            props.navigation.navigate('CategoryFilterPage',{
+                categoryArray:category,
+                typeArray:initTypeArray,
+                conditionArray:initConditionArray
+            })}
+        else{
+            props.navigation.navigate('CategoryFilterPage',{
+            categoryArray:category,
+            typeArray:typeArray,
+            conditionArray:conditionArray
+        })}
+    }
+    // 카테고리 선택
+    const onPressCateBtn=(data,index)=>{
+        let tmpArray=category;
+        tmpArray[index+1].value=!data.value;
+        setCategory(tmpArray)
+        // 남은 하나 취소
+        if(categoryId.length===1&&categoryId[0]!==categoryArray[0].id){
+            setCategoryId([categoryArray[0].id]);
+            console.log('남은 하나 취소입니다.')
+        }
+        else{
+            setCategoryId(pickedIdArray(tmpArray))
+            console.log('처음으로 선택하거나 또 다시 선택이거나 여러개 중 하나 취소입니다.')
+        }
+    }
     // totop
     const [totop,setTotop]=useState<boolean>(false);
     const scrollRef=useRef<ScrollView>();
@@ -64,13 +80,41 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
         status:'LATEST',
         statusArr:[true,false,false]
     });
+    const[sortStatus,setSortStatus]=useState('LATEST');
     const[sort,setSort]=useState<boolean>(false);
-    const onPressTagOne=()=>{
+    const onPressSort=()=>{
+        setSort(!sort);
+    }
+    // map
+    const [map,setMap]=useState(false);
+    // list data
+    let listData=``;
+    let initTypeArray=[];
+    let initConditionArray=[];
+
+    let pageInfo:pageInfoProps={
+        endCursor:null,
+        hasNextPage:null
+    }
+    const { loading, error, data,fetchMore,refetch } = useQuery(GET_CATEGORY_LISTS,{
+        variables:{
+            after:pageInfo.endCursor,
+            first:10,
+            sort:sortStatus,
+            categories:categoryId,
+            conditions:pickedConditionId,
+            types:pickedTypeId
+        },
+        fetchPolicy:'cache-and-network'
+    });
+    // 정렬버튼 함수
+    const onPressTagOne=async ()=>{
         setSortState({
             statusName:'추천순',
             status:'LATEST',
             statusArr:[true,false,false]
         })
+        setSortStatus('LATEST')
         setSort(!sort);
     }
     const onPressTagTwo=()=>{
@@ -79,6 +123,7 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
             status:'HITS',
             statusArr:[false,true,false]
         })
+        setSortStatus('HITS')
         setSort(!sort);
     }
     const onPressTagThree=()=>{
@@ -87,29 +132,9 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
             status:'LATEST',
             statusArr:[false,false,true]
         }) 
+        setSortStatus('LATEST')
         setSort(!sort);
     }
-    const onPressSort=()=>{
-        setSort(!sort);
-    }
-    // map
-    const [map,setMap]=useState(false);
-    // list data
-    let listData=``;
-    let pageInfo:pageInfoProps={
-        endCursor:null,
-        hasNextPage:null
-    }
-    const { loading, error, data,fetchMore,refetch } = useQuery(GET_LISTS,{
-        variables:{
-            after:pageInfo.endCursor,
-            first:10,
-            sort:sortState.status,
-            categories:categoryId,
-            conditions:pickedIdArray(conditions),
-            types:pickedIdArray(types)
-        }
-    });
     // refetch
     const [refreshing,setRefreshing]=useState(false);
     const onRefresh=async ()=>{
@@ -118,56 +143,39 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
         try{
             await refetch({
                 first:10,
-                sort:sortState.status,
+                sort:sortStatus,
                 categories:categoryId,
-                conditions:pickedIdArray(conditions),
-                types:pickedIdArray(types)
+                conditions:pickedConditionId,
+                types:pickedTypeId
             })
             setRefreshing(false);
+            console.log('refetch')
         } catch(e){
             console.log('refetch err')
         }
     }
     if (loading) return <Loading />;
-    if (error){
-        console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
-        console.log(error.graphQLErrors)
-        console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
-    }
-    if(data&&types.length===0){
-        storeCLTypeNewArray(newStateArray(data.types));
-    }
-    if(data&&conditions.length===0){
-        storeCLConditionNewArray(newStateArray(data.conditions));
-    }
+    if (error) return <ErrorPage onPress={onRefresh} />
     if(data&&data.contests.edges){
         listData=data.contests.edges.map((data)=>
-            <ListBox key = {data.node.id.toString()} onPress={()=>{
-                props.navigation.navigate('DetailPage',{
-                    listId:data.node.id,
-                })
-            }}>
-            <TextList 
+            <TextList
+                key = {data.node.id.toString()} 
+                onPress={()=>{
+                    props.navigation.navigate('DetailPage',{
+                        listId:data.node.id,
+                    })
+                }}
                 recruit={data.node.application.status} 
                 deadline={data.node.application.period.endAt}
                 title={data.node.title} 
                 viewcount={data.node.hits}
+                categories={data.node.categories}
+                poster={data.node.posterURL}
                 />
-                {data.node.categories!==null?(
-                <TagBox>
-                    {data.node.categories.slice(0,3).map((tag)=>
-                    <HashTag key={tag.id.toString()} hashtag={tag.label} picked={false}/>
-                    )}
-                    {data.node.categories.length>3?(
-                    <HashTag hashtag={'+'+ (data.node.categories.length-3)} picked={false}/>
-                    ):(
-                    null
-                    )}
-                </TagBox>
-                ):null}
-            </ListBox>
         )
         pageInfo=data.contests.pageInfo;
+        initTypeArray=newStateArray(data.types);
+        initConditionArray=newStateArray(data.conditions);
     }
     // pagination
     const onEndReached=()=>{
@@ -177,10 +185,10 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
                     variables:{
                         after:pageInfo.endCursor,
                         first:10,
-                        sort:sortState.status,
+                        sort:sortStatus,
                         categories:categoryId,
-                        conditions:pickedIdArray(conditions),
-                        types:pickedIdArray(types)
+                        conditions:pickedConditionId,
+                        types:pickedTypeId
                     }
                 })
             }
@@ -191,31 +199,14 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
                 <View>
                     <View style={{height:'17%',justifyContent:'flex-end'}}>
                         <CategoryBox>
-                            <Category># {categories[0].label}</Category>
+                            <Category># {categoryArray[0].label}</Category>
                         </CategoryBox>
                         <View>
-                            {category.length===categories.length?(
+                            {categoryArray.length>1?(
                                     <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} >
                                         {category.slice(1).map((data,index)=>{
                                             return(
-                                                <TouchableOpacity onPress={()=>{
-                                                    let tmpArray=category;
-                                                    tmpArray[index+1].value=!data.value;
-                                                    setCategory(tmpArray)
-                                                    if(categoryId[0]===initCateId){
-                                                        setCategoryId(pickedIdArray(tmpArray.slice(1)))
-                                                        console.log('기본입니다.')
-                                                    }
-                                                    else if(categoryId.length===1&&categoryId[0]!==initCateId){
-                                                        console.log('취소했습니다')
-                                                        setCategoryId([initCateId]);
-                                                    }
-                                                    else{
-                                                        setCategoryId(pickedIdArray(tmpArray))
-                                                        console.log('선택햇습니다.')
-                                                    }
-                                                    setState(!state)
-                                                }} key={data.id}>
+                                                <TouchableOpacity onPress={()=>onPressCateBtn(data,index)} key={data.id}>
                                                     <HashTag hashtag={data.label} picked={data.value}/>
                                                 </TouchableOpacity>
                                             )
@@ -230,16 +221,16 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
                         height ={'8%'} 
                         isMap={true} 
                         onPressMap={()=>setMap(!map)} 
-                        onPressFilter={()=>props.navigation.navigate('CategoryFilterPage')}
+                        onPressFilter={onPressFilter}
                         onPressSort={()=>null} 
                         sortState={null}
-                        badgeNumber={pickedIdArray(category).length+pickedIdArray(conditions).length+pickedIdArray(types).length} />
+                        badgeNumber={pickedIdArray(category).length+pickedConditionId.length+pickedTypeId.length} />
                     <View style={{width:'100%',height:'75%', padding:5}}>
-                        <Map 
+                        <CategoryMap 
                             search={null}
                             categoryState={categoryId}
-                            conditions={pickedIdArray(conditions)}
-                            types={pickedIdArray(types)}
+                            conditions={pickedConditionId}
+                            types={pickedTypeId}
                             />
                     </View>
                 </View>
@@ -268,30 +259,13 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
                         >
                         <View style={{paddingTop:20}}>
                             <CategoryBox>
-                                <Category># {categories[0].label}</Category>
+                                <Category># {categoryArray[0].label}</Category>
                             </CategoryBox>
-                            {category.length===categories.length?(
+                            {categoryArray.length>1?(
                                     <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
                                         {category.slice(1).map((data,index)=>{
                                             return(
-                                                <TouchableOpacity onPress={()=>{
-                                                    let tmpArray=category;
-                                                    tmpArray[index+1].value=!data.value;
-                                                    setCategory(tmpArray)
-                                                    if(categoryId[0]===initCateId){
-                                                        setCategoryId(pickedIdArray(tmpArray.slice(1)))
-                                                        console.log('새로 선택했습니다.')
-                                                    }
-                                                    else if(categoryId.length===1&&categoryId[0]!==initCateId){
-                                                        console.log('취소했습니다')
-                                                        setCategoryId([initCateId]);
-                                                    }
-                                                    else{
-                                                        setCategoryId(pickedIdArray(tmpArray))
-                                                        console.log('선택햇습니다.')
-                                                    }
-                                                    setState(!state)
-                                                }} key={data.id}>
+                                                <TouchableOpacity onPress={()=>onPressCateBtn(data,index)} key={data.id}>
                                                     <HashTag hashtag={data.label} picked={data.value}/>
                                                 </TouchableOpacity>
                                             )
@@ -305,28 +279,28 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
                             height={30}
                             isMap={false} 
                             onPressMap={()=>setMap(!map)}
-                            onPressFilter={()=>props.navigation.navigate('CategoryFilterPage')}
+                            onPressFilter={onPressFilter}
                             onPressSort={()=>setSort(!sort)} 
                             sortState={sortState.statusName}
-                            badgeNumber={pickedIdArray(category).length+pickedIdArray(conditions).length+pickedIdArray(types).length}
+                            badgeNumber={pickedIdArray(category).length+pickedConditionId.length+pickedTypeId.length}
                         />
                         <View style={{marginBottom:10}}>
                             {listData}
                         </View>
                         <SortComponent 
-                        onPressCancle={onPressSort} 
+                        onPressCancle={()=>onPressSort()} 
                         modalVisible={sort} 
                         one={sortState.statusArr[0]}
                         two={sortState.statusArr[1]}
                         three={sortState.statusArr[2]}
-                        onPressTagOne={onPressTagOne}
-                        onPressTagTwo={onPressTagTwo}
-                        onPressTagThree={onPressTagThree}
+                        onPressTagOne={()=>onPressTagOne()}
+                        onPressTagTwo={()=>onPressTagTwo()}
+                        onPressTagThree={()=>onPressTagThree()}
                         />
                         {pageInfo.hasNextPage?<Loading />:<LastData />}
                     </ScrollView>
                     {totop?(
-                        <ToTop onPressToTop={onPressToTop}/>
+                        <ToTop onPressToTop={()=>onPressToTop()}/>
                     ):(
                         null
                     )}
@@ -355,13 +329,13 @@ const BarBox=({isMap,onPressMap,onPressFilter,onPressSort,sortState,height,badge
             marginLeft:5,
             height:height,
             }}>
-            {isMap?(<View />):(<SortBtn onPressSort={onPressSort} state={sortState}/>)}
+            {isMap?(<View />):(<SortBtn onPressSort={()=>onPressSort()} state={sortState}/>)}
             <View style={{flexDirection:'row'}}>
-                <FilterBtn onPressFilter={onPressFilter} number={badgeNumber}/>
+                <FilterBtn onPressFilter={()=>onPressFilter()} number={badgeNumber}/>
                 {isMap?(
-                    <ListBtn onPressMap={onPressMap}/>
+                    <ListBtn onPressMap={()=>onPressMap()}/>
                 ):(
-                    <MapBtn onPressMap={onPressMap}/>
+                    <MapBtn onPressMap={()=>onPressMap()}/>
                 )}
             </View>
         </View>
@@ -378,4 +352,8 @@ const Category=styled.Text`
     padding-vertical:10px;
 `
 export default CategoryListPage;
+
+function fetchNumAction(fetchNumAction: any) {
+    throw new Error('Function not implemented.');
+}
 

@@ -2,15 +2,34 @@
 import {RouteProp} from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 
+interface ArrayProps{
+  id:string,label:string,value:boolean
+}
 // navigation
 type StackParamList={
   HomePage:undefined;
   SearchPage:undefined;
-  SearchListPage:undefined;
-  SearchFilterPage:undefined;
+  SearchListPage:{
+    search:string;
+    typeArray:null|Array<ArrayProps>,
+    conditionArray:null|Array<ArrayProps>
+  };
+  SearchFilterPage:{
+    search:string;
+    typeArray:null|Array<ArrayProps>,
+    conditionArray:null|Array<ArrayProps>
+  };
   CategoryPage:undefined;
-  CategoryListPage:undefined;
-  CategoryFilterPage:undefined;
+  CategoryListPage:{
+    categoryArray:Array<ArrayProps>
+    typeArray:null|Array<ArrayProps>,
+    conditionArray:null|Array<ArrayProps>
+  };
+  CategoryFilterPage:{
+    categoryArray:Array<ArrayProps>
+    typeArray:null|Array<ArrayProps>,
+    conditionArray:null|Array<ArrayProps>
+  };
   FilterPage:undefined;
   DetailPage:{listId:string};
 };
@@ -21,10 +40,12 @@ export interface SearchPageProps{
 
 export interface SearchListPageProps{
   navigation:StackNavigationProp<StackParamList,'SearchPage'>
+  route: RouteProp<StackParamList, 'SearchListPage'>;
 }
 
 export interface SearchFilterPageProps{
   navigation:StackNavigationProp<StackParamList,'SearchListPage'>
+  route: RouteProp<StackParamList, 'SearchFilterPage'>;
 }
 
 export interface HomaPageProps{
@@ -41,6 +62,7 @@ export interface CategoryListPageProps {
 }
 export interface CategoryFilterPageProps {
   navigation: StackNavigationProp<StackParamList, 'CategoryListPage'>;
+  route: RouteProp<StackParamList, 'CategoryFilterPage'>;
 }
 
 export interface DetailPageProps {
@@ -54,6 +76,8 @@ export interface SortStatus{
   status:string,
   statusArr:Array<boolean>
 }
+
+
 
 
 

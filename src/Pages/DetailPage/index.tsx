@@ -19,6 +19,7 @@ import {SmallMap} from '~/Components/Map';
 // data
 import { useQuery } from '@apollo/client';
 import {GET_DETAILS} from '~/queries';
+import { ErrorPage } from '~/Components/Error';
 
 const DetailPage =(props:DetailPageProps)=>{
     // totop
@@ -32,7 +33,7 @@ const DetailPage =(props:DetailPageProps)=>{
     };
     // data
     const {listId}=props.route.params;
-    const { loading, error, data } = useQuery(GET_DETAILS,{
+    const { loading, error, data,refetch } = useQuery(GET_DETAILS,{
         variables:{id:listId}
     });
     
@@ -46,7 +47,13 @@ const DetailPage =(props:DetailPageProps)=>{
         return New
     }
     if (loading) return <Loading />;
-    if (error) return <Text>Error</Text>;
+    if (error) return <ErrorPage onPress={async ()=>{
+        try{
+            await refetch({id:listId})
+            console.log('refetch')
+        } catch(e){
+            console.log('refetch err')
+        }}} />
     if(data&&data.contest)
     
     return(
@@ -61,19 +68,17 @@ const DetailPage =(props:DetailPageProps)=>{
                     }}
                     onScrollBeginDrag={()=>setTotop(true)}
                     >
-                    {data.contest.posterURL!==null?(
+                    {!data.contest.posterURL?null:(
                         <Poster source={{
-                            uri:`data.contest.posterURL`+',w_594,h_840'
-                        }}/>
-                    ):(
-                        null      
+                            uri:`${data.contest.posterURL},w_594,h_840`
+                        }}/>      
                     )}
                     
                     <Title>{data.contest.title}</Title>
                     <TextBox>
                         <Text style={Styles.s_font}>조회수 {data.contest.hits}</Text>
                     </TextBox>
-                    {data.contest.categories!==null?(
+                    {!data.contest.categories?null:(
                         <View>
                             <ContentTitle>카테고리</ContentTitle>
                             <TagBox>
@@ -84,10 +89,8 @@ const DetailPage =(props:DetailPageProps)=>{
                             })}
                             </TagBox>
                         </View>
-                    ):(
-                        null
                     )}
-                    {data.contest.types!==null?(
+                    {!data.contest.types?null:(
                         <View>
                             <ContentTitle>참여조건</ContentTitle>
                             <TagBox>
@@ -98,19 +101,15 @@ const DetailPage =(props:DetailPageProps)=>{
                                 })}
                             </TagBox>
                         </View>
-                    ):(
-                        null
                     )}
                     
                     <Period Start={PeriodSplit(data.contest.application.period.startAt)} End={PeriodSplit(data.contest.application.period.endAt)}/>
-                    {data.contest.siteURL!==""?(
-                        <View style={{width:'100%',alignItems:'flex-end'}}>
+                    {!data.contest.siteURL?null:(
+                       <View style={{width:'100%',alignItems:'flex-end'}}>
                             <OpenURLBtn url={data.contest.siteURL}>홈페이지</OpenURLBtn>
                         </View>
-                    ):(
-                       null
                     )}
-                    {data.contest.content!==null?(
+                    {!data.contest.content?null:(
                         <View>
                             <ContentTitle>상세내용</ContentTitle>
                             <Markdown
@@ -175,16 +174,14 @@ const DetailPage =(props:DetailPageProps)=>{
                                 {data.contest.content}
                             </Markdown>
                         </View>
-                    ):null}
-                    {data.contest.place!==null?(
+                    )}
+                    {!data.contest.place?null:(
                         <MapPart 
                             alias={data.contest.place.alias}
                             place={data.contest.place.fullAddress} 
                             lat={data.contest.place.latLng.lat} 
                             lng={data.contest.place.latLng.lng}
                             />
-                    ):(
-                        null
                     )}
                     
                 </ScrollView>

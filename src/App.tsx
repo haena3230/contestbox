@@ -3,10 +3,18 @@ import {NavigationContainer} from '@react-navigation/native';
 import MainStackNavi from './Pages/navigation';
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
 import SplashScreen from 'react-native-splash-screen';
-import {createStore,combineReducers,Reducer,Store} from 'redux'
-import {Provider} from 'react-redux'
-import {queryReducers} from './Store/reducers';
 import { relayStylePagination } from '@apollo/client/utilities';
+import ErrorBoundary from 'react-native-error-boundary'
+import {ErrorPage} from '~/Components/Error';
+
+// error 판별 시간 정하기 
+// 메일로 보내주기
+
+const CustomFallback = (props: { error: Error, resetError: Function }) => (
+  <ErrorPage 
+    onPress={()=>null}
+  />
+)
 
 // graphql
 const client = new ApolloClient({
@@ -21,14 +29,6 @@ const client = new ApolloClient({
     }
   })
 });
-
-// redux
-export const rootReducer:Reducer = combineReducers({
-  query:queryReducers
-})
-const store:Store = createStore(rootReducer)
-export type RootState = ReturnType<typeof rootReducer>
-
 const App =()=>{
   useEffect(()=>{
     setTimeout(()=>{
@@ -36,13 +36,13 @@ const App =()=>{
     },1000);
   },[])
   return (
-    <Provider store={store}>
+    // <ErrorBoundary onError={errorHandler} FallbackComponent={CustomFallback}>
       <ApolloProvider client={client}>
         <NavigationContainer>
           <MainStackNavi />
         </NavigationContainer>
       </ApolloProvider>
-    </Provider>
+    // </ErrorBoundary>
   );
 };
 

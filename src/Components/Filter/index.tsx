@@ -31,28 +31,38 @@ export const CategoryView=(array:Array<{id,label,parentID}>)=>{
 }
 // value 들어간 배열 생성함수
 export const newStateArray=(array:Array<any>)=>{
-    let i=0;
-    let state=[]
-    for(i=0;i<array.length;i++){
-        state.push({
-            id:array[i].id,
-            label:array[i].label,
-            value:false
-        })
+    if(!array){
+        return []
     }
-    return state;
+    else{
+        let i=0;
+        let state=[]
+        for(i=0;i<array.length;i++){
+            state.push({
+                id:array[i].id,
+                label:array[i].label,
+                value:false
+            })
+        }
+        return state;
+    }
 }
 
 // 선택된 id만 포함된 배열
 export const pickedIdArray=(array:Array<any>)=>{
-    let idArray=[];
-    let result=array.filter(d=>{
-    return d.value===true
-    });
-    result.forEach((e)=>{
-        idArray.push(e.id)
-    });
-    return(idArray);
+    if(!array){
+        return []
+    }
+    else{
+        let idArray=[];
+        let result=array.filter(d=>{
+        return d.value===true
+        });
+        result.forEach((e)=>{
+            idArray.push(e.id)
+        });
+        return(idArray);
+    }
 }
 
 // 선택된 id만 포함된 배열(다차원)

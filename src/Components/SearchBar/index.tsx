@@ -3,26 +3,33 @@ import React,{useState} from 'react';
 import {TouchableOpacity,TextInput} from 'react-native';
 import {Color,IconSize,Styles} from '~/Styles';
 import styled from 'styled-components/native';
-import {SearchPageProps,SearchListPageProps} from '~/Types';
-// icon
+import {SearchPageProps} from '~/Types';
+// component
 import Search from '~/Assets/search-solid.svg';
-import Arrow from '~/Assets/chevron-left-solid.svg';
-// data 
-import {SearchAction} from '~/Store/actions';
-import {useDispatch} from 'react-redux'
+import {InfoModalComponent} from '~/Components/Modal';
+
 
 export const SearchBar=({navigation}:SearchPageProps)=>{
-  const dispatch=useDispatch();
-  const StoreSearchText=(text:string)=>{
-        dispatch(SearchAction(text))
+  const[searchText,setSearchText]=useState<null|string>();
+  const[infoModal,setInfoModal]=useState<boolean>(false);
+  const onSubmet=()=>{
+    if(!searchText){
+      setInfoModal(true);
+      setTimeout(()=>{
+        setInfoModal(false);
+      },1500);
     }
-  const[searchText,setSearchText]=useState('');
+    else{
+      navigation.navigate('SearchListPage',{
+          search:searchText,
+          typeArray:null,
+          conditionArray:null,
+        });
+    }
+  }
   return(
     <SearchBarStyle>
-      <TouchableOpacity onPress={()=>{
-        navigation.navigate('SearchListPage');
-        StoreSearchText(searchText);
-      }} style={{paddingHorizontal:15}}>
+      <TouchableOpacity onPress={onSubmet} style={{paddingHorizontal:15}}>
         <Search height={IconSize.icon} width={IconSize.icon} color={Color.g3_color}/>
       </TouchableOpacity>
       <TextInput 
@@ -30,7 +37,12 @@ export const SearchBar=({navigation}:SearchPageProps)=>{
         placeholder={'검색어를 입력해 주세요.'} 
         value={searchText} 
         onChangeText={(text)=>{setSearchText(text)}} 
-        
+        onSubmitEditing={onSubmet}
+        maxLength={35}
+        />
+        <InfoModalComponent 
+          Info={'검색어를 입력해 주세요.'}
+          modalVisible={infoModal}
         />
     </SearchBarStyle>
   )
@@ -45,46 +57,4 @@ const SearchBarStyle=styled.View`
   border-width:1px;
   border-color:${Color.g1_color};
 `
-export const SearchBarSmall=({navigation}:SearchListPageProps)=>{
-    const dispatch=useDispatch();
-    const StoreSearchText=(text:string)=>{
-        dispatch(SearchAction(text))
-    }
-    const[searchText,setSearchText]=useState('');
-    return(
-        <SearchHeader>
-            <Arrow onPress={()=>navigation.goBack()} height={IconSize.sicon} width={IconSize.sicon} color={Color.g3_color}/>
-            <SmallSearchBarStyle>
-                <TouchableOpacity onPress={()=>{
-                  navigation.replace('SearchListPage');
-                  StoreSearchText(searchText);
-                  }} style={{paddingHorizontal:15}}>
-                    <Search height={IconSize.sicon} width={IconSize.sicon} color={Color.g3_color}/>
-                </TouchableOpacity>
-                <SearchHeaderText placeholder={'검색어를 입력해 주세요.'} value={searchText} onChangeText={(text)=>{setSearchText(text)}} />
-            </SmallSearchBarStyle>
-        </SearchHeader>
-    )
-}
 
-const SearchHeader=styled.View`
-    width:100%;
-    flex-direction:row;
-    justify-content:space-around;
-    align-items:center;
-`
-const SmallSearchBarStyle=styled.View`
-  width:90%;
-  background-color:${Color.w_color};
-  border-radius:15px;
-  flex-direction:row;
-  align-items:center;
-  margin-vertical:10px;
-  border-width:1px;
-  border-color:${Color.g1_color};
-`
-const SearchHeaderText=styled.TextInput`
-    ${Styles.m_font};
-    padding:0
-
-`

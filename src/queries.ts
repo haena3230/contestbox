@@ -1,5 +1,13 @@
 import { gql } from '@apollo/client';
-
+export const GET_CATEGORIES=gql`
+  query GetCategories{
+    categories {
+      id
+      label
+      parentID
+    }
+  }
+`
 export const GET_HOTS = gql`
   query ($existPoster:Boolean,$sort:ContestsSortType, $first:Int, $applicationStatuses:[ContestApplicationStatus!]){
     categories {
@@ -19,9 +27,8 @@ export const GET_HOTS = gql`
     }
   }
 `;
-
-export const GET_LISTS= gql`
-  query ($first:Int,$after:ID,$categories:[ID!],$search:String,$sort:ContestsSortType,$conditions:[ID!],$types:[ID!],$place:LatLngBoxInput){
+export const GET_SEARCH_LISTS= gql`
+  query GetLists ($first:Int,$after:ID,$categories:[ID!],$search:String,$sort:ContestsSortType,$conditions:[ID!],$types:[ID!],$place:LatLngBoxInput){
     types{
         id
         label
@@ -50,6 +57,52 @@ export const GET_LISTS= gql`
               endAt
             }
           }
+          posterURL
+          place{
+              alias
+              fullAddress
+              latLng{
+                lat
+                lng
+              }
+            }
+        }
+      }
+    }
+  }
+`;
+
+export const GET_CATEGORY_LISTS= gql`
+  query GetLists ($first:Int,$after:ID,$categories:[ID!],$search:String,$sort:ContestsSortType,$conditions:[ID!],$types:[ID!],$place:LatLngBoxInput){
+    types{
+        id
+        label
+      }
+      conditions{
+        id
+        label
+      }
+    contests(first:$first,after:$after,categories:$categories,search:$search,sort:$sort,conditions:$conditions,types:$types,place:$place) {
+      pageInfo{
+        endCursor
+        hasNextPage
+      }
+      edges{
+        node{
+          id
+          title
+          hits
+          categories{
+            id
+            label
+          }
+          application{
+            status
+            period{
+              endAt
+            }
+          }
+          posterURL
           place{
               alias
               fullAddress

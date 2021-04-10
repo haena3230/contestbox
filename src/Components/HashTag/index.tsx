@@ -39,8 +39,7 @@ const HashTagContainer=styled.View`
     border-width:1px;
     border-color:${Color.g1_color};
     min-width:40px;
-    height:${DWidth>480? '35px':'25px'};
-    margin:3px;
+    margin:0px 3px 0px 3px;
     background-color:${(props:ContainerProps)=>props.backgroundColor?props.backgroundColor:Color.w_color};
-    padding:${DWidth>480? '20px':'10px'};
+    padding:${DWidth>480? '7xp 20px 7px 20px':'3px 10px 3px 10px'};
 `

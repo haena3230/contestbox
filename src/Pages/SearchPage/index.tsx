@@ -12,18 +12,41 @@ import {Color,Styles,Container,DWidth} from '~/Styles';
 import {TouchableOpacity } from 'react-native-gesture-handler';
 // data
 import {SearchPageProps} from '~/Types';
-import {useSelector,useDispatch} from 'react-redux';
-import {RootState} from '~/App';
-import {CLCategoryAction} from '~/Store/actions';
-import {newStateArray} from '~/Components/Filter';
+import {newStateArray,CategoryView} from '~/Components/Filter';
+import { useQuery } from '@apollo/client';
+import { GET_CATEGORIES} from '~/queries';
+import Loading from '~/Components/Loading';
+import { ErrorPage } from '~/Components/Error';
 
 const SearchPage = ({navigation}:SearchPageProps) => {
-  const dispatch=useDispatch();
-  const storeNewArrayCategories=(Array:Array<string>)=>{
-    dispatch(CLCategoryAction(Array))
-  }
   // catrgory data
-  const categories= useSelector((state:RootState)=>state.query.categoriesArray)
+  const {loading,error,data,refetch} =useQuery(GET_CATEGORIES,{
+    fetchPolicy:'cache-and-network'
+  })
+  let cateData=[];
+  if(loading) return <Loading />
+  if(error) return <ErrorPage onPress={async ()=>{
+        try{
+            await refetch()
+            console.log('refetch')
+        } catch(e){
+            console.log('refetch err')
+        }}} />
+  if(data.categories){
+    cateData=CategoryView(data.categories).slice(0,9).map((cate)=>
+      <TouchableOpacity  key = {cate[0].id} onPress={()=>{
+          navigation.navigate('CategoryListPage',{
+            categoryArray:newStateArray(cate),
+            typeArray:null,
+            conditionArray:null,
+          })
+      }}
+      style={{paddingVertical:5}}
+      >
+        <HashTag hashtag={cate[0].label} picked={false}/>
+      </TouchableOpacity>
+    )
+  }
   return (
       <Container>
         <Header />
@@ -41,16 +64,7 @@ const SearchPage = ({navigation}:SearchPageProps) => {
               <Text style={Styles.m_font}>카테고리</Text>
             </Title>
                 <View style={{flexDirection:'row', flexWrap:'wrap',marginVertical:20}}>
-                  {categories.map((cate)=>{
-                    return(
-                      <TouchableOpacity  key = {cate[0].id} onPress={()=>{
-                          navigation.navigate('CategoryListPage'),
-                          storeNewArrayCategories(newStateArray(cate))
-                          }}>
-                        <HashTag hashtag={cate[0].label} picked={false}/>
-                      </TouchableOpacity>
-                    )
-                  })}                  
+                  {cateData}              
                 </View>
           </Category>
         </MainContainer>

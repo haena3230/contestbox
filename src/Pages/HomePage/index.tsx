@@ -1,5 +1,5 @@
 // main home page
-import React from 'react';
+import React, { useEffect } from 'react';
 import {View, TouchableOpacity, Text,StyleSheet, Image} from 'react-native';
 import styled from 'styled-components/native';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -10,59 +10,66 @@ import Swiper from 'react-native-swiper';
 import {HashTag} from '~/Components/HashTag';
 import Loading from '~/Components/Loading';
 import {CategoryView} from '~/Components/Filter';
+import {ErrorPage} from '~/Components/Error';
 // data
 import {useQuery} from '@apollo/client';
 import {GET_HOTS} from '~/queries';
 import {HomaPageProps} from '~/Types';
-import {useDispatch} from 'react-redux'
-import { categoryAction,CLCategoryAction } from '~/Store/actions';
 import {newStateArray} from '~/Components/Filter';
 
 const HomePage = ({navigation}:HomaPageProps) => {
-  // redux
-  const dispatch = useDispatch()
-  const storeCategories=(Array:Array<string>)=>{
-    dispatch(categoryAction(Array))
-  }
-  const storeNewArrayCategories=(Array:Array<any>)=>{
-    dispatch(CLCategoryAction(Array))
-  }
+  useEffect(()=>{
+    console.log('home')
+  },[])
   // catrgory && hot data
-  const { loading, error, data } = useQuery(GET_HOTS,{
+  const { loading, error, data,refetch } = useQuery(GET_HOTS,{
     variables:{
       existPoster:true,
       sort:'HITS',
       applicationStatuses:['NOTSTARTED','INPROGRESS'],
       first:15
-    }
+    },
+    fetchPolicy:'cache-and-network'
   });
   let categoriesData=[];
   let hotData='';
   if(loading) return <Loading />
-  if(error)return <Text>err</Text>
+  if(error)return <ErrorPage onPress={async ()=>{
+    try{
+        await refetch({
+            existPoster:true,
+            sort:'HITS',
+            applicationStatuses:['NOTSTARTED','INPROGRESS'],
+            first:15
+        })
+        console.log('refetch')
+    } catch(e){
+        console.log('refetch err')
+    }}} />
   if(data.categories){
     // max 10개
     categoriesData=CategoryView(data.categories).slice(0,9).map((cate)=>
-    <TouchableOpacity  key = {cate[0].id} onPress={()=>{
-        navigation.navigate('CategoryListPage'),
-        storeNewArrayCategories(newStateArray(cate))
+    <TouchableOpacity  
+        key = {cate[0].id} onPress={()=>{
+        navigation.navigate('CategoryListPage',{
+          categoryArray:newStateArray(cate),
+          typeArray:null,
+          conditionArray:null,
+        });
         }}>
       <HashTag hashtag={cate[0].label} picked={false}/>
     </TouchableOpacity>
-    ),
-    storeCategories(CategoryView(data.categories));
+    )
   }
   if(data.contests){
     hotData=data.contests.edges.map((contest)=>
     <PosterContainer key = {contest.node.id.toString()} onPress={()=>
-      navigation.navigate('DetailPage',{
+      navigation.push('DetailPage',{
         listId:contest.node.id
       })
     }>
-      <PosterBox>
-        <Poster source={{uri:`contest.node.posterURL`+',w_297,h_420'}}/>
-      </PosterBox>
-      <PosterText numberOfLines={2} ellipsizeMode="tail">{contest.node.title}</PosterText>
+      <Poster source={{uri:`${contest.node.posterURL},w_297,h_420`}}/>
+      <PosterText numberOfLines={2}>{contest.node.title}</PosterText>
     </PosterContainer>
     )
   }
@@ -76,7 +83,7 @@ const HomePage = ({navigation}:HomaPageProps) => {
         <Title>
           카테고리
         </Title>
-        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={{padding:10}}>
+        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={{marginVertical:20}}>
           {categoriesData}
         </ScrollView>
       </ComponentContainer>
@@ -146,18 +153,14 @@ const Title=styled.Text`
 const PosterContainer=styled.TouchableOpacity`
   height:100%;
   aspect-ratio:0.55;
-  padding-vertical:10px;
-  margin-horizontal:10px;
-`
-const PosterBox=styled.View`
-  border-radius:10px;
-  overflow:hidden;
-  height:90%;
+  margin:15px;
+  
 `
 const Poster=styled.Image`
-  width:100%;
-  height:100%;
-  resize-mode:contain;
+  height:85%;
+  aspect-ratio:0.7;
+  border-radius:10px;
+  overflow:hidden;
 `
 const PosterText=styled.Text`
   ${Styles.s_font};

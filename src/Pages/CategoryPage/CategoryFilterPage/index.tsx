@@ -2,40 +2,29 @@
 import React,{useEffect, useState} from 'react';
 import {Container} from '~/Styles';
 // component
-import {FilterHeader,FilterBottom,MenuContainer,MenuBox,MenuTitle,Type} from '~/Components/Filter';
+import {FilterHeader,FilterBottom,MenuContainer,MenuBox,MenuTitle,Type,newStateArray} from '~/Components/Filter';
 import { ScrollView } from 'react-native-gesture-handler';
 import {SortDownBtn, SortUpBtn} from  '~/Components/Btn';
 // data
-import {useSelector,useDispatch} from 'react-redux';
-import {RootState} from '~/App';
-import {CLTypeAction,CLConditionAction} from '~/Store/actions';
-import {newStateArray} from '~/Components/Filter';
 import { Text, TouchableOpacity } from 'react-native';
 import { HashTag } from '~/Components/HashTag';
 import {CategoryFilterPageProps} from '~/Types';
+import ModalComponent from '~/Components/Modal';
 
-const CategoryFilterPage =({navigation}:CategoryFilterPageProps)=>{
-    // 상태 불러오기
-    let types= useSelector((state:RootState)=>state.query.CLTypeArray)
-    let conditions= useSelector((state:RootState)=>state.query.CLConditionArray)
-    // 상태 업데이트
+const CategoryFilterPage =(props:CategoryFilterPageProps)=>{
+    const {categoryArray,typeArray,conditionArray} =props.route.params;
     const[state,setState]=useState(false);
-    const[typeArray,setTypeArray]=useState<Array<{id:string,label:string,value:boolean}>>(types);
-    const[conditionArray,setConditionArray]=useState<Array<{id:string,label:string,value:boolean}>>(conditions);
+    const[typeArrayState,setTypeArrayState]=useState<Array<{id:string,label:string,value:boolean}>>(typeArray);
+    const[conditionArrayState,setConditionArrayState]=useState<Array<{id:string,label:string,value:boolean}>>(conditionArray);
     useEffect(()=>{
         console.log('@@@@@@@@@@@@@@@@@@');
     },[state])
     // menu state
     const [typeMenu,setTypeMenu]=useState<Boolean>(false);
     const [conditionMenu,setConditionMenu]=useState<Boolean>(false);
-    // 상태 저장하기
-    const dispatch=useDispatch();
-    const storeCLTypeNewArray=(Array:Array<any>)=>{
-        dispatch(CLTypeAction(Array))
-    }
-    const storeCLConditionNewArray=(Array:Array<any>)=>{
-        dispatch(CLConditionAction(Array))
-    }
+    // reset confirm modal
+    const [resetModal,setResetModal]=useState<boolean>(false);
+
     return(
         <Container>
             <FilterHeader />
@@ -51,22 +40,21 @@ const CategoryFilterPage =({navigation}:CategoryFilterPageProps)=>{
                             :<SortDownBtn />
                         }
                     </MenuBox>
-                        {typeMenu?(
+                        {typeMenu&&typeArray?(
                             <Type>
-                            {typeArray.map((data,index)=>
-                                <TouchableOpacity onPress={()=>{
-                                    let tmpArray=typeArray;
-                                    tmpArray[index].value=!data.value;
-                                    setTypeArray(tmpArray);
-                                    setState(!state);
-                                }} key={data.id}>
-                                    <HashTag hashtag={data.label} picked={data.value}/>
-                                </TouchableOpacity>
-                            )}
+                            {typeArrayState.map((data,index)=>{
+                                return(
+                                    <TouchableOpacity onPress={()=>{
+                                        let tmpArray=typeArrayState;
+                                        tmpArray[index].value=!data.value;
+                                        setTypeArrayState(tmpArray);
+                                        setState(!state);
+                                    }} key={data.id}>
+                                        <HashTag hashtag={data.label} picked={data.value}/>
+                                    </TouchableOpacity>
+                                )})}
                         </Type>
-                        ):(
-                            null
-                        )}
+                        ):(null)}
                 </MenuContainer>
                 {/* 참여조건 */}
                 <MenuContainer>
@@ -81,35 +69,48 @@ const CategoryFilterPage =({navigation}:CategoryFilterPageProps)=>{
                     </MenuBox>
                         {conditionMenu?(
                             <Type>
-                            {conditionArray.map((data,index)=>
-                                <TouchableOpacity onPress={()=>{
-                                    let tmpArray=conditionArray;
-                                    tmpArray[index].value=!data.value;
-                                    setConditionArray(tmpArray);
-                                    setState(!state);
-                                }} key={data.id}>
-                                    <HashTag hashtag={data.label} picked={data.value}/>
-                                </TouchableOpacity>
-                            )}
+                            {conditionArrayState.map((data,index)=>{
+                                return(
+                                    <TouchableOpacity onPress={()=>{
+                                        let tmpArray=conditionArrayState
+                                        tmpArray[index].value=!data.value;
+                                        setConditionArrayState(tmpArray);
+                                        setState(!state);
+                                    }} key={data.id}>
+                                        <HashTag hashtag={data.label} picked={data.value}/>
+                                    </TouchableOpacity>
+                                )})} 
                         </Type>
                         ):(
                             null
                         )}
                 </MenuContainer>
             </ScrollView>
+            <ModalComponent 
+                modalVisible={resetModal}
+                onPressCancle={()=>setResetModal(false)}
+                onPressConfirm={()=>{
+                    props.navigation.pop()
+                    props.navigation.replace('CategoryListPage',{
+                        categoryArray:categoryArray,
+                        typeArray:newStateArray(typeArray),
+                        conditionArray:newStateArray(conditionArray)
+                    });
+                }}
+                tag={null}
+                title={'조건을 초기화 하시겠습니까?'}
+            />
             <FilterBottom 
-                onPressReset={async ()=>{
-                    await setTypeArray(newStateArray(types));
-                    await setConditionArray(newStateArray(conditions));
-                    storeCLTypeNewArray(typeArray);
-                    storeCLConditionNewArray(conditionArray);
-                    setState(!state);
+                onPressReset={()=>{
+                    setResetModal(true);
                 }}
                 onPressConfirm={()=>{
-                    storeCLTypeNewArray(typeArray);
-                    storeCLConditionNewArray(conditionArray);
-                    navigation.replace('CategoryListPage');
-                    navigation.navigate('CategoryListPage');
+                    props.navigation.pop()
+                    props.navigation.replace('CategoryListPage',{
+                        categoryArray:categoryArray,
+                        typeArray:typeArrayState,
+                        conditionArray:conditionArrayState
+                    });
                 }}
             />
         </Container>
