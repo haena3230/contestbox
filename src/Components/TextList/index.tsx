@@ -56,7 +56,7 @@ const TextList=({recruit,deadline,title,viewcount,categories,poster,onPress}:Tex
                     </TagBox>
                     )}
             </View>
-            <View style={{width:'25%'}}>
+            <View style={{width:'100%',justifyContent:'center'}}>
             {!poster?null:(
                 <Poster source={{
                     uri:`${poster},w_594,h_840`
@@ -88,19 +88,17 @@ export const Poster =styled.Image`
     aspect-ratio:0.7;
     border-radius:5px;
     overflow:hidden;
-    right:0
+    right:0;
+    width:22%;
 `
 const Recruitbox=styled.View`
     flex-direction:row;
 `
 const Title=styled.Text`
-    margin-top:10px;
-    ${Styles.m_font};
-    font-weight:bold
+    ${Styles.m_b_font};
 
 `
 const ViewCount=styled.Text`
-    margin-top:5px;
     ${Styles.ss_font};
 `
 export default TextList;

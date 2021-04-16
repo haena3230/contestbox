@@ -5,7 +5,7 @@ import styled from 'styled-components/native';
 import { ScrollView } from 'react-native-gesture-handler';
 // component
 import Header from '~/Components/Header';
-import {Container,Styles,Color,DWidth,ComponentContainer} from '~/Styles';
+import {Container,Styles,Color,DWidth} from '~/Styles';
 import Swiper from 'react-native-swiper';
 import {HashTag} from '~/Components/HashTag';
 import Loading from '~/Components/Loading';
@@ -76,25 +76,25 @@ const HomePage = ({navigation}:HomaPageProps) => {
   return (
     <Container>
       <Header/>
-      <View style={{flex:3,justifyContent:'center'}}>
+      <View style={{flex:4,justifyContent:'center'}}>
         <Banner />
       </View>
-      <ComponentContainer flex={2} padding={10}>
+      <View style={{flex:3}}>
         <Title>
           카테고리
         </Title>
-        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={{marginVertical:20}}>
+        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={{paddingLeft:10}}>
           {categoriesData}
         </ScrollView>
-      </ComponentContainer>
-      <ComponentContainer flex={7} padding={10}>
+      </View>
+      <View style={{flex:7}}>
         <Title>
           인기대회
         </Title>
-        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={{paddingLeft:10}}>
           {hotData}
         </ScrollView>
-      </ComponentContainer>
+      </View>
     </Container>
   );
 };
@@ -129,16 +129,18 @@ const Banner = ()=>{
 const styles=StyleSheet.create({
   bannerImg:{
     width:DWidth,
-    height:DWidth*(100/300)
+    height:DWidth*(1/3)
   },
   bannerPg:{
     backgroundColor:Color.g4_color,
     opacity:0.5,
     borderRadius:10,
-    paddingHorizontal:10,
-    position:'absolute',
-    right:10,
-    top:DWidth*(100/300)*(7/10),
+    left:DWidth-50,
+    bottom:30,
+    justifyContent:'center',
+    alignItems:'center',
+    height:20,
+    width:40
   }
 })
 const BannerText=styled.Text`
@@ -146,24 +148,24 @@ const BannerText=styled.Text`
   color:${Color.w_color};
 `
 const Title=styled.Text`
-  ${Styles.m_font};
-  font-weight:bold;
+  ${Styles.m_b_font};
+  padding:10px 0 0 10px;
 `
 // poster
 const PosterContainer=styled.TouchableOpacity`
   height:100%;
-  aspect-ratio:0.55;
-  margin:15px;
-  
+  aspect-ratio:0.57;
+  margin-right:10px;  
 `
 const Poster=styled.Image`
-  height:85%;
+  background-color:gray;
+  height:80%;
   aspect-ratio:0.7;
-  border-radius:10px;
+  border-radius:8px;
   overflow:hidden;
 `
 const PosterText=styled.Text`
-  ${Styles.s_font};
+  ${Styles.s_m_font};
   margin-horizontal:3px;
 `
 export default HomePage;

@@ -1,7 +1,7 @@
 // SearchListPage
 import React,{useState,useRef, useEffect} from 'react';
 import {View,ScrollView,RefreshControl,Text, TouchableOpacity} from 'react-native';
-import {Container,Styles,Color, IconSize} from '~/Styles';
+import {Container,Styles,Color, IconSize, DWidth} from '~/Styles';
 import styled from 'styled-components/native';
 // data
 import {SearchListPageProps, SearchPageProps} from '~/Types';
@@ -13,14 +13,14 @@ import Arrow from '~/Assets/chevron-left-solid.svg';
 import Search from '~/Assets/search-solid.svg';
 import {SortBtn,FilterBtn,MapBtn, ListBtn} from  '~/Components/Btn';
 import {SortComponent} from '~/Components/Sort';
-import TextList,{TagBox,ListBox} from '~/Components/TextList';
-import {HashTag} from '~/Components/HashTag';
+import TextList from '~/Components/TextList';
 import ToTop from '~/Components/ToTop';
 import Loading, { LastData } from '~/Components/Loading';
 import {pickedIdArray,newStateArray} from '~/Components/Filter';
 import {SearchMap} from '~/Components/Map';
 import { InfoModalComponent } from '~/Components/Modal';
 import { ErrorPage } from '~/Components/Error';
+import { TextInput } from 'react-native-gesture-handler';
 
 interface pageInfoProps{
     endCursor:string,
@@ -88,7 +88,7 @@ const SearchListPage =(props:SearchListPageProps)=>{
             types:pickedTypeId,
             conditions:pickedConditionId
         },
-        fetchPolicy:'cache-and-network'
+        fetchPolicy:'network-only'
     })
     // 정렬버튼 함수
     const onPressTagOne=()=>{
@@ -313,8 +313,9 @@ export const SearchBarSmall=(props:SearchPageProps)=>{
                 <TouchableOpacity onPress={onSubmet} style={{paddingHorizontal:15}}>
                     <Search height={IconSize.sicon} width={IconSize.sicon} color={Color.g3_color}/>
                 </TouchableOpacity>
-                <SearchHeaderText 
-                    placeholder={'검색어를 입력해 주세요.'} 
+                <TextInput
+                    style={Styles.m_font}
+                    placeholder={'검색어를 입력해 주세요'} 
                     value={searchText} 
                     onChangeText={(text)=>{setSearchText(text)}} 
                     maxLength={35}
@@ -322,7 +323,7 @@ export const SearchBarSmall=(props:SearchPageProps)=>{
                     />
             </SmallSearchBarStyle>
             <InfoModalComponent 
-                Info={'검색어를 입력해 주세요.'}
+                Info={'검색어를 입력해 주세요'}
                 modalVisible={infoModal}
                 />
         </SearchHeader>
@@ -334,15 +335,13 @@ const BarBox=styled.View`
     flex-direction:row;
     justify-content:space-between;
     align-items:center;
-    padding:10px;
+    padding-horizontal:10px;
 `
 const BarBoxText=styled.Text`
-    ${Styles.m_font};
-    font-weight:bold;
+    ${Styles.m_b_font};
 `
 const BarBoxCount=styled.Text`
-    ${Styles.m_font};
-    color:${Color.g3_color};
+    ${Styles.m_m_font};
 `
 // search bar
 const SearchHeader=styled.View`
@@ -353,6 +352,7 @@ const SearchHeader=styled.View`
 `
 const SmallSearchBarStyle=styled.View`
   width:90%;
+  height:${DWidth > 480 ? 60 : 45}px;
   background-color:${Color.w_color};
   border-radius:15px;
   flex-direction:row;
@@ -360,10 +360,5 @@ const SmallSearchBarStyle=styled.View`
   margin-vertical:10px;
   border-width:1px;
   border-color:${Color.g1_color};
-`
-const SearchHeaderText=styled.TextInput`
-    ${Styles.m_font};
-    padding:3px;
-
 `
 export default SearchListPage;

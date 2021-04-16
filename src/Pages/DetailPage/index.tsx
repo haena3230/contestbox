@@ -1,13 +1,16 @@
 // list detail Page
 import React,{useRef, useState} from 'react';
 import {View,Text} from 'react-native';
+// library
 import moment from 'moment';
+import ImageViewer from 'react-native-image-zoom-viewer';
+import Modal from 'react-native-modal';
 // style
 import {Color,Container, Styles,IconSize,DWidth} from '~/Styles';
 import styled from 'styled-components/native';
 // components
 import ToTop from '~/Components/ToTop';
-import { ScrollView } from 'react-native-gesture-handler';
+import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import {HashTag} from '~/Components/HashTag';
 import Loading from '~/Components/Loading';
 import {OpenURLBtn} from '~/Components/Btn';
@@ -21,7 +24,11 @@ import { useQuery } from '@apollo/client';
 import {GET_DETAILS} from '~/queries';
 import { ErrorPage } from '~/Components/Error';
 
+
+
 const DetailPage =(props:DetailPageProps)=>{
+    // image viewer
+    const[imgModal,setImgModal]=useState<boolean>(false);
     // totop
     const scrollRef=useRef<ScrollView>();
     const[totop,setTotop]=useState<Boolean>(false);
@@ -58,49 +65,75 @@ const DetailPage =(props:DetailPageProps)=>{
     
     return(
         <Container>
-            <Box>
-                <ScrollView 
-                    ref={scrollRef}
-                    onScroll={(e)=>{
-                        if (e.nativeEvent.contentOffset.y===0){
-                            setTotop(false);
-                        }                            
-                    }}
-                    onScrollBeginDrag={()=>setTotop(true)}
-                    >
+            <ScrollView 
+            ref={scrollRef}
+            onScroll={(e)=>{
+                if (e.nativeEvent.contentOffset.y===0){
+                    setTotop(false);
+                }                            
+            }}
+            onScrollBeginDrag={()=>setTotop(true)}
+            >
+                <Box>
                     {!data.contest.posterURL?null:(
-                        <Poster source={{
-                            uri:`${data.contest.posterURL},w_594,h_840`
-                        }}/>      
+                        <TouchableOpacity onPress={()=>setImgModal(!imgModal)}>
+                            <Poster source={{
+                                uri:`${data.contest.posterURL},w_594,h_840`
+                            }}/>      
+                            <Modal isVisible={imgModal} backdropOpacity={1} onBackdropPress={()=>setImgModal(!imgModal)}>
+                                <ImageViewer 
+                                imageUrls={[{url: `${data.contest.posterURL},w_594,h_840`}]} 
+                                enableSwipeDown={true} 
+                                onSwipeDown={()=>setImgModal(!imgModal)} />
+                            </Modal>
+                        </TouchableOpacity>
                     )}
-                    
-                    <Title>{data.contest.title}</Title>
-                    <TextBox>
+                    <ComponentBox>
+                        <Title>{data.contest.title}</Title>
                         <Text style={Styles.s_font}>조회수 {data.contest.hits}</Text>
-                    </TextBox>
+                    </ComponentBox>
                     {!data.contest.categories?null:(
-                        <View>
+                        <ComponentBox>
                             <ContentTitle>카테고리</ContentTitle>
                             <TagBox>
                             {data.contest.categories.map((data)=>{
                                 return(
-                                    <HashTag key= {data.id} hashtag={data.label} picked={false}/>
+                                    <TouchableOpacity onPress={()=>
+                                        props.navigation.navigate('SearchListPage',{
+                                            search:data.label,
+                                            typeArray:null,
+                                            conditionArray:null,
+                                            })}
+                                        key= {data.id}
+                                        style={{paddingBottom:10}}
+                                        >
+                                        <HashTag hashtag={data.label} picked={false}/>
+                                    </TouchableOpacity>
                                 )
                             })}
                             </TagBox>
-                        </View>
+                        </ComponentBox>
                     )}
                     {!data.contest.types?null:(
-                        <View>
+                        <ComponentBox>
                             <ContentTitle>참여조건</ContentTitle>
                             <TagBox>
                                 {data.contest.types.map((data)=>{
                                     return(
-                                        <HashTag key = {data.id} hashtag={data.label} picked={false}/>
+                                        <TouchableOpacity onPress={()=>
+                                            props.navigation.navigate('SearchListPage',{
+                                                search:data.label,
+                                                typeArray:null,
+                                                conditionArray:null,
+                                                })}
+                                            key= {data.id}
+                                            style={{paddingBottom:10}}>
+                                            <HashTag key = {data.id} hashtag={data.label} picked={false}/>
+                                        </TouchableOpacity>
                                     )
                                 })}
                             </TagBox>
-                        </View>
+                        </ComponentBox>
                     )}
                     
                     <Period Start={PeriodSplit(data.contest.application.period.startAt)} End={PeriodSplit(data.contest.application.period.endAt)}/>
@@ -110,7 +143,7 @@ const DetailPage =(props:DetailPageProps)=>{
                         </View>
                     )}
                     {!data.contest.content?null:(
-                        <View>
+                        <ComponentBox>
                             <ContentTitle>상세내용</ContentTitle>
                             <Markdown
                                 style={{
@@ -173,19 +206,19 @@ const DetailPage =(props:DetailPageProps)=>{
                             >
                                 {data.contest.content}
                             </Markdown>
-                        </View>
+                        </ComponentBox>
                     )}
                     {!data.contest.place?null:(
+                        <ComponentBox>
                         <MapPart 
                             alias={data.contest.place.alias}
                             place={data.contest.place.fullAddress} 
                             lat={data.contest.place.latLng.lat} 
                             lng={data.contest.place.latLng.lng}
-                            />
+                            /></ComponentBox>
                     )}
-                    
-                </ScrollView>
-            </Box>
+                </Box>
+            </ScrollView>
             {totop?<ToTop onPressToTop={onPressToTop}/>:null}
         </Container>
     )
@@ -248,7 +281,7 @@ interface MapPartProps{
 const MapPart=({alias,place,lat,lng}:MapPartProps)=>{
     return(
         <View style={{marginBottom:30}}>
-            <View style={{flexDirection:'row',alignItems:'flex-end',justifyContent:'space-between'}}>
+            <View style={{flexDirection:'row',alignItems:'center',justifyContent:'space-between'}}>
                 <ContentTitle>대회 장소</ContentTitle>
                 <MapText>{alias}</MapText>
             </View>
@@ -277,21 +310,18 @@ const Box=styled.View`
     border-width:1px;
     border-color:${Color.g1_color};
 `
-
+const ComponentBox=styled.View`
+    margin-top:30px;
+`
 const Poster =styled.Image`
     width:100%;
     aspect-ratio:0.7;
     border-radius:10px;
     overflow:hidden;
-`
-const TextBox=styled.View`
-    margin-vertical:5px;
+    background-color:gray;
 `
 const ContentTitle=styled.Text`
-    ${Styles.m_font};
-    font-weight:bold;
-    margin-top:20px;
-    margin-bottom:5px;
+    ${Styles.m_b_font};
 `
 const TagBox=styled.View`
     flex-direction:row;
@@ -299,9 +329,8 @@ const TagBox=styled.View`
 `
 
 const Title=styled.Text`
-    ${Styles.b_font};
-    font-weight:bold;
-    margin-vertical:10px;
+    ${Styles.b_b_font};
+    margin-vertical:5px;
 `
 
 const MapBox=styled.View`
@@ -319,14 +348,13 @@ const PeriodContainer=styled.View`
     justify-content:space-around;
     background-color:${Color.g2_color};
     border-radius:10px;
-    padding:10px;
-    margin-vertical:20px;
+    padding:20px;
 `
 const Time=styled.View`
     flex-direction:row;
 `
 const TimeText =styled.Text`
-    ${Styles.ss_font};
+    ${Styles.ss_m_font};
     margin-horizontal:3px;
 `
 

@@ -62,17 +62,13 @@ const CategoryPage =({navigation}:CategoryPageProps)=>{
 export default CategoryPage;
 
 const Title=styled.Text`
-    ${Styles.m_font};
-    font-weight:bold;
-    color:${Color.g4_color};
+    ${Styles.m_b_font};
     padding:30px;
 `
 
-
-
 const Box = styled.TouchableOpacity`
     width:48%;
-    padding:8px;
+    padding-horizontal:8px;
     background-color:${Color.w_color};
     border-width:1px;
     border-color:${Color.g1_color};
@@ -80,7 +76,6 @@ const Box = styled.TouchableOpacity`
     margin:3px;
 `
 const CateText = styled.Text`
-    ${Styles.m_font};
-    color:${Color.g4_color};
+    ${Styles.m_m_font};
     padding:5px;
 `

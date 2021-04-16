@@ -1,6 +1,6 @@
 // searchbar
 import React,{useState} from 'react';
-import {TouchableOpacity,TextInput} from 'react-native';
+import {TouchableOpacity,TextInput, View} from 'react-native';
 import {Color,IconSize,Styles} from '~/Styles';
 import styled from 'styled-components/native';
 import {SearchPageProps} from '~/Types';
@@ -32,14 +32,16 @@ export const SearchBar=({navigation}:SearchPageProps)=>{
       <TouchableOpacity onPress={onSubmet} style={{paddingHorizontal:15}}>
         <Search height={IconSize.icon} width={IconSize.icon} color={Color.g3_color}/>
       </TouchableOpacity>
-      <TextInput 
-        style={Styles.m_font} 
-        placeholder={'검색어를 입력해 주세요.'} 
-        value={searchText} 
-        onChangeText={(text)=>{setSearchText(text)}} 
-        onSubmitEditing={onSubmet}
-        maxLength={35}
-        />
+      <View style={{alignItems:'center'}}>
+        <TextInput 
+          style={Styles.m_font} 
+          placeholder={'검색어를 입력해 주세요.'} 
+          value={searchText} 
+          onChangeText={(text)=>{setSearchText(text)}} 
+          onSubmitEditing={onSubmet}
+          maxLength={35}
+          />
+        </View>
         <InfoModalComponent 
           Info={'검색어를 입력해 주세요.'}
           modalVisible={infoModal}
@@ -48,7 +50,7 @@ export const SearchBar=({navigation}:SearchPageProps)=>{
   )
 }
 const SearchBarStyle=styled.View`
-  width:95%;
+  width:100%;
   background-color:${Color.w_color};
   border-radius:25px;
   flex-direction:row;

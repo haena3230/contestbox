@@ -1,8 +1,7 @@
 // 정렬 순서 모달
 import React from "react";
-import {TouchableOpacity,View} from "react-native";
+import {TouchableOpacity} from "react-native";
 import styled from 'styled-components/native';
-import {Styles,Color}  from '~/Styles';
 import {HashTag} from '~/Components/HashTag';
 import Modal from 'react-native-modal';
 
@@ -29,9 +28,6 @@ export const SortComponent = ({modalVisible,onPressCancle,one,two,three,onPressT
                     <Sort hashtag={'조회순'} picked={two} onPressTag={onPressTagTwo} />         
                     <Sort hashtag={'등록순'} picked={three} onPressTag={onPressTagThree}/>
                 </Tag>
-                <TouchableOpacity onPress={onPressCancle}>
-                    <Exit>닫기</Exit>
-                </TouchableOpacity>
             </ModalView>
         </Modal>
   );
@@ -44,7 +40,7 @@ interface SortProps{
 }
 const Sort=({hashtag,picked,onPressTag}:SortProps)=>{
     return(
-        <TouchableOpacity onPress={onPressTag}>
+        <TouchableOpacity onPress={onPressTag} style={{paddingHorizontal:5}}>
             <HashTag hashtag={hashtag} picked={picked}/>
         </TouchableOpacity>
     )
@@ -65,11 +61,8 @@ const ModalView =styled.View`
 `
 const Tag=styled.View`
     flex-direction:row;
-`
-
-const Exit=styled.Text`
-    ${Styles.m_font};
-    color:${Color.p_color};
+    align-items:center;
+    flex-wrap:wrap;
 `
 
 export default SortComponent;

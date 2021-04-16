@@ -25,7 +25,7 @@ export const HashTag=({hashtag,picked}:HashTagProps)=>{
 }
 
 const BoxText=styled.Text`
-    ${Styles.s_font};
+    ${Styles.s_m_font};
     padding-horizontal:3px;
 `
 interface ContainerProps{
@@ -39,7 +39,8 @@ const HashTagContainer=styled.View`
     border-width:1px;
     border-color:${Color.g1_color};
     min-width:40px;
-    margin:0px 3px 0px 3px;
+    height:25px;
+    margin-right:6px;
     background-color:${(props:ContainerProps)=>props.backgroundColor?props.backgroundColor:Color.w_color};
-    padding:${DWidth>480? '7xp 20px 7px 20px':'3px 10px 3px 10px'};
+    padding:${DWidth>480? '0 20px 0 20px':'0 10px 0 10px'};
 `

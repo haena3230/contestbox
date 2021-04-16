@@ -59,11 +59,11 @@ const Box = styled.View`
 const Text=styled.Text`
     ${Styles.ss_font};
     color:${Color.w_color};
-    font-weight:bold;
+    font-weight:500;
 `
 
 const DText=styled.Text`
     ${Styles.ss_font};
     color:${Color.p_color};
-    font-weight:bold;
+    font-weight:500;
 `

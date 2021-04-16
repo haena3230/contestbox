@@ -52,16 +52,14 @@ const SearchPage = ({navigation}:SearchPageProps) => {
         <Header />
         <MainContainer>
           <Title>
-            <Text style={Styles.b_font}>어떤 </Text>
+            <Text style={Styles.b_b_font}>어떤 </Text>
             <Point>대회</Point>
-            <Text style={Styles.b_font}>를 찾고계신가요?</Text>
+            <Text style={Styles.b_b_font}>를 찾고계신가요?</Text>
           </Title>
-          <View style={{alignItems:'center'}}>
-            <SearchBar navigation={navigation}/>
-          </View>
+          <SearchBar navigation={navigation}/>
           <Category>
             <Title>
-              <Text style={Styles.m_font}>카테고리</Text>
+              <Text style={Styles.m_m_font}>카테고리</Text>
             </Title>
                 <View style={{flexDirection:'row', flexWrap:'wrap',marginVertical:20}}>
                   {cateData}              
@@ -76,7 +74,7 @@ const SearchPage = ({navigation}:SearchPageProps) => {
 const MainContainer=styled.View`
   height:100%;
   justify-content:center;
-  padding:${DWidth > 480 ? '50px':'20px'};
+  padding:${DWidth > 480 ? '50px':'10px'};
 `
 const Title=styled.View`
   width:100%;
@@ -84,7 +82,7 @@ const Title=styled.View`
 `
 
 const Point = styled.Text`
-  ${Styles.b_font};
+  ${Styles.b_m_font};
   color:${Color.p_color};
 `
 

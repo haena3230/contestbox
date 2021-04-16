@@ -37,7 +37,7 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
     const pickedConditionId=pickedIdArray(conditionArray);
     // 필터페이지 버튼
     const onPressFilter=()=>{
-        if(!!!typeArray){
+        if(!typeArray){
             props.navigation.navigate('CategoryFilterPage',{
                 categoryArray:category,
                 typeArray:initTypeArray,
@@ -105,7 +105,7 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
             conditions:pickedConditionId,
             types:pickedTypeId
         },
-        fetchPolicy:'cache-and-network'
+        fetchPolicy:'network-only'
     });
     // 정렬버튼 함수
     const onPressTagOne=async ()=>{
@@ -195,6 +195,7 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
     }
     return(
         <Container>
+            {/* <TouchableOpacity onPress={()=>console.log(category)}><Text>test</Text></TouchableOpacity> */}
             {map?(
                 <View>
                     <View style={{height:'17%',justifyContent:'flex-end'}}>
@@ -257,7 +258,7 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
                         }
                         onScrollBeginDrag={()=>setTotop(true)}
                         >
-                        <View style={{paddingTop:20}}>
+                        <View>
                             <CategoryBox>
                                 <Category># {categoryArray[0].label}</Category>
                             </CategoryBox>
@@ -325,8 +326,9 @@ const BarBox=({isMap,onPressMap,onPressFilter,onPressSort,sortState,height,badge
         <View style={{
             flexDirection:'row',
             justifyContent:'space-between',
-            alignItems:'flex-end',
-            marginLeft:5,
+            alignItems:'center',
+            margin:5,
+            marginRight:0,
             height:height,
             }}>
             {isMap?(<View />):(<SortBtn onPressSort={()=>onPressSort()} state={sortState}/>)}
@@ -347,13 +349,9 @@ const CategoryBox=styled.View`
 `
 
 const Category=styled.Text`
-    ${Styles.b_font};
-    font-weight:bold;
-    padding-vertical:10px;
+    ${Styles.b_b_font};
+    padding-vertical:20px;
 `
 export default CategoryListPage;
 
-function fetchNumAction(fetchNumAction: any) {
-    throw new Error('Function not implemented.');
-}
 

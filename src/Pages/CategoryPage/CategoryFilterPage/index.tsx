@@ -2,7 +2,8 @@
 import React,{useEffect, useState} from 'react';
 import {Container} from '~/Styles';
 // component
-import {FilterHeader,FilterBottom,MenuContainer,MenuBox,MenuTitle,Type,newStateArray} from '~/Components/Filter';
+import {FilterBottom,MenuContainer,MenuBox,MenuTitle,Type,newStateArray} from '~/Components/Filter';
+import {FilterHeader} from '~/Components/Header'
 import { ScrollView } from 'react-native-gesture-handler';
 import {SortDownBtn, SortUpBtn} from  '~/Components/Btn';
 // data
@@ -27,7 +28,7 @@ const CategoryFilterPage =(props:CategoryFilterPageProps)=>{
 
     return(
         <Container>
-            <FilterHeader />
+            <FilterHeader onPressClose={()=>null}/>
             <ScrollView>
                 {/* 종류 */}
                 <MenuContainer>

@@ -66,6 +66,7 @@ export interface CategoryFilterPageProps {
 }
 
 export interface DetailPageProps {
+  navigation: StackNavigationProp<StackParamList, 'SearchListPage'>;
   route: RouteProp<StackParamList, 'DetailPage'>;
 }
 

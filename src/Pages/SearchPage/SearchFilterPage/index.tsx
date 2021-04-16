@@ -3,13 +3,15 @@ import React, { useState,useEffect } from 'react';
 import {Text, ScrollView, TouchableOpacity, View} from 'react-native';
 import {Container} from '~/Styles';
 // components
-import {FilterHeader,FilterBottom,MenuContainer,MenuBox,MenuTitle,Type,newStateArray} from '~/Components/Filter';
+import {FilterBottom,MenuContainer,MenuBox,MenuTitle,Type,newStateArray} from '~/Components/Filter';
+import { FilterHeader } from '~/Components/Header';
 import {SortDownBtn,SortUpBtn} from '~/Components/Btn';
 import {HashTag} from '~/Components/HashTag';
 
 // data
 import { SearchFilterPageProps } from '~/Types';
 import ModalComponent from '~/Components/Modal';
+
 
 
 const SearchFilterPage =(props:SearchFilterPageProps)=>{
@@ -29,7 +31,7 @@ const SearchFilterPage =(props:SearchFilterPageProps)=>{
     const [resetModal,setResetModal]=useState<boolean>(false);
     return(
         <Container>
-            <FilterHeader />
+            <FilterHeader onPressClose={()=>null}/>
             <ScrollView style={{marginBottom:60}}>
                 <MenuContainer>
                     <MenuBox  onPress={()=>setTypeMenu(!typeMenu)}>

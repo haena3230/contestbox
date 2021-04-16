@@ -12,25 +12,18 @@ import SortDown from '~/Assets/sort-down-solid.svg';
 import ListIcon from '~/Assets/list-ul-solid.svg';
 import SortUp from '~/Assets/sort-up-solid.svg';
 
-export const LongBtn =()=>{
-    return(
-        <Container>
-            <LText>필터 적용하기</LText>
-        </Container>
-    )
-}
-
-interface ShortBtnProps{
+interface BtnProps{
     text:string;
     onPress:()=>void;
     color:string;
+    widthPercent:number;
 }
-export const ShortBtn=({text,onPress,color}:ShortBtnProps)=>{
+export const Btn=({text,onPress,color,widthPercent}:BtnProps)=>{
     
     return(
-        <SContainer onPress={onPress} color={color}>
-            <SText>{text}</SText>
-        </SContainer>
+        <BtnContainer onPress={onPress} color={color} width={widthPercent}>
+            <BtnText>{text}</BtnText>
+        </BtnContainer>
     )
 }
 
@@ -41,7 +34,7 @@ interface MapBtnProps{
 export const MapBtn = ({onPressMap}:MapBtnProps)=>{
     return(
         <IconBorder onPress={onPressMap}>
-            <MapIcon width={IconSize.icon} height={IconSize.icon} color={Color.g4_color} />
+            <MapIcon width={IconSize.sicon} height={IconSize.sicon} color={Color.g4_color} />
         </IconBorder>
     )
 }
@@ -50,7 +43,7 @@ export const MapBtn = ({onPressMap}:MapBtnProps)=>{
 export const ListBtn=({onPressMap}:MapBtnProps)=>{
     return(
         <IconBorder onPress={onPressMap}>
-            <ListIcon width={IconSize.icon} height={IconSize.icon} color={Color.g4_color} />
+            <ListIcon width={IconSize.sicon} height={IconSize.sicon} color={Color.g4_color} />
         </IconBorder>
     )
 }
@@ -68,7 +61,7 @@ export const FilterBtn =({onPressFilter,number}:FilterBtnProps)=>{
             ):(
                 <Badge number={number}/>
             )}
-            <FilterIcon width={IconSize.icon} height={IconSize.icon} color={Color.g4_color} />
+            <FilterIcon width={IconSize.sicon} height={IconSize.sicon} color={Color.g4_color} />
         </IconBorder>   
     )
 }
@@ -94,7 +87,7 @@ interface SortBtnProps{
 export const SortBtn=({onPressSort,state}:SortBtnProps)=>{
     return(
         <TouchableOpacity onPress={onPressSort} style={{flexDirection:'row',alignItems:'center'}}>
-            <Text style={Styles.s_font}>{state}</Text>
+            <Text style={Styles.s_m_font}>{state}</Text>
             <View style={{padding:5,marginBottom:3}}>
             <SortDown width={IconSize.sicon} height={IconSize.sicon} color={Color.g3_color}/>
             </View>
@@ -130,47 +123,32 @@ export const OpenURLBtn = ({ url, children }) => {
         }
     }, [url]);
     
-return <ShortBtn text={children} onPress={handlePress} color={Color.p_color}/>;
+return <Btn text={children} onPress={handlePress} color={Color.p_color} widthPercent={40}/>;
 };
 
-
-// long
-const Container=styled.TouchableOpacity`
-    justify-content:center;
-    align-items:center;
-    background-color:${Color.p_color};
-    border-radius:15px;
-
-`
-const LText=styled.Text`
-    ${Styles.m_font};
-    color:${Color.w_color};
-    padding:8px;
-`
-
 // short
-interface SContainerProps{
+interface BtnContainerProps{
     color:string;
+    width:number;
 }
-const SContainer=styled.TouchableOpacity`
-    justify-content:center;
-    align-items:center;
-    background-color:${(props:SContainerProps)=>props.color};
+const BtnContainer=styled.TouchableOpacity`
+    width:${(props:BtnContainerProps)=>props.width}%;
+    background-color:${(props:BtnContainerProps)=>props.color};
     border-radius:10px;
-    padding-horizontal:15px;
+    align-items:center;
 `
-const SText=styled.Text`
-    ${Styles.m_font};
-    font-weight:bold;
+const BtnText=styled.Text`
+    ${Styles.m_b_font};
     color:${Color.w_color};
-    padding:8px;
+    justify-content:center;
+    padding:10px;
 `
 
 const IconBorder=styled.TouchableOpacity`
     border-width:1px;
     border-color:${Color.g1_color};
     border-radius:5px;
-    padding:5px;
+    padding:7px;
     margin:2px;
 `
 

@@ -76,49 +76,11 @@ function MainTabNavi() {
           }
         })}
       >
-        <Tab.Screen name="검색" component={SearchStackNavi} />
-        <Tab.Screen name="홈" component={HomePageStackNavi} />
-        <Tab.Screen name="카테고리" component={CategoryStackNavi} />
+        <Tab.Screen name="검색" component={SearchPage} />
+        <Tab.Screen name="홈" component={HomePage} />
+        <Tab.Screen name="카테고리" component={CategoryPage} />
     </Tab.Navigator>
   );
-}
-
-const HomePageStackNavi=()=>{
-  return(
-    <Stack.Navigator
-      screenOptions={{
-        headerShown:false,
-      }}>
-      <Stack.Screen name="HomePage" component={HomePage}/>
-      <Stack.Screen name="CategoryListPage" component={CategoryListPage} />
-      <Stack.Screen name="DetailPage" component={DetailPage} />
-    </Stack.Navigator>
-  )
-}
-const SearchStackNavi=()=>{
-  return(
-    <Stack.Navigator
-      screenOptions={{
-        headerShown:false,
-      }}>
-        <Stack.Screen name="SearchPage" component={SearchPage} />
-        <Stack.Screen name="CategoryListPage" component={CategoryListPage} />
-        <Stack.Screen name="SearchListPage" component={SearchListPage} />
-        <Stack.Screen name="DetailPage" component={DetailPage} />
-    </Stack.Navigator>
-  )
-}
-const CategoryStackNavi=()=>{
-  return(
-    <Stack.Navigator
-      screenOptions={{
-        headerShown:false,
-      }}>
-        <Stack.Screen name="CategoryPage" component={CategoryPage} />
-        <Stack.Screen name="CategoryListPage" component={CategoryListPage} />
-        <Stack.Screen name="DetailPage" component={DetailPage} />
-    </Stack.Navigator>
-  )
 }
 
 // main stack
@@ -129,8 +91,11 @@ const MainStackNavi=()=>{
         headerShown:false,
       }}>
         <Stack.Screen name="MainTabNavi" component={MainTabNavi} />
+        <Stack.Screen name="CategoryListPage" component={CategoryListPage} />
         <Stack.Screen name="CategoryFilterPage" component={CategoryFilterPage} />
+        <Stack.Screen name="SearchListPage" component={SearchListPage} />
         <Stack.Screen name="SearchFilterPage" component={SearchFilterPage} />
+        <Stack.Screen name="DetailPage" component={DetailPage} />
     </Stack.Navigator>
   )
 }
