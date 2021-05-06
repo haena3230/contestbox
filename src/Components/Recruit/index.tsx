@@ -20,7 +20,7 @@ export const Recruit=()=>{
 
 export const NoRecruit=()=>{
     return(
-        <Box color={Color.g3_color}>
+        <Box color={Color.gray}>
             <Text>접수마감</Text>
         </Box>
     )
@@ -28,7 +28,7 @@ export const NoRecruit=()=>{
 
 export const CancelRecruit=()=>{
     return(
-        <Box color={Color.g3_color}>
+        <Box color={Color.gray}>
             <Text>취소</Text>
         </Box>
     )
@@ -57,13 +57,11 @@ const Box = styled.View`
 `
 
 const Text=styled.Text`
-    ${Styles.ss_font};
+    ${Styles.s_font};
     color:${Color.w_color};
-    font-weight:500;
 `
 
 const DText=styled.Text`
-    ${Styles.ss_font};
+    ${Styles.s_font};
     color:${Color.p_color};
-    font-weight:500;
 `
