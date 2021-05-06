@@ -9,6 +9,7 @@ import styled from 'styled-components/native';
 // component
 import {CategoryPageProps} from '~/Types';
 import {newStateArray,CategoryView} from '~/Components/Filter';
+import Header from '~/Components/Header';
 // data
 import { useQuery } from '@apollo/client';
 import { GET_CATEGORIES } from '~/queries';
@@ -48,6 +49,7 @@ const CategoryPage =({navigation}:CategoryPageProps)=>{
     }
     return(
         <Container>
+            <Header />
             <Title>카테고리</Title>
             <ScrollView style={{padding:10}}>
                 <View style={{flexDirection:'row',flexWrap:'wrap',justifyContent:'space-between'}}>
@@ -63,7 +65,8 @@ export default CategoryPage;
 
 const Title=styled.Text`
     ${Styles.m_b_font};
-    padding:30px;
+    padding-horizontal:15px;
+    margin-top:10px;
 `
 
 const Box = styled.TouchableOpacity`

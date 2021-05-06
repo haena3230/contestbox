@@ -5,7 +5,7 @@ import styled from 'styled-components/native';
 import { ScrollView } from 'react-native-gesture-handler';
 // component
 import Header from '~/Components/Header';
-import {Container,Styles,Color,DWidth} from '~/Styles';
+import {Container,Styles,Color,DWidth, DHeight} from '~/Styles';
 import Swiper from 'react-native-swiper';
 import {HashTag} from '~/Components/HashTag';
 import Loading from '~/Components/Loading';
@@ -136,7 +136,7 @@ const styles=StyleSheet.create({
     opacity:0.5,
     borderRadius:10,
     left:DWidth-50,
-    bottom:30,
+    bottom:DHeight>700?60:40,
     justifyContent:'center',
     alignItems:'center',
     height:20,
