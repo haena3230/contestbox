@@ -22,6 +22,12 @@ export const GET_HOTS = gql`
           hits
           title
           posterURL
+          application{
+            period{
+              endAt
+            }
+            status
+          }
         }
       }
     }

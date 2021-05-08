@@ -17,6 +17,7 @@ import { useQuery } from '@apollo/client';
 import { GET_CATEGORIES} from '~/queries';
 import Loading from '~/Components/Loading';
 import { ErrorPage } from '~/Components/Error';
+import { CategotyDesign, CategotyIT, CategotyMusic, CategotySport, CategotyStudy, CategotyUCC, TypeFirst, TypeSecond, TypeThird } from '~/Components/CategoryBtn';
 
 const SearchPage = ({navigation}:SearchPageProps) => {
   // catrgory data
@@ -49,47 +50,44 @@ const SearchPage = ({navigation}:SearchPageProps) => {
   }
   return (
       <Container>
-        <Header />
-        <MainContainer>
           <Title>
             <Text style={Styles.b_b_font}>어떤 </Text>
             <Point>대회</Point>
             <Text style={Styles.b_b_font}>를 찾고계신가요?</Text>
           </Title>
           <SearchBar navigation={navigation}/>
-          <Category>
-            <Title>
-              <Text style={Styles.m_m_font}>카테고리</Text>
-            </Title>
-                <View style={{flexDirection:'row', flexWrap:'wrap',marginVertical:20}}>
-                  {cateData}              
-                </View>
-          </Category>
-        </MainContainer>
+          <Title>
+            인기카테고리
+          </Title>
+          <View style={{flexWrap:'wrap',flexDirection:'row', justifyContent:'space-between'}}>
+            <CategotySport />
+            <CategotyIT />
+            <CategotyStudy />
+            <CategotyUCC />
+            <CategotyMusic />
+            <CategotyDesign />
+          </View>
+          <Title>
+            대회 종류
+          </Title>
+          <View  style={{flexWrap:'wrap',flexDirection:'row', justifyContent:'space-around'}}>
+            <TypeFirst />
+            <TypeSecond />
+            <TypeThird />
+          </View>
       </Container>
   );
 };
 
 
-const MainContainer=styled.View`
-  height:100%;
-  justify-content:center;
-  padding:${DWidth > 480 ? '50px':'10px'};
-`
-const Title=styled.View`
-  width:100%;
-  flex-direction:row; 
+const Title=styled.Text`
+  ${Styles.m_b_font};
+  margin:20px 0 15px 0;
 `
 
 const Point = styled.Text`
   ${Styles.b_m_font};
   color:${Color.p_color};
 `
-
-const Category=styled.View`
-  width:100%;
-  margin-vertical:20px;
-`
-
 
 export default SearchPage;

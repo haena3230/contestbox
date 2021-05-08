@@ -11,8 +11,8 @@ interface HashTagProps{
 export const HashTag=({hashtag,picked}:HashTagProps)=>{
     return(
         picked?(
-            <HashTagContainer backgroundColor={Color.g2_color}>
-                <CheckIcon height={IconSize.icon} width={IconSize.sicon} color={Color.g4_color}/>
+            <HashTagContainer backgroundColor={Color.background}>
+                <CheckIcon height={IconSize.icon} width={IconSize.sicon} color={Color.gray}/>
                 <BoxText>{hashtag}</BoxText>
             </HashTagContainer>
         ):(
@@ -37,7 +37,7 @@ const HashTagContainer=styled.View`
     flex-direction:row;
     border-radius:15px;
     border-width:1px;
-    border-color:${Color.g1_color};
+    border-color:${Color.border};
     min-width:40px;
     height:25px;
     margin-right:6px;

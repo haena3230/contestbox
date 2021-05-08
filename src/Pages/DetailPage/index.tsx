@@ -153,7 +153,7 @@ const DetailPage =(props:DetailPageProps)=>{
                                         marginVertical:10,
                                         paddingVertical:10,
                                         borderTopWidth:2,
-                                        borderColor:Color.g1_color
+                                        borderColor:Color.border
                                     },
                                     heading2: {
                                         fontSize: DWidth > 480 ? 22 : 18,
@@ -161,7 +161,7 @@ const DetailPage =(props:DetailPageProps)=>{
                                         marginVertical:10,
                                         paddingVertical:10,
                                         borderTopWidth:2,
-                                        borderColor:Color.g1_color
+                                        borderColor:Color.border
                                     },
                                     heading3: {
                                         fontSize: DWidth > 480 ? 20 : 16,
@@ -169,7 +169,7 @@ const DetailPage =(props:DetailPageProps)=>{
                                         marginVertical:10,
                                         paddingVertical:10,
                                         borderTopWidth:2,
-                                        borderColor:Color.g1_color
+                                        borderColor:Color.border
                                     },
                                     heading4: {
                                         fontSize: DWidth > 480 ? 20 : 16,
@@ -177,7 +177,7 @@ const DetailPage =(props:DetailPageProps)=>{
                                         marginVertical:10,
                                         paddingVertical:10,
                                         borderTopWidth:2,
-                                        borderColor:Color.g1_color
+                                        borderColor:Color.border
                                     },
                                     heading5: {
                                         fontSize: DWidth > 480 ? 18 : 16,
@@ -185,7 +185,7 @@ const DetailPage =(props:DetailPageProps)=>{
                                         marginVertical:10,
                                         paddingVertical:10,
                                         borderTopWidth:2,
-                                        borderColor:Color.g1_color
+                                        borderColor:Color.border
                                     },
                                     heading6: {
                                         fontSize: DWidth > 480 ? 16 : 12,
@@ -193,13 +193,13 @@ const DetailPage =(props:DetailPageProps)=>{
                                         marginVertical:10,
                                         paddingVertical:10,
                                         borderTopWidth:2,
-                                        borderColor:Color.g1_color
+                                        borderColor:Color.border
                                     },
                                     code_block:{
-                                        backgroundColor:Color.g2_color,
+                                        backgroundColor:Color.artbox,
                                     },
                                     code_inline:{
-                                        backgroundColor:Color.g4_color,
+                                        backgroundColor:Color.artbox,
                                         color:Color.w_color
                                     }
                                 }}    
@@ -294,7 +294,7 @@ const MapPart=({alias,place,lat,lng}:MapPartProps)=>{
                     />
             </MapBox>
             <View style={{flexDirection:'row',alignItems:'flex-start'}}>
-                <MarkIcon width={IconSize.sicon} height={IconSize.sicon} color={Color.g4_color} />
+                <MarkIcon width={IconSize.sicon} height={IconSize.sicon} color={Color.gray} />
                 <MapText>{place}</MapText>
             </View>
         </View>
@@ -308,7 +308,7 @@ const Box=styled.View`
     border-radius:7px;
     padding:10px;
     border-width:1px;
-    border-color:${Color.g1_color};
+    border-color:${Color.border};
 `
 const ComponentBox=styled.View`
     margin-top:30px;
@@ -336,7 +336,7 @@ const Title=styled.Text`
 const MapBox=styled.View`
     border-width:1px;
     border-radius:10px;
-    border-color:${Color.g1_color};
+    border-color:${Color.border};
     overflow:hidden;
     height:200px;
     margin-vertical:10px;
@@ -346,7 +346,7 @@ const MapBox=styled.View`
 const PeriodContainer=styled.View`
     flex-direction:row;
     justify-content:space-around;
-    background-color:${Color.g2_color};
+    background-color:${Color.artbox};
     border-radius:10px;
     padding:20px;
 `
@@ -361,7 +361,7 @@ const TimeText =styled.Text`
 // map
 const MapText=styled.Text`
     ${Styles.s_font};
-    color:${Color.g4_color};
+    color:${Color.gray};
     margin-horizontal:3px;
 `
 export default DetailPage;

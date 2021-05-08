@@ -308,10 +308,10 @@ export const SearchBarSmall=(props:SearchPageProps)=>{
     }
     return(
         <SearchHeader>
-            <Arrow onPress={()=>props.navigation.goBack()} height={IconSize.icon} width={IconSize.icon} color={Color.g3_color}/>
+            <Arrow onPress={()=>props.navigation.goBack()} height={IconSize.icon} width={IconSize.icon} color={Color.gray}/>
             <SmallSearchBarStyle>
                 <TouchableOpacity onPress={onSubmet} style={{paddingHorizontal:15}}>
-                    <Search height={IconSize.sicon} width={IconSize.sicon} color={Color.g3_color}/>
+                    <Search height={IconSize.sicon} width={IconSize.sicon} color={Color.gray}/>
                 </TouchableOpacity>
                 <TextInput
                     style={Styles.m_font}
@@ -359,6 +359,6 @@ const SmallSearchBarStyle=styled.View`
   align-items:center;
   margin-vertical:10px;
   border-width:1px;
-  border-color:${Color.g1_color};
+  border-color:${Color.border};
 `
 export default SearchListPage;

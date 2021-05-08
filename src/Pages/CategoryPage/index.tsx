@@ -74,7 +74,7 @@ const Box = styled.TouchableOpacity`
     padding-horizontal:8px;
     background-color:${Color.w_color};
     border-width:1px;
-    border-color:${Color.g1_color};
+    border-color:${Color.border_color};
     border-radius:5px;
     margin:3px;
 `

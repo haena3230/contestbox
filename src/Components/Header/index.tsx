@@ -33,7 +33,7 @@ export const FilterHeader = ({onPressClose}:FilterHeaderProps)=>{
             <Box>
                 <Item>
                     <IconBorder>
-                        <FilterIcon width={IconSize.sicon} height={IconSize.sicon} color={Color.g4_color} />
+                        <FilterIcon width={IconSize.sicon} height={IconSize.sicon} color={Color.gray} />
                     </IconBorder>
                 </Item>
                 <Item>
@@ -71,14 +71,15 @@ const FilterHeaderContainer=styled.View`
     justify-content:space-between;
     align-items:center;
     border-bottom-width:1px;
-    border-color:${Color.g2_color};
+    border-color:${Color.border};
 `
 const HeaderText=styled.Text`
-    ${Styles.mb_b_font};
+    ${Styles.m_b_font};
 `
 const Box = styled.View`
     flex-direction:row;
     align-items:center;
+    padding-vertical:5px;
 `
 const Item=styled.View`
     padding-left:10px;
@@ -86,14 +87,14 @@ const Item=styled.View`
 
 const IconBorder=styled.View`
     border-width:1px;
-    border-color:${Color.g1_color};
+    border-color:${Color.border};
     border-radius:5px;
     padding:7px;
     margin:2px;
 `
 // close
 const CloseBtn=styled.Text`
-    ${Styles.m_b_font};
+    ${Styles.m_font};
     padding-right:15px;
 `
 

@@ -12,6 +12,7 @@ import SortDown from '~/Assets/sort-down-solid.svg';
 import ListIcon from '~/Assets/list-ul-solid.svg';
 import SortUp from '~/Assets/sort-up-solid.svg';
 
+
 interface BtnProps{
     text:string;
     onPress:()=>void;
@@ -34,7 +35,7 @@ interface MapBtnProps{
 export const MapBtn = ({onPressMap}:MapBtnProps)=>{
     return(
         <IconBorder onPress={onPressMap}>
-            <MapIcon width={IconSize.sicon} height={IconSize.sicon} color={Color.g4_color} />
+            <MapIcon width={IconSize.sicon} height={IconSize.sicon} color={Color.gray} />
         </IconBorder>
     )
 }
@@ -43,7 +44,7 @@ export const MapBtn = ({onPressMap}:MapBtnProps)=>{
 export const ListBtn=({onPressMap}:MapBtnProps)=>{
     return(
         <IconBorder onPress={onPressMap}>
-            <ListIcon width={IconSize.sicon} height={IconSize.sicon} color={Color.g4_color} />
+            <ListIcon width={IconSize.sicon} height={IconSize.sicon} color={Color.gray} />
         </IconBorder>
     )
 }
@@ -61,7 +62,7 @@ export const FilterBtn =({onPressFilter,number}:FilterBtnProps)=>{
             ):(
                 <Badge number={number}/>
             )}
-            <FilterIcon width={IconSize.sicon} height={IconSize.sicon} color={Color.g4_color} />
+            <FilterIcon width={IconSize.sicon} height={IconSize.sicon} color={Color.gray} />
         </IconBorder>   
     )
 }
@@ -89,7 +90,7 @@ export const SortBtn=({onPressSort,state}:SortBtnProps)=>{
         <TouchableOpacity onPress={onPressSort} style={{flexDirection:'row',alignItems:'center'}}>
             <Text style={Styles.s_m_font}>{state}</Text>
             <View style={{padding:5,marginBottom:3}}>
-            <SortDown width={IconSize.sicon} height={IconSize.sicon} color={Color.g3_color}/>
+            <SortDown width={IconSize.sicon} height={IconSize.sicon} color={Color.gray}/>
             </View>
         </TouchableOpacity>
     )
@@ -99,7 +100,7 @@ export const SortBtn=({onPressSort,state}:SortBtnProps)=>{
 export const SortDownBtn=()=>{
     return(
         <View style={{padding:5,marginBottom:3}}>
-            <SortDown width={IconSize.sicon} height={IconSize.sicon} color={Color.g3_color}/>
+            <SortDown width={IconSize.sicon} height={IconSize.sicon} color={Color.gray}/>
         </View>
     )
 }
@@ -107,7 +108,7 @@ export const SortDownBtn=()=>{
 export const SortUpBtn=()=>{
     return(
         <View style={{padding:5,marginTop:3}}>
-            <SortUp width={IconSize.sicon} height={IconSize.sicon} color={Color.g3_color}/>
+            <SortUp width={IconSize.sicon} height={IconSize.sicon} color={Color.gray}/>
         </View>
     )
 }
@@ -146,7 +147,7 @@ const BtnText=styled.Text`
 
 const IconBorder=styled.TouchableOpacity`
     border-width:1px;
-    border-color:${Color.g1_color};
+    border-color:${Color.border};
     border-radius:5px;
     padding:7px;
     margin:2px;

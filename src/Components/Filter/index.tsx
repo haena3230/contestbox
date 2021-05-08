@@ -89,7 +89,7 @@ interface FilterBottomProps{
 export const FilterBottom=({onPressReset,onPressConfirm}:FilterBottomProps)=>{
     return(
         <BottomContainer>
-            <Btn color={Color.g2_color} text={' 초기화 '} onPress={onPressReset} widthPercent={30}/>
+            <Btn color={Color.gray} text={' 초기화 '} onPress={onPressReset} widthPercent={30}/>
             <Btn color={Color.p_color} text={'적용하기'} onPress={onPressConfirm} widthPercent={60}/>
         </BottomContainer>
     )
@@ -99,7 +99,7 @@ export const FilterBottom=({onPressReset,onPressConfirm}:FilterBottomProps)=>{
 // filter menu
 export const MenuContainer=styled.View`
     border-bottom-width:1px;
-    border-color:${Color.g2_color};
+    border-color:${Color.border};
 `
 export const MenuBox=styled.TouchableOpacity`
     flex-direction:row;
@@ -126,7 +126,7 @@ const BottomContainer=styled.View`
     justify-content:space-around;
     padding:15px;
     border-top-width:1px;
-    border-color:${Color.g2_color};
+    border-color:${Color.border};
     position:absolute;
     bottom:0;
 `

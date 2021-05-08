@@ -24,8 +24,7 @@ export const Immenent=(deadline)=>{
     if(moment(now).isBefore(deadline)&&moment(after).isAfter(deadline))       
     return <ImmenentRecruit />;
 }
-const TextList=({recruit,deadline,title,viewcount,categories,poster,onPress}:TextListProps)=>{
-    const status=(status)=>{
+export const status=(status)=>{
         switch(status){
             case 'NOTSTARTED':
                 return <PreRecruit />;
@@ -35,6 +34,7 @@ const TextList=({recruit,deadline,title,viewcount,categories,poster,onPress}:Tex
                 return <NoRecruit />;
         }
     }
+const TextList=({recruit,deadline,title,viewcount,categories,poster,onPress}:TextListProps)=>{
     
     return(
         <ListBox onPress={onPress}>
@@ -72,7 +72,7 @@ export const ListBox = styled.TouchableOpacity`
     background-color:white;
     border-radius:10px;
     border-width:1px;
-    border-color:${Color.g1_color};
+    border-color:${Color.border};
     margin-vertical:5px;
     flex-direction:row;  
     justify-content:space-between;
