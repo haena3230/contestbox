@@ -40,15 +40,6 @@ export const MapBtn = ({onPressMap}:MapBtnProps)=>{
     )
 }
 
-// list btn
-export const ListBtn=({onPressMap}:MapBtnProps)=>{
-    return(
-        <IconBorder onPress={onPressMap}>
-            <ListIcon width={IconSize.sicon} height={IconSize.sicon} color={Color.gray} />
-        </IconBorder>
-    )
-}
-
 // filter btn
 interface FilterBtnProps{
     onPressFilter:()=>void;
@@ -135,11 +126,12 @@ interface BtnContainerProps{
 const BtnContainer=styled.TouchableOpacity`
     width:${(props:BtnContainerProps)=>props.width}%;
     background-color:${(props:BtnContainerProps)=>props.color};
-    border-radius:10px;
+    border-radius:5px;
     align-items:center;
 `
 const BtnText=styled.Text`
-    ${Styles.m_b_font};
+    ${Styles.m_font};
+    font-weight:bold;
     color:${Color.w_color};
     justify-content:center;
     padding:10px;
@@ -148,6 +140,7 @@ const BtnText=styled.Text`
 const IconBorder=styled.TouchableOpacity`
     border-width:1px;
     border-color:${Color.border};
+    background-color:${Color.artbox};
     border-radius:5px;
     padding:7px;
     margin:2px;

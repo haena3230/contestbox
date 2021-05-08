@@ -23,11 +23,9 @@ export const SortComponent = ({modalVisible,onPressCancle,one,two,three,onPressT
             onBackdropPress={onPressCancle}
         >
             <ModalView>
-                <Tag>
                     <Sort hashtag={'추천순'} picked={one} onPressTag={onPressTagOne}/>
                     <Sort hashtag={'조회순'} picked={two} onPressTag={onPressTagTwo} />         
                     <Sort hashtag={'등록순'} picked={three} onPressTag={onPressTagThree}/>
-                </Tag>
             </ModalView>
         </Modal>
   );
@@ -58,11 +56,6 @@ const ModalView =styled.View`
     position:absolute;
     bottom:0px;
 
-`
-const Tag=styled.View`
-    flex-direction:row;
-    align-items:center;
-    flex-wrap:wrap;
 `
 
 export default SortComponent;

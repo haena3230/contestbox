@@ -1,10 +1,14 @@
 // filterpage component
 import React from 'react';
 import styled from 'styled-components/native';
-import { Styles,Color } from '~/Styles';
+import { Styles,Color, IconSize, DWidth } from '~/Styles';
 
 // components
 import {Btn} from  '~/Components/Btn';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { Text, View } from 'react-native';
+import CheckIcon from '~/Assets/check_circle_outline_black_24dp.svg';
+import CheckIconFill from '~/Assets/check_circle_black_24dp.svg';
 
 // 함수
 
@@ -95,7 +99,35 @@ export const FilterBottom=({onPressReset,onPressConfirm}:FilterBottomProps)=>{
     )
 }
 
+// filter category btn
+interface FilterCategoryBtnProps{
+    picked:boolean;
+    category:string;
+}
+export const FilterCategoryBtn = ({picked,category}:FilterCategoryBtnProps)=>{
+    return( 
+        <View>
+            {picked?(
+                <PickedCategoryMenuItem  style={{borderColor:Color.p_color}} onPress={()=>null}>
+                    <CheckIconFill width={IconSize.ssicon} height={IconSize.ssicon} fill={Color.p_color} />
+                    <Text style={Styles.m_m_font}>{category}</Text>
+                </PickedCategoryMenuItem>
+            ):(
+                <PickedCategoryMenuItem style={{borderColor:Color.place_holder}} onPress={()=>null}>
+                        <CheckIcon width={IconSize.ssicon} height={IconSize.ssicon} fill={Color.place_holder} />
+                        <Text style={Styles.m_m_font}>{category}</Text>
+                </PickedCategoryMenuItem>
+            )}
+            
+        </View>
+    )
+}
 
+// 모두삭제
+export const AllDeleteText =styled.Text`
+    ${Styles.s_m_font};
+    color:${Color.p_color};
+`
 // filter menu
 export const MenuContainer=styled.View`
     border-bottom-width:1px;
@@ -111,12 +143,28 @@ export const MenuBox=styled.TouchableOpacity`
 export const MenuTitle=styled.Text`
     ${Styles.m_m_font};
 `
-// 종류
-export const Type = styled.View`
+export const PickedMenuBox = styled.View`
     flex-direction:row;
     flex-wrap:wrap;
-    padding:15px;
+    justify-content:space-around;
+    padding-horizontal:20px;
+    padding-bottom:20px;
 `
+
+export const PickedCategoryMenuBox= styled.View`
+    flex-direction:row;
+    flex-wrap:wrap;
+`
+let half = DWidth/2
+const PickedCategoryMenuItem= styled.TouchableOpacity`
+    border-width:0.5px;
+    flex-direction:row;
+    align-items:center;
+    justify-content:space-between;
+    padding-horizontal:20px;
+    width:${half};
+`
+
 // bottom
 const BottomContainer=styled.View`
     width:100%;
@@ -130,5 +178,4 @@ const BottomContainer=styled.View`
     position:absolute;
     bottom:0;
 `
-
 

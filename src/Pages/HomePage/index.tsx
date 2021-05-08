@@ -25,68 +25,68 @@ const HomePage = ({navigation}:HomaPageProps) => {
     console.log('home')
   },[])
   // catrgory && hot data
-  const { loading, error, data,refetch } = useQuery(GET_HOTS,{
-    variables:{
-      existPoster:true,
-      sort:'HITS',
-      applicationStatuses:['NOTSTARTED','INPROGRESS'],
-      first:15
-    },
-    fetchPolicy:'cache-and-network'
-  });
-  let categoriesData=[];
-  let hotData='';
-  if(loading) return <Loading />
-  if(error)return <ErrorPage onPress={async ()=>{
-    try{
-        await refetch({
-            existPoster:true,
-            sort:'HITS',
-            applicationStatuses:['NOTSTARTED','INPROGRESS'],
-            first:15
-        })
-        console.log('refetch')
-    } catch(e){
-        console.log('refetch err')
-    }}} />
-  if(data.categories){
-    // max 10개
-    categoriesData=CategoryView(data.categories).slice(0,9).map((cate)=>
-    <TouchableOpacity  
-        key = {cate[0].id} onPress={()=>{
-        navigation.navigate('CategoryListPage',{
-          categoryArray:newStateArray(cate),
-          typeArray:null,
-          conditionArray:null,
-        });
-        }}>
-      <HashTag hashtag={cate[0].label} picked={false}/>
-    </TouchableOpacity>
-    )
-  }
-  if(data.contests){
-    hotData=data.contests.edges.map((contest)=>
-    <PosterContainer key = {contest.node.id.toString()} onPress={()=>
-      navigation.push('DetailPage',{
-        listId:contest.node.id
-      })
-    }>
-      <Recruitbox>
-          {status(contest.node.application.status)}
-          {Immenent(contest.node.application.period.endAt)}
-      </Recruitbox>
-      <Image
-          source={{uri:`${contest.node.posterURL},w_297,h_420`}}
-          style={{width:'100%',height:'100%',borderRadius:10}}
-      />
-      <LinearGradient 
-        colors={['transparent', Color.b_color]} 
-        start={{ x: 0.5, y: 0.3 }} end={{ x: 0.5, y: 1 }}
-        style={{position:'absolute',width:'100%',height:'100%', opacity:0.7,bottom:10,borderRadius:10}} />
-      <PosterText numberOfLines={2}>{contest.node.title}</PosterText>
-    </PosterContainer>
-    )
-  }
+  // const { loading, error, data,refetch } = useQuery(GET_HOTS,{
+  //   variables:{
+  //     existPoster:true,
+  //     sort:'HITS',
+  //     applicationStatuses:['NOTSTARTED','INPROGRESS'],
+  //     first:15
+  //   },
+  //   fetchPolicy:'cache-and-network'
+  // });
+  // let categoriesData=[];
+  // let hotData='';
+  // if(loading) return <Loading />
+  // if(error)return <ErrorPage onPress={async ()=>{
+  //   try{
+  //       await refetch({
+  //           existPoster:true,
+  //           sort:'HITS',
+  //           applicationStatuses:['NOTSTARTED','INPROGRESS'],
+  //           first:15
+  //       })
+  //       console.log('refetch')
+  //   } catch(e){
+  //       console.log('refetch err')
+  //   }}} />
+  // if(data.categories){
+  //   // max 10개
+  //   // categoriesData=CategoryView(data.categories).slice(0,9).map((cate)=>
+  //   // <TouchableOpacity  
+  //   //     key = {cate[0].id} onPress={()=>{
+  //   //     navigation.navigate('CategoryListPage',{
+  //   //       categoryArray:newStateArray(cate),
+  //   //       typeArray:null,
+  //   //       conditionArray:null,
+  //   //     });
+  //   //     }}>
+  //   //   <HashTag hashtag={cate[0].label} picked={false}/>
+  //   // </TouchableOpacity>
+  //   // )
+  // }
+  // if(data.contests){
+  //   hotData=data.contests.edges.map((contest)=>
+  //   <PosterContainer key = {contest.node.id.toString()} onPress={()=>
+  //     navigation.push('DetailPage',{
+  //       listId:contest.node.id
+  //     })
+  //   }>
+  //     <Recruitbox>
+  //         {status(contest.node.application.status)}
+  //         {Immenent(contest.node.application.period.endAt)}
+  //     </Recruitbox>
+  //     <Image
+  //         source={{uri:`${contest.node.posterURL},w_297,h_420`}}
+  //         style={{width:'100%',height:'100%',borderRadius:10}}
+  //     />
+  //     <LinearGradient 
+  //       colors={['transparent', Color.b_color]} 
+  //       start={{ x: 0.5, y: 0.3 }} end={{ x: 0.5, y: 1 }}
+  //       style={{position:'absolute',width:'100%',height:'100%', opacity:0.7,bottom:10,borderRadius:10}} />
+  //     <PosterText numberOfLines={2}>{contest.node.title}</PosterText>
+  //   </PosterContainer>
+  //   )
+  // }
   return (
     <View>
       <Header/>
@@ -110,7 +110,7 @@ const HomePage = ({navigation}:HomaPageProps) => {
             인기대회
           </Title>
           <View style={{flexWrap:'wrap',flexDirection:'row', justifyContent:'space-between'}}>
-            {hotData}
+            {/* {hotData} */}
           </View>
           <View style={{height:50}}/>
           </Container>

@@ -25,12 +25,6 @@ type StackParamList={
     typeArray:null|Array<ArrayProps>,
     conditionArray:null|Array<ArrayProps>
   };
-  CategoryFilterPage:{
-    categoryArray:Array<ArrayProps>
-    typeArray:null|Array<ArrayProps>,
-    conditionArray:null|Array<ArrayProps>
-  };
-  FilterPage:undefined;
   DetailPage:{listId:string};
 };
 
@@ -59,10 +53,6 @@ export interface CategoryPageProps{
 export interface CategoryListPageProps {
   navigation: StackNavigationProp<StackParamList, 'DetailPage'>;
   route: RouteProp<StackParamList, 'CategoryListPage'>;
-}
-export interface CategoryFilterPageProps {
-  navigation: StackNavigationProp<StackParamList, 'CategoryListPage'>;
-  route: RouteProp<StackParamList, 'CategoryFilterPage'>;
 }
 
 export interface DetailPageProps {

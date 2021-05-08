@@ -10,7 +10,6 @@ import SearchListPage from './SearchPage/SearchListPage';
 import SearchFilterPage from './SearchPage/SearchFilterPage';
 import CategoryPage from './CategoryPage';
 import CategoryListPage from './CategoryPage/CategoryListPage';
-import CategoryFilterPage from './CategoryPage/CategoryFilterPage';
 import DetailPage from './DetailPage';
 import LoginPage from './LoginPage';
 import CommunityPage from './CommunityPage';
@@ -118,7 +117,6 @@ const MainStackNavi=()=>{
       }}>
         <Stack.Screen name="MainTabNavi" component={MainTabNavi} />
         <Stack.Screen name="CategoryListPage" component={CategoryListPage} />
-        <Stack.Screen name="CategoryFilterPage" component={CategoryFilterPage} />
         <Stack.Screen name="SearchListPage" component={SearchListPage} />
         <Stack.Screen name="SearchFilterPage" component={SearchFilterPage} />
         <Stack.Screen name="DetailPage" component={DetailPage} />

@@ -30,7 +30,7 @@ export const SearchBar=({navigation}:SearchPageProps)=>{
   return(
     <SearchBarStyle>
       <TouchableOpacity onPress={onSubmet} style={{paddingHorizontal:15}}>
-        <Search height={IconSize.icon} width={IconSize.icon} color={Color.gray}/>
+        <Search height={IconSize.sicon} width={IconSize.sicon} color={Color.gray}/>
       </TouchableOpacity>
       <View style={{alignItems:'center'}}>
         <TextInput 
@@ -50,13 +50,12 @@ export const SearchBar=({navigation}:SearchPageProps)=>{
   )
 }
 const SearchBarStyle=styled.View`
-  width:100%;
-  background-color:${Color.w_color};
-  border-radius:25px;
+  width:95%;
+  background-color:${Color.border};
+  border-radius:10px;
   flex-direction:row;
   align-items:center;
-  margin-vertical:20px;
-  border-width:1px;
-  border-color:${Color.border};
+  margin-vertical:5px;
+  elevation: 3
 `
 

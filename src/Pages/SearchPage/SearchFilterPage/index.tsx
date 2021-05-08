@@ -1,38 +1,41 @@
 // SearchFilterPage
-import React, { useState,useEffect } from 'react';
-import {Text, ScrollView, TouchableOpacity, View} from 'react-native';
-import {Container} from '~/Styles';
+import React, { useState } from 'react';
+import { ScrollView, TouchableOpacity, View} from 'react-native';
+import {Color} from '~/Styles';
 // components
-import {FilterBottom,MenuContainer,MenuBox,MenuTitle,Type,newStateArray} from '~/Components/Filter';
-import { FilterHeader } from '~/Components/Header';
-import {SortDownBtn,SortUpBtn} from '~/Components/Btn';
-import {HashTag} from '~/Components/HashTag';
+import {MenuContainer,MenuBox,MenuTitle, AllDeleteText, PickedMenuBox, PickedCategoryMenuBox, FilterCategoryBtn} from '~/Components/Filter';
+import { PageHeader } from '~/Components/Header';
+import {Btn, SortDownBtn,SortUpBtn} from '~/Components/Btn';
+import {FilterPickedTag, HashTag} from '~/Components/HashTag';
 
-// data
 import { SearchFilterPageProps } from '~/Types';
-import ModalComponent from '~/Components/Modal';
-
 
 
 const SearchFilterPage =(props:SearchFilterPageProps)=>{
-    // 상태 불러오기
-    const{search,typeArray,conditionArray}=props.route.params;
-    // 상태 업데이트
-    const[state,setState]=useState<boolean>(false);
-    const[typeArrayState,setTypeArrayState]=useState<Array<{id:string,label:string,value:boolean}>>(typeArray);
-    const[conditionArrayState,setConditionArrayState]=useState<Array<{id:string,label:string,value:boolean}>>(conditionArray);
-    useEffect(()=>{
-        console.log('SerchFilterPage');
-    },[state])
-    // 메뉴상태
     const [typeMenu,setTypeMenu]=useState<boolean>(false);
     const [conditionMenu,setConditionMenu]=useState<boolean>(false);
+    const [categoryMenu,setCategoryMenu]=useState<boolean>(false);
     // reset modal 
     const [resetModal,setResetModal]=useState<boolean>(false);
     return(
-        <Container>
-            <FilterHeader onPressClose={()=>null}/>
+        <View style={{backgroundColor:Color.background,flex:1}}>
+            <PageHeader pageName={'필터'} onPressClose={()=>null}/>
             <ScrollView style={{marginBottom:60}}>
+                {/* picked  */}
+                <View style={{borderBottomWidth:1, borderBottomColor:Color.border}}>
+                    <ScrollView horizontal={true} style={{flexWrap:'wrap',flexDirection:'row',marginLeft:20}}>
+                        <FilterPickedTag onPress={()=>null} text={'경진'}/>
+                        <FilterPickedTag onPress={()=>null} text={'경진'}/>
+                        <FilterPickedTag onPress={()=>null} text={'경진'}/>
+                        <FilterPickedTag onPress={()=>null} text={'경진'}/>
+                        <FilterPickedTag onPress={()=>null} text={'경진'}/>
+                        <FilterPickedTag onPress={()=>null} text={'경진'}/>
+                    </ScrollView>
+                    <TouchableOpacity onPress={()=>null} style={{alignItems:'flex-end',marginRight:20, paddingVertical:10}}>
+                        <AllDeleteText>모두삭제</AllDeleteText>
+                    </TouchableOpacity>
+                </View>
+                {/* type */}
                 <MenuContainer>
                     <MenuBox  onPress={()=>setTypeMenu(!typeMenu)}>
                         <MenuTitle>
@@ -43,24 +46,35 @@ const SearchFilterPage =(props:SearchFilterPageProps)=>{
                             :<SortDownBtn />
                         }
                     </MenuBox>
-                        {typeMenu?(
-                            <Type>
-                            {typeArrayState.map((data,index)=>
-                                <TouchableOpacity onPress={()=>{
-                                    let tmpArray=typeArrayState;
-                                    tmpArray[index].value=!data.value;
-                                    setTypeArrayState(tmpArray);
-                                    setState(!state)
-                                }} key={data.id}>
-                                    <HashTag hashtag={data.label} picked={data.value}/>
-                                </TouchableOpacity>
-                            )}
-                        </Type>
-                        ):(
-                            null
-                        )}
+                    {typeMenu?(
+                        <PickedMenuBox>
+                            <HashTag hashtag={'경진대회'} picked={true}/>
+                            <HashTag hashtag={'경시대회'} picked={false}/>
+                            <HashTag hashtag={'공모전'} picked={false}/>
+                        </PickedMenuBox>
+                    ):null}
                 </MenuContainer>
-                {/* 카테고리
+                {/* condition */}
+                <MenuContainer>
+                    <MenuBox  onPress={()=>setConditionMenu(!conditionMenu)}>
+                        <MenuTitle>
+                            참여대상
+                        </MenuTitle>
+                        {conditionMenu?
+                            <SortUpBtn />
+                            :<SortDownBtn />
+                        }
+                    </MenuBox>
+                    {conditionMenu?(
+                        <PickedMenuBox>
+                            <HashTag hashtag={'13세 미만'} picked={true}/>
+                            <HashTag hashtag={'중고등학생'} picked={false}/>
+                            <HashTag hashtag={'대학생'} picked={false}/>
+                            <HashTag hashtag={'성인'} picked={false}/>
+                        </PickedMenuBox>
+                    ):null}
+                </MenuContainer>
+                {/* category */}
                 <MenuContainer>
                     <MenuBox  onPress={()=>setCategoryMenu(!categoryMenu)}>
                         <MenuTitle>
@@ -72,94 +86,19 @@ const SearchFilterPage =(props:SearchFilterPageProps)=>{
                         }
                     </MenuBox>
                     {categoryMenu?(
-                        <View style={{padding:15}}>
-                            {categories.map((data,index)=>{
-                                return(
-                                    <FilterCategory 
-                                        key ={data[0].id} 
-                                        category={data[0].label} 
-                                        isSelect={data[0].value} 
-                                        secondCategories={data} 
-                                        sndIdx={index}
-                                        onPressFirst={()=>{
-                                            let tmpArray=categories;
-                                            tmpArray[index][0].value=!data[0].value;
-                                            storeSLCategoryNewArray(tmpArray)
-                                            setState(!state)
-                                        }}
-                                        onPressSecond={()=>{
-                                            setState(!state);
-                                            console.log(index)
-                                        }}
-                                    />
-                                )
-                            })} 
-                        </View>
+                        <PickedCategoryMenuBox>
+                            <FilterCategoryBtn category={'스포츠'} picked ={true}/>
+                            <FilterCategoryBtn category={'IT'} picked ={false}/>
+                            <FilterCategoryBtn category={'미술'} picked ={false}/>
+                            <FilterCategoryBtn category={'음악'} picked ={false}/>
+                        </PickedCategoryMenuBox>
                     ):null}
                 </MenuContainer>
-                <TouchableOpacity onPress={()=>{
-                    console.log(CategoryStateArray(orgCategories))
-                }}>
-                    <Text>test</Text>
-                </TouchableOpacity> */}
-                {/* 참여조건 */}
-                <MenuContainer>
-                    <MenuBox  onPress={()=>setConditionMenu(!conditionMenu)}>
-                        <MenuTitle>
-                            참여조건
-                        </MenuTitle>
-                        {conditionMenu?
-                            <SortUpBtn />
-                            :<SortDownBtn />
-                        }
-                    </MenuBox>
-                        {conditionMenu?(
-                            <Type>
-                            {conditionArrayState.map((data,index)=>
-                                <TouchableOpacity onPress={()=>{
-                                    let tmpArray=conditionArrayState;
-                                    tmpArray[index].value=!data.value;
-                                    setConditionArrayState(tmpArray)
-                                    setState(!state)
-                                }} key={data.id}>
-                                    <HashTag hashtag={data.label} picked={data.value}/>
-                                </TouchableOpacity>
-                            )}
-                        </Type>
-                        ):(
-                            null
-                        )}
-                </MenuContainer>
             </ScrollView>
-            <ModalComponent 
-                modalVisible={resetModal}
-                onPressCancle={()=>setResetModal(false)}
-                onPressConfirm={()=>{
-                    props.navigation.pop()
-                    props.navigation.replace('SearchListPage',{
-                        search:search,
-                        typeArray:newStateArray(typeArray),
-                        conditionArray:newStateArray(conditionArray)
-                    });
-                }}
-                tag={null}
-                title={'조건을 초기화 하시겠습니까?'}
-            />
-            <FilterBottom 
-                onPressReset={()=>{
-                   setResetModal(true);
-                }}
-                onPressConfirm={()=>{
-                    props.navigation.pop()
-                    props.navigation.replace('SearchListPage',{
-                        search:search,
-                        typeArray:typeArrayState,
-                        conditionArray:conditionArrayState
-                    });
-                }} 
-                />
-        </Container>
-        
+            <View style={{alignItems:'center', position:'absolute',bottom:10, width:'100%'}}>
+                    <Btn color={Color.p_color} onPress={()=>null} text={'적용하기'} widthPercent={90}/>
+            </View>
+        </View>
     )
 }
 

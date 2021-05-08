@@ -6,7 +6,7 @@ import styled from 'styled-components/native'
 import {PreRecruit,Recruit,NoRecruit,CancelRecruit,ImmenentRecruit} from '~/Components/Recruit';
 import {Styles,Color} from '~/Styles';
 import moment from 'moment';
-import {HashTag} from '~/Components/HashTag';
+import {HashTag, ListBoxCategory} from '~/Components/HashTag';
 
 interface TextListProps{
     recruit:string;
@@ -48,10 +48,10 @@ const TextList=({recruit,deadline,title,viewcount,categories,poster,onPress}:Tex
                 {!categories?null:(
                     <TagBox>
                         {categories.slice(0,2).map((tag)=>
-                        <HashTag key={tag.id.toString()} hashtag={tag.label} picked={false}/>
+                        <ListBoxCategory key={tag.id.toString()} category={tag.label}/>
                         )}
                         {categories.length>2?(
-                        <HashTag hashtag={'+'+ (categories.length-2)} picked={false}/>
+                        <ListBoxCategory category={'+'+ (categories.length-2)}/>
                         ):null}
                     </TagBox>
                     )}

@@ -31,7 +31,7 @@ export const Styles = StyleSheet.create({
     fontWeight:"500"
   },
   s_font: {
-    fontSize: DWidth > 480 ? 16 : 10,
+    fontSize: DWidth > 480 ? 16 : 11,
   },
   m_font: {
     fontSize: DWidth > 480 ? 20 : 13,
@@ -50,7 +50,7 @@ export const Styles = StyleSheet.create({
   },
   s_m_font: {
     fontFamily:'NotoSansKR-Medium',
-    fontSize: DWidth > 480 ? 16 : 10,
+    fontSize: DWidth > 480 ? 16 : 11,
     color:Color.b_color
   },
   m_m_font: {
@@ -65,7 +65,7 @@ export const Styles = StyleSheet.create({
   },
   b_m_font: {
     fontFamily:'NotoSansKR-Medium',
-    fontSize: DWidth > 480 ? 24 : 20,
+    fontSize: DWidth > 480 ? 24 : 18,
     color:Color.b_color
   },
   // bold
@@ -76,7 +76,7 @@ export const Styles = StyleSheet.create({
   },
   s_b_font: {
     fontFamily:'NotoSansKR-Bold',
-    fontSize: DWidth > 480 ? 16 : 10,
+    fontSize: DWidth > 480 ? 16 : 11,
     color:Color.b_color
   },
   m_b_font: {
@@ -91,7 +91,7 @@ export const Styles = StyleSheet.create({
   },
   b_b_font: {
     fontFamily:'NotoSansKR-Bold',
-    fontSize: DWidth > 480 ? 24 : 20,
+    fontSize: DWidth > 480 ? 24 : 18,
     color:Color.b_color
   },
 });
@@ -108,6 +108,7 @@ interface flexProps{
 }
 // 아이콘 사이즈
 export const IconSize={
+  ssicon:DWidth>480?20:15,
   sicon:DWidth>480?22:17,
   icon:DWidth>480?27:22,
   bicon:DWidth>480?35:30,

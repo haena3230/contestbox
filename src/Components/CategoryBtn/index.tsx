@@ -106,6 +106,18 @@ export const TypeThird =()=>{
     )
 }
 
+// contest condition btn
+interface CondiitonProps{
+    text:string
+}
+export const ConditionBtn =({text}:CondiitonProps)=>{
+    return(
+        <ConditionBox>
+            <ConditionText>{text}</ConditionText>
+        </ConditionBox>
+    )
+}
+
 
 // category Btn
 const CategoryBtnBox=styled.TouchableOpacity`
@@ -116,7 +128,7 @@ const CategoryBtnBox=styled.TouchableOpacity`
     padding:10px;
 `
 const CategoryBtnText=styled.Text`
-    ${Styles.m_font};
+    ${Styles.s_b_font};
     color:${Color.gray};
     font-weight:bold;
     padding:3px;
@@ -132,4 +144,20 @@ const TypeBtnBox = styled.TouchableOpacity`
     border-width:1px;
     border-color:${Color.border};
     borderRadius:10px;
+`
+
+// condition box
+const ConditionBox = styled.TouchableOpacity`
+    justify-content:center;
+    align-items:center;
+    padding-horizontal:10px;
+    background-color:${Color.artbox};
+    border-width:1px;
+    border-color:${Color.border};
+    borderRadius:10px;
+`
+const ConditionText = styled.Text`
+    ${Styles.s_b_font};
+    color:${Color.gray};
+
 `
