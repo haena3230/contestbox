@@ -1,5 +1,5 @@
 // list detail Page
-import React,{useRef, useState} from 'react';
+import React,{ useRef, useState} from 'react';
 import {View,Text} from 'react-native';
 // library
 import moment from 'moment';
@@ -11,11 +11,12 @@ import styled from 'styled-components/native';
 // components
 import ToTop from '~/Components/ToTop';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
-import {HashTag} from '~/Components/HashTag';
+import {CategoryListTag} from '~/Components/HashTag';
 import Loading from '~/Components/Loading';
-import {OpenURLBtn} from '~/Components/Btn';
+import {BottomOpenURLBtn, OpenURLBtn} from '~/Components/Btn';
 import MarkIcon from '~/Assets/map-marker-alt-solid.svg';
 import Markdown from 'react-native-markdown-display';
+import Star from '~/Assets/star_outline_black_24dp.svg'
 // navi
 import {DetailPageProps} from '~/Types';
 import {SmallMap} from '~/Components/Map';
@@ -23,7 +24,6 @@ import {SmallMap} from '~/Components/Map';
 import { useQuery } from '@apollo/client';
 import {GET_DETAILS} from '~/queries';
 import { ErrorPage } from '~/Components/Error';
-
 
 
 const DetailPage =(props:DetailPageProps)=>{
@@ -107,7 +107,7 @@ const DetailPage =(props:DetailPageProps)=>{
                                         key= {data.id}
                                         style={{paddingBottom:10}}
                                         >
-                                        <HashTag hashtag={data.label} picked={false}/>
+                                        <CategoryListTag text={data.label} picked={false}/>
                                     </TouchableOpacity>
                                 )
                             })}
@@ -128,20 +128,21 @@ const DetailPage =(props:DetailPageProps)=>{
                                                 })}
                                             key= {data.id}
                                             style={{paddingBottom:10}}>
-                                            <HashTag key = {data.id} hashtag={data.label} picked={false}/>
+                                            <CategoryListTag text={data.label} picked={false}/>
                                         </TouchableOpacity>
                                     )
                                 })}
                             </TagBox>
                         </ComponentBox>
                     )}
-                    
-                    <Period Start={PeriodSplit(data.contest.application.period.startAt)} End={PeriodSplit(data.contest.application.period.endAt)}/>
-                    {!data.contest.siteURL?null:(
-                       <View style={{width:'100%',alignItems:'flex-end'}}>
+                    <ComponentBox>
+                        <Period Start={PeriodSplit(data.contest.application.period.startAt)} End={PeriodSplit(data.contest.application.period.endAt)}/>
+                        {!data.contest.siteURL?null:(
+                        <View style={{width:'100%',alignItems:'flex-end', paddingTop:10}}>
                             <OpenURLBtn url={data.contest.siteURL}>홈페이지</OpenURLBtn>
                         </View>
-                    )}
+                        )}
+                    </ComponentBox>
                     {!data.contest.content?null:(
                         <ComponentBox>
                             <ContentTitle>상세내용</ContentTitle>
@@ -219,7 +220,9 @@ const DetailPage =(props:DetailPageProps)=>{
                     )}
                 </Box>
             </ScrollView>
-            {totop?<ToTop onPressToTop={onPressToTop}/>:null}
+            {totop?
+            <View style={{bottom:40}}><ToTop onPressToTop={onPressToTop}/></View>:null}
+            <BottomBtn url={data.contest.siteURL} onPressScrab={()=>null}/>
         </Container>
     )
 }
@@ -301,14 +304,31 @@ const MapPart=({alias,place,lat,lng}:MapPartProps)=>{
     )
 }
 
+// bottom btn
+interface BottomBtnProps{
+    onPressScrab:()=>void;
+    url:string;
+}
+const BottomBtn = ({onPressScrab,url}:BottomBtnProps)=>{
+    return(
+        <BottomBtnContainer>
+            <BottomOpenURLBtn url={url}/>
+            <BottomBtnBox style={{padding:10,flexDirection:'row'}} onPress={onPressScrab}>
+                <Star width={IconSize.sicon} height={IconSize.sicon} fill={Color.gray}/>
+                <BottomBoxText>스크랩</BottomBoxText>
+            </BottomBtnBox>
+        </BottomBtnContainer>
+    )
+}
+
 // detail page
 const Box=styled.View`
-    margin:5px;
     background-color:${Color.w_color};
     border-radius:7px;
     padding:10px;
     border-width:1px;
     border-color:${Color.border};
+    margin-bottom:60px;
 `
 const ComponentBox=styled.View`
     margin-top:30px;
@@ -330,7 +350,6 @@ const TagBox=styled.View`
 
 const Title=styled.Text`
     ${Styles.b_b_font};
-    margin-vertical:5px;
 `
 
 const MapBox=styled.View`
@@ -346,7 +365,7 @@ const MapBox=styled.View`
 const PeriodContainer=styled.View`
     flex-direction:row;
     justify-content:space-around;
-    background-color:${Color.artbox};
+    background-color:${Color.border};
     border-radius:10px;
     padding:20px;
 `
@@ -354,7 +373,7 @@ const Time=styled.View`
     flex-direction:row;
 `
 const TimeText =styled.Text`
-    ${Styles.ss_m_font};
+    ${Styles.s_m_font};
     margin-horizontal:3px;
 `
 
@@ -363,5 +382,30 @@ const MapText=styled.Text`
     ${Styles.s_font};
     color:${Color.gray};
     margin-horizontal:3px;
+`
+
+// bottom btn
+const BottomBtnContainer = styled.View`
+    background-color:${Color.artbox};
+    border-width:1px;
+    border-color:${Color.p_color};
+    border-radius:10px;
+    flex-direction:row;
+    width:100%;
+    position:absolute;
+    margin:10px;
+    bottom:0;
+    justify-content:center;
+`
+const BottomBtnBox = styled.TouchableOpacity`
+    width:50%;
+    flex-direction:row;
+    align-items:center;
+    justify-content:center;
+`
+const BottomBoxText = styled.Text`
+    margin-left:10px;
+    ${Styles.m_font};
+    color:${Color.gray};
 `
 export default DetailPage;

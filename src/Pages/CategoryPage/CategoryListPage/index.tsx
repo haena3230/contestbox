@@ -104,13 +104,6 @@ const Title=styled.Text`
   padding:20px 10px 10px 10px;
 `
 
-const PosterContainer=styled.TouchableOpacity`
-  align-items:center;
-  width:150px;
-  aspect-ratio:0.7;
-  margin-right:10px;
-`
-
 export default CategoryListPage;
 
 
