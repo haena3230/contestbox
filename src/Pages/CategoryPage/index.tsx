@@ -9,12 +9,12 @@ import styled from 'styled-components/native';
 // component
 import {CategoryPageProps} from '~/Types';
 import {newStateArray,CategoryView} from '~/Components/Filter';
-import Header from '~/Components/Header';
+import Loading from '~/Components/Loading';
+import { ErrorPage } from '~/Components/Error';
+import { CategotyDesign, CategotyIT, CategotyMusic, CategotySport, CategotyStudy, CategotyUCC } from '~/Components/CategoryBtn';
 // data
 import { useQuery } from '@apollo/client';
 import { GET_CATEGORIES } from '~/queries';
-import Loading from '~/Components/Loading';
-import { ErrorPage } from '~/Components/Error';
 
 const CategoryPage =({navigation}:CategoryPageProps)=>{
     useEffect(()=>{
@@ -39,8 +39,7 @@ const CategoryPage =({navigation}:CategoryPageProps)=>{
         <Box  key={data[0].id.toString()} onPress={()=>{
             navigation.push('CategoryListPage',{
                     categoryArray:newStateArray(data),
-                    typeArray:null,
-                    conditionArray:null,
+                    categoryIdArr:[data[0].id]
                 })
         }}>
             <CateText>{data[0].label}</CateText>
@@ -48,15 +47,29 @@ const CategoryPage =({navigation}:CategoryPageProps)=>{
         )
     }
     return(
-        <Container>
-            <Header />
-            <Title>카테고리</Title>
-            <ScrollView style={{padding:10}}>
+        <ScrollView>
+            <Container>
+                <Title>
+                    <Text style={Styles.m_b_font}>인기 카테고리</Text>
+                </Title>
+                <View style={{flexWrap:'wrap',flexDirection:'row', justifyContent:'space-between'}}>
+                    <CategotySport />
+                    <CategotyIT />
+                    <CategotyStudy />
+                    <CategotyUCC />
+                    <CategotyMusic />
+                    <CategotyDesign />
+                </View>
+                <Title>
+                    <Point>카테고리</Point>
+                    <Text style={Styles.mb_b_font}>를 통해 둘러보세요</Text>
+                </Title>
                 <View style={{flexDirection:'row',flexWrap:'wrap',justifyContent:'space-between'}}>
                     {categoryData}
                 </View>
-            </ScrollView>
-        </Container>
+
+            </Container>
+        </ScrollView>
     )
 }
 
@@ -64,21 +77,24 @@ const CategoryPage =({navigation}:CategoryPageProps)=>{
 export default CategoryPage;
 
 const Title=styled.Text`
-    ${Styles.m_b_font};
-    padding-horizontal:15px;
-    margin-top:10px;
+  margin:20px 0 15px 0;
+`
+
+const Point = styled.Text`
+  ${Styles.mb_b_font};
+  color:${Color.p_color};
 `
 
 const Box = styled.TouchableOpacity`
-    width:48%;
+    width:49%;
     padding-horizontal:8px;
     background-color:${Color.w_color};
     border-width:1px;
-    border-color:${Color.border_color};
+    border-color:${Color.border};
     border-radius:5px;
-    margin:3px;
+    margin-bottom:5px;
 `
 const CateText = styled.Text`
     ${Styles.m_m_font};
-    padding:5px;
+    padding-horizontal:10px;
 `

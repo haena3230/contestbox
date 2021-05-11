@@ -54,9 +54,9 @@ const SearchPage = ({navigation}:SearchPageProps) => {
         <Container>
             {/* search */}
             <Title>
-              <Text style={Styles.b_b_font}>어떤 </Text>
+              <Text style={Styles.mb_b_font}>어떤 </Text>
               <Point>대회</Point>
-              <Text style={Styles.b_b_font}>를 찾고계신가요?</Text>
+              <Text style={Styles.mb_b_font}>를 찾고계신가요?</Text>
             </Title>
             <View style={{width:'100%',alignItems:'center'}}>
               <SearchBar navigation={navigation}/>
@@ -109,7 +109,7 @@ const Title=styled.Text`
 `
 
 const Point = styled.Text`
-  ${Styles.b_b_font};
+  ${Styles.mb_b_font};
   color:${Color.p_color};
 `
 

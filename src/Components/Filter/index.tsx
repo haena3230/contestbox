@@ -38,9 +38,14 @@ export const newStateArray=(array:Array<any>)=>{
         return []
     }
     else{
-        let i=0;
+        let i;
         let state=[]
-        for(i=0;i<array.length;i++){
+        state.push({
+                id:array[0].id,
+                label:array[0].label,
+                value:true
+            })
+        for(i=1;i<array.length;i++){
             state.push({
                 id:array[i].id,
                 label:array[i].label,

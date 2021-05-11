@@ -17,31 +17,29 @@ interface TextListProps{
     poster:string;
     onPress:()=>void;
 }
-export const Immenent=(deadline)=>{
+export const status=(status,deadline)=>{
     // 현재로부터 7일 미만이면 마감임박
     let now = moment();        
     let after = moment(now).add(7,'days');
-    if(moment(now).isBefore(deadline)&&moment(after).isAfter(deadline))       
-    return <ImmenentRecruit />;
-}
-export const status=(status)=>{
-        switch(status){
-            case 'NOTSTARTED':
-                return <PreRecruit />;
-            case 'INPROGRESS':
-                return <Recruit />;
-            case 'COMPLETED':
-                return <NoRecruit />;
-        }
+    
+    switch(status){
+        case 'NOTSTARTED':
+            return <PreRecruit />;
+        case 'INPROGRESS':
+            if(moment(now).isBefore(deadline)&&moment(after).isAfter(deadline))       
+                return <ImmenentRecruit />;
+            else return <Recruit />;
+        case 'COMPLETED':
+            return <NoRecruit />;
     }
+}
 const TextList=({recruit,deadline,title,viewcount,categories,poster,onPress}:TextListProps)=>{
     
     return(
         <ListBox onPress={onPress}>
             <View style={{width:'75%',padding:10}}>
                 <Recruitbox>
-                    {status(recruit)}
-                    {Immenent(deadline)}
+                    {status(recruit,deadline)}
                 </Recruitbox>
                 <Title numberOfLines={1}>{title}</Title>
                 <ViewCount>조회수 {viewcount}</ViewCount>

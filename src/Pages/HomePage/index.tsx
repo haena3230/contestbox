@@ -18,7 +18,7 @@ import {useQuery} from '@apollo/client';
 import {GET_HOTS} from '~/queries';
 import {HomaPageProps} from '~/Types';
 import {newStateArray} from '~/Components/Filter';
-import { Immenent, status } from '~/Components/TextList';
+import { status } from '~/Components/TextList';
 
 const HomePage = ({navigation}:HomaPageProps) => {
   useEffect(()=>{
@@ -72,8 +72,7 @@ const HomePage = ({navigation}:HomaPageProps) => {
   //     })
   //   }>
   //     <Recruitbox>
-  //         {status(contest.node.application.status)}
-  //         {Immenent(contest.node.application.period.endAt)}
+  //         {status(contest.node.application.status,contest.node.application.period.endAt)}
   //     </Recruitbox>
   //     <Image
   //         source={{uri:`${contest.node.posterURL},w_297,h_420`}}
@@ -82,7 +81,7 @@ const HomePage = ({navigation}:HomaPageProps) => {
   //     <LinearGradient 
   //       colors={['transparent', Color.b_color]} 
   //       start={{ x: 0.5, y: 0.3 }} end={{ x: 0.5, y: 1 }}
-  //       style={{position:'absolute',width:'100%',height:'100%', opacity:0.7,bottom:10,borderRadius:10}} />
+  //       style={{position:'absolute',width:'100%',height:'100%', opacity:0.7,borderRadius:10}} />
   //     <PosterText numberOfLines={2}>{contest.node.title}</PosterText>
   //   </PosterContainer>
   //   )
@@ -173,21 +172,21 @@ const PosterContainer=styled.TouchableOpacity`
   align-items:center;
   width:50%;
   aspect-ratio:0.7;
-  padding:10px;
+  margin-right:10px;
 `
-const PosterText=styled.Text`
-  ${Styles.m_m_font};
+export const PosterText=styled.Text`
+  ${Styles.s_m_font};
   color:${Color.w_color};
   padding-horizontal:3px;
   position:absolute;
   padding:10px;
-  bottom:10px;
+  bottom:0;
 `
-const Recruitbox=styled.View`
+export const Recruitbox=styled.View`
   flex-direction:row;
   position:absolute;
-  left:20px;
-  bottom:75px;
+  left:10px;
+  bottom:60px;
   z-index:3;
 `
 export default HomePage;

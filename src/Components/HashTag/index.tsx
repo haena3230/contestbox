@@ -42,12 +42,11 @@ export const HashTag=({hashtag,picked}:HashTagProps)=>{
 // filter picked btn
 interface FilterPickedTagProps{
     text:string
-    onPress:()=>void
 }
 
-export const FilterPickedTag = ({text,onPress}:FilterPickedTagProps)=>{
+export const FilterPickedTag = ({text}:FilterPickedTagProps)=>{
     return(
-        <FilterPickedTagBox onPress={onPress}>
+        <FilterPickedTagBox>
             <BoxText>
                 {text}
             </BoxText>
@@ -55,6 +54,29 @@ export const FilterPickedTag = ({text,onPress}:FilterPickedTagProps)=>{
         </FilterPickedTagBox>
     )
 }
+
+// category list page tag
+interface CategoryListTagProps{
+    picked:boolean;
+    text:string
+}
+
+export const CategoryListTag = ({picked,text}:CategoryListTagProps)=>{
+    return(
+        picked?(
+            <CategoryListTagBox backgroundColor={Color.p_color}>
+                <PickedBoxText>{text}</PickedBoxText>
+            </CategoryListTagBox>
+        ):(
+            <CategoryListTagBox backgroundColor={Color.border}>
+                <BoxText>{text}</BoxText>
+            </CategoryListTagBox>
+        )
+        
+    )
+}
+
+
 // category tag of list box
 const ListBoxCategoryBox = styled.View`
     justify-content:center;
@@ -98,7 +120,7 @@ const HashTagContainer=styled.View`
 `
 
 // filter picked btn
-const FilterPickedTagBox=styled.TouchableOpacity`
+const FilterPickedTagBox=styled.View`
     background-color:${Color.w_color};
     border-width:1px;
     border-color:${Color.p_color};
@@ -109,5 +131,16 @@ const FilterPickedTagBox=styled.TouchableOpacity`
     align-items:center;
     margin-right:6px;
     padding:${DWidth>480? '0 20px 0 20px':'0 10px 0 10px'};
+`
 
+// category list tag
+const CategoryListTagBox=styled.View`
+    background-color:${(props:ContainerProps)=>props.backgroundColor?props.backgroundColor:Color.border};
+    border-radius:15px;
+    min-width:40px;
+    height:30px;
+    flex-direction:row;
+    align-items:center;
+    margin-right:6px;
+    padding:${DWidth>480? '0 20px 0 20px':'0 10px 0 10px'};
 `

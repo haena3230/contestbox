@@ -223,7 +223,7 @@ const SearchListPage =(props:SearchListPageProps)=>{
                 onPressTagTwo={onPressTagTwo}
                 onPressTagThree={onPressTagThree}
                 />
-                {totop&&!map?(
+                {totop?(
                     <ToTop onPressToTop={onPressToTop}/>
                 ):(
                     null

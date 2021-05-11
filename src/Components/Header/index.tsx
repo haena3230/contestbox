@@ -59,7 +59,7 @@ const HeaderContainer=styled.View`
     padding-vertical:5px;
 `
 const HeaderText=styled.Text`
-    ${Styles.b_b_font};
+    ${Styles.mb_b_font};
 `
 const Item=styled.View`
     padding-left:10px;

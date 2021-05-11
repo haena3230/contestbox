@@ -24,12 +24,12 @@ const SearchFilterPage =(props:SearchFilterPageProps)=>{
                 {/* picked  */}
                 <View style={{borderBottomWidth:1, borderBottomColor:Color.border}}>
                     <ScrollView horizontal={true} style={{flexWrap:'wrap',flexDirection:'row',marginLeft:20}}>
-                        <FilterPickedTag onPress={()=>null} text={'경진'}/>
-                        <FilterPickedTag onPress={()=>null} text={'경진'}/>
-                        <FilterPickedTag onPress={()=>null} text={'경진'}/>
-                        <FilterPickedTag onPress={()=>null} text={'경진'}/>
-                        <FilterPickedTag onPress={()=>null} text={'경진'}/>
-                        <FilterPickedTag onPress={()=>null} text={'경진'}/>
+                        <FilterPickedTag text={'경진'}/>
+                        <FilterPickedTag text={'경진'}/>
+                        <FilterPickedTag text={'경진'}/>
+                        <FilterPickedTag text={'경진'}/>
+                        <FilterPickedTag text={'경진'}/>
+                        <FilterPickedTag text={'경진'}/>
                     </ScrollView>
                     <TouchableOpacity onPress={()=>null} style={{alignItems:'flex-end',marginRight:20, paddingVertical:10}}>
                         <AllDeleteText>모두삭제</AllDeleteText>

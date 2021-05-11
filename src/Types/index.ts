@@ -22,8 +22,7 @@ type StackParamList={
   CategoryPage:undefined;
   CategoryListPage:{
     categoryArray:Array<ArrayProps>
-    typeArray:null|Array<ArrayProps>,
-    conditionArray:null|Array<ArrayProps>
+    categoryIdArr:Array<string>
   };
   DetailPage:{listId:string};
 };
