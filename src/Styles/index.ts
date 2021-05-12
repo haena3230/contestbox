@@ -100,6 +100,7 @@ export const Styles = StyleSheet.create({
  export const Container=styled.View`
   background-color:${Color.background};
   padding-horizontal:10px;
+  flex:1;
 `
 // 비율 
 interface flexProps{

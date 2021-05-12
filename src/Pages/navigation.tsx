@@ -13,6 +13,7 @@ import CategoryListPage from './CategoryPage/CategoryListPage';
 import DetailPage from './DetailPage';
 import LoginPage from './LoginPage';
 import CommunityPage from './CommunityPage';
+import CommunityDetailPage from './CommunityPage/CommunityDetailPage';
 import MyPage from './MyPage';
 
 // icon
@@ -120,6 +121,7 @@ const MainStackNavi=()=>{
         <Stack.Screen name="SearchListPage" component={SearchListPage} />
         <Stack.Screen name="SearchFilterPage" component={SearchFilterPage} />
         <Stack.Screen name="DetailPage" component={DetailPage} />
+        <Stack.Screen name="CommunityDetailPage" component={CommunityDetailPage} />
     </Stack.Navigator>
   )
 }

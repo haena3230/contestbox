@@ -6,18 +6,19 @@ import styled from 'styled-components/native'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import CommentIcon from '~/Assets/comment-regular.svg';
 
+
+// boxfeed
 interface BoxFeedProps{
     category:string;
     time:string;
     title:string;
     body:string;
-    onPressBody:()=>void;
     url:Array<string>
     comments:number
 }
 let Width = DWidth-60
 let HalfWidth = DWidth/2-35
-export const BoxFeed = ({category,time,title,body,onPressBody,url,comments}:BoxFeedProps) =>{
+export const BoxFeed = ({category,time,title,body,url,comments}:BoxFeedProps) =>{
     return(
         <BoxFeedContainer>
             {/* header */}
@@ -40,16 +41,14 @@ export const BoxFeed = ({category,time,title,body,onPressBody,url,comments}:BoxF
                     {title}
                 </Text>
                 <SFont numberOfLines={2} style={{marginVertical:5}}>{body}</SFont>
-                <TouchableOpacity onPress={onPressBody}>
-                    <SSFont>더보기...</SSFont>
-                </TouchableOpacity>
+                <SSFont>더보기...</SSFont>
                 {/* image */}
                 {!url?null:url.length==1?(
                         <Image style={{height:Width,width:Width, resizeMode:'cover',overflow:'hidden'}} source={
                             require('~/Assets/FirstBanner.png')
                         }/>
                     ):(
-                        <TouchableOpacity style={{flexDirection:'row', justifyContent:'space-between'}} onPress={onPressBody}>
+                        <View style={{flexDirection:'row', justifyContent:'space-between'}} >
                             <Image style={{height:HalfWidth,width:HalfWidth, resizeMode:'cover',overflow:'hidden'}} source={
                                 require('~/Assets/FirstBanner.png')
                             }/>
@@ -57,16 +56,48 @@ export const BoxFeed = ({category,time,title,body,onPressBody,url,comments}:BoxF
                                 require('~/Assets/SecondBanner.png')} />
                             <View style={{height:HalfWidth,width:HalfWidth, backgroundColor:Color.b_color,opacity:0.5,position:'absolute', bottom:0,right:0}} />
                             <ImgFont>+ {url.length-1}</ImgFont>
-                        </TouchableOpacity>
+                        </View>
                     )}
             </BoxFeedBox>
-            <Row style={{marginTop:10, justifyContent:'flex-end'}}>
-                <CommentIcon width={IconSize.sicon} height={IconSize.sicon} color={Color.b_color}/>
-                <SFont style={{marginLeft:10}}>{comments} 댓글</SFont>
+            <CommentBar comments={comments}/>
+        </BoxFeedContainer>
+    )
+}
+
+
+// listfeed
+interface ListFeedProps{
+    title:string,
+    category:string,
+    time:string,
+    comments:number
+}
+export const ListFeed = ({title,category,time,comments}:ListFeedProps)=>{
+    return(
+        <BoxFeedContainer style={{paddingTop:20,paddingLeft:20}}>
+            <MFont numberOfLines={1} >{title}</MFont>
+            <Row>
+                <SSFont>{category}</SSFont>
+                <View style={{borderRightWidth:1,borderColor:Color.border, height:15,marginHorizontal:10}} />
+                <SSFont>{time}</SSFont>
+                <View style={{borderRightWidth:1,borderColor:Color.border, height:15,marginHorizontal:10}} />
+                <SSFont>댓글 {comments}개</SSFont>
             </Row>
         </BoxFeedContainer>
     )
 }
+interface CommentProps{
+    comments:number
+}
+export const CommentBar = ({comments}:CommentProps)=>{
+    return(
+        <Row style={{marginTop:10, justifyContent:'flex-end'}}>
+            <CommentIcon width={IconSize.sicon} height={IconSize.sicon} color={Color.b_color}/>
+            <SFont style={{marginLeft:10}}>{comments} 댓글</SFont>
+        </Row>
+    )
+}
+
 
 // boxfeed 
 const BoxFeedContainer = styled.View`
