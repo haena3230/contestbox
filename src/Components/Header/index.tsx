@@ -7,8 +7,7 @@ import BackIcon from '~/Assets/chevron-left-solid.svg';
 import {Color,Styles,IconSize} from '~/Styles'
 import styled from 'styled-components/native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-
-
+import { Text, View } from 'react-native';
 
 const Header=()=>{
     return(
@@ -39,16 +38,27 @@ export const PageHeader = ({pageName,onPressClose}:PageHeaderProps)=>{
     )
 }
 
-
-// 닫기 버튼
-interface CloseBtnProps{
+// 완료 버튼 있는 header
+interface SubmitHeaderProps{
+    pageName:string;
     onPressClose:()=>void;
+    onPressSubmit:()=>void;
 }
-const Close = ({onPressClose}:CloseBtnProps)=>{
+export const SubmitHeader = ({pageName,onPressClose,onPressSubmit}:SubmitHeaderProps)=>{
     return(
-        <TouchableOpacity onPress={onPressClose}>
-                <CloseBtn>닫기</CloseBtn>
-        </TouchableOpacity>  
+        <View style={{flexDirection:'row', justifyContent:'space-between', alignItems:'center', width:'100%'}}>
+            <SubmitHeaderContainer>
+                <Item>
+                    <BackIcon width={IconSize.sicon} height={IconSize.sicon} color={Color.gray} onPress={onPressClose}/>
+                </Item>
+                <Item>
+                    <HeaderText>{pageName}</HeaderText>
+                </Item>
+            </SubmitHeaderContainer>
+            <TouchableOpacity onPress={onPressSubmit} style={{marginRight:10}}>
+                <HeaderText>완료</HeaderText>
+            </TouchableOpacity>
+        </View>
     )
 }
 
@@ -56,18 +66,17 @@ const HeaderContainer=styled.View`
     width:100%;
     flex-direction:row;
     align-items:center;
-    padding-vertical:5px;
+`
+
+const SubmitHeaderContainer=styled.View`
+    flex-direction:row;
+    align-items:center;
 `
 const HeaderText=styled.Text`
     ${Styles.mb_b_font};
 `
 const Item=styled.View`
     padding-left:10px;
-`
-// close
-const CloseBtn=styled.Text`
-    ${Styles.m_font};
-    padding-right:15px;
 `
 
 export default Header

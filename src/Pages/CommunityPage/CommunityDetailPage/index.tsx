@@ -1,6 +1,6 @@
 // community detail page
 import React, { useRef, useState } from 'react';
-import { Image, Text, TextInput, View } from 'react-native';
+import { Image, Keyboard, Text, TextInput, View } from 'react-native';
 import { PageHeader } from '~/Components/Header';
 import { Container, Styles, Color, IconSize } from '~/Styles';
 import { CommunityDetailPageProps } from '~/Types';
@@ -10,6 +10,7 @@ import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import SendIcon from '~/Assets/send_black_24dp.svg'
 import { InfoModalComponent } from '~/Components/Modal';
 import ToTop from '~/Components/ToTop';
+import { TouchableWithoutFeedback } from 'react-native';
 
 
 const CommunityDetailPage = (props:CommunityDetailPageProps)=>{
@@ -96,16 +97,18 @@ const BottomBar = ()=>{
   }
     return(
         <BottomBarContainer>
-            <View style={{backgroundColor:Color.border,borderRadius:10,paddingLeft:10, width:'85%'}}>
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 <TextInput 
-                style={Styles.m_font} 
+                style={{
+                    backgroundColor:Color.border,borderRadius:10,paddingLeft:10, width:'85%'
+                }} 
                 placeholder={'댓글을 입력하세요...'} 
                 value={text} 
                 onChangeText={(text)=>{setText(text)}} 
                 onSubmitEditing={onSubmet}
                 maxLength={100}
                 />
-            </View>
+            </TouchableWithoutFeedback>
             <TouchableOpacity onPress={onSubmet} >
                 <SendIcon width={IconSize.bicon} height={IconSize.bicon} fill={Color.p_color}/>
             </TouchableOpacity>

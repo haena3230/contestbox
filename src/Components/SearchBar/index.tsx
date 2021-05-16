@@ -1,6 +1,6 @@
 // searchbar
 import React,{useState} from 'react';
-import {TouchableOpacity,TextInput, View} from 'react-native';
+import {TouchableOpacity,TextInput, View, TouchableWithoutFeedback, Keyboard} from 'react-native';
 import {Color,IconSize,Styles} from '~/Styles';
 import styled from 'styled-components/native';
 import {SearchPageProps} from '~/Types';
@@ -28,25 +28,28 @@ export const SearchBar=({navigation}:SearchPageProps)=>{
     }
   }
   return(
-    <SearchBarStyle>
-      <TouchableOpacity onPress={onSubmet} style={{paddingHorizontal:15}}>
-        <Search height={IconSize.sicon} width={IconSize.sicon} color={Color.gray}/>
-      </TouchableOpacity>
-      <View style={{alignItems:'center'}}>
-        <TextInput 
-          style={Styles.m_font} 
-          placeholder={'검색어를 입력해 주세요.'} 
-          value={searchText} 
-          onChangeText={(text)=>{setSearchText(text)}} 
-          onSubmitEditing={onSubmet}
-          maxLength={35}
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <SearchBarStyle>
+        <TouchableOpacity onPress={onSubmet} style={{paddingHorizontal:15}}>
+          <Search height={IconSize.sicon} width={IconSize.sicon} color={Color.gray}/>
+        </TouchableOpacity>
+        <View style={{alignItems:'center'}}>
+
+          <TextInput 
+            style={Styles.m_font} 
+            placeholder={'검색어를 입력해 주세요.'} 
+            value={searchText} 
+            onChangeText={(text)=>{setSearchText(text)}} 
+            onSubmitEditing={onSubmet}
+            maxLength={35}
+            />
+          </View>
+          <InfoModalComponent 
+            Info={'검색어를 입력해 주세요.'}
+            modalVisible={infoModal}
           />
-        </View>
-        <InfoModalComponent 
-          Info={'검색어를 입력해 주세요.'}
-          modalVisible={infoModal}
-        />
-    </SearchBarStyle>
+      </SearchBarStyle>
+    </TouchableWithoutFeedback>
   )
 }
 const SearchBarStyle=styled.View`

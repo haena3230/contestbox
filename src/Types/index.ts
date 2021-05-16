@@ -27,6 +27,7 @@ type StackParamList={
   DetailPage:{listId:string};
   CommunityPage:undefined
   CommunityDetailPage:{category:string}
+  CommunityAddPage:undefined
   MyPage:undefined;
   LoginPage:undefined
 };
@@ -71,6 +72,11 @@ export interface CommunityDetailPageProps {
   navigation: StackNavigationProp<StackParamList, 'CommunityPage'>;
   route: RouteProp<StackParamList, 'CommunityDetailPage'>;
 }
+
+export interface CommunityAddPageProps {
+  navigation: StackNavigationProp<StackParamList, 'CommunityAddPage'>;
+}
+
 
 // sort 
 export interface SortStatus{

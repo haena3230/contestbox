@@ -65,7 +65,7 @@ const CommunityPage= ({navigation}:CommunityPageProps)=>{
                     )}
                 </Container>
             </ScrollView>
-            <AddBtn onPressAddBtn={onPressFeed}/>
+            <AddBtn onPressAddBtn={()=>navigation.navigate('CommunityAddPage')}/>
         </View>
     )
 }
