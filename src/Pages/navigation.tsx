@@ -10,17 +10,25 @@ import SearchListPage from './SearchPage/SearchListPage';
 import SearchFilterPage from './SearchPage/SearchFilterPage';
 import CategoryPage from './CategoryPage';
 import CategoryListPage from './CategoryPage/CategoryListPage';
-import CategoryFilterPage from './CategoryPage/CategoryFilterPage';
 import DetailPage from './DetailPage';
+import LoginPage from './LoginPage';
+import CommunityPage from './CommunityPage';
+import CommunityDetailPage from './CommunityPage/CommunityDetailPage';
+import CommunityAddPage from './CommunityPage/CommunityAddPage';
+import MyPage from './MyPage';
+import ManageMyPage from './MyPage/ManageMyPage';
 
 // icon
-import Home from '~/Assets/Home.svg';
-import Flame from '~/Assets/fire-solid.svg';
-import Search from '~/Assets/compass-solid.svg';
+import Search from '~/Assets/search-solid.svg';
+import Category from '~/Assets/category_black_24dp.svg'
+import Home from '~/Assets/home_black_24dp.svg';
+import Community from '~/Assets/forum_black_24dp.svg'
+import User from '~/Assets/assignment_ind_black_24dp.svg'
 
 // style
 import {Color,Styles,IconSize,DWidth} from '~/Styles';
 import styled from 'styled-components/native';
+import ScrapListPage from './MyPage/ScrapListPage';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -43,21 +51,34 @@ function MainTabNavi() {
           tabBarIcon: ({focused}) => {
             if (route.name === '검색') {
               return (
-                focused?<Search height={IconSize.icon} width={IconSize.icon} color={Color.p_color}/>
-              :<Search height={IconSize.icon} width={IconSize.icon} color={Color.g4_color} />
+                focused?<Search height={IconSize.sicon} width={IconSize.sicon} color={Color.p_color}/>
+              :<Search height={IconSize.sicon} width={IconSize.sicon} color={Color.gray} />
                 );
-            } else if (route.name === '홈') {
-              return (
-                focused?<Home height={IconSize.icon} width={IconSize.icon} fill={Color.p_color} />
-                :<Home height={IconSize.icon} width={IconSize.icon} fill={Color.g4_color} />
-              
-              );
             } else if (route.name === '카테고리') {
               return (
-                focused?<Flame height={IconSize.icon} width={IconSize.icon} color={Color.p_color} />
-                :<Flame height={IconSize.icon} width={IconSize.icon} color={Color.g4_color} />
+                focused?<Category height={IconSize.icon} width={IconSize.icon} fill={Color.p_color} />
+                :<Category height={IconSize.icon} width={IconSize.icon} fill={Color.gray} />
+              );
+            } else if (route.name === '홈') {
+              return (
+                focused?<Home height={IconSize.bicon} width={IconSize.bicon} fill={Color.p_color} />
+                :<Home height={IconSize.bicon} width={IconSize.bicon} fill={Color.gray} />
+              
+              );
+            } else if (route.name === '커뮤니티') {
+              return (
+                focused?<Community height={IconSize.icon} width={IconSize.icon} fill={Color.p_color} />
+                :<Community height={IconSize.icon} width={IconSize.icon} fill={Color.gray} />
+              
+              );
+            } else if (route.name === 'My') {
+              return (
+                focused?<User height={IconSize.icon} width={IconSize.icon} fill={Color.p_color} />
+                :<User height={IconSize.icon} width={IconSize.icon} fill={Color.gray} />
+              
               );
             } 
+
           },
           tabBarLabel: ({ focused}) => {
             let label;
@@ -65,60 +86,30 @@ function MainTabNavi() {
               case '검색':
                 return label = focused ? <FocusedText>검색</FocusedText> 
                 : <NText>검색</NText> 
-              case '홈':
-                return label = focused ? <FocusedText>홈</FocusedText> 
-                : <NText>홈</NText> 
               case '카테고리':
                 return label = focused ? <FocusedText>카테고리</FocusedText> 
                 : <NText>카테고리</NText> 
+              case '홈':
+                return null
+              case '커뮤니티':
+                return label = focused ? <FocusedText>커뮤니티</FocusedText> 
+                : <NText>커뮤니티</NText>
+              case 'My':
+                return label = focused ? <FocusedText>My</FocusedText> 
+                : <NText>My</NText>  
+              
             }
             return label
           }
         })}
       >
-        <Tab.Screen name="검색" component={SearchStackNavi} />
-        <Tab.Screen name="홈" component={HomePageStackNavi} />
-        <Tab.Screen name="카테고리" component={CategoryStackNavi} />
+        <Tab.Screen name="검색" component={SearchPage} />
+        <Tab.Screen name="카테고리" component={CategoryPage} />
+        <Tab.Screen name="홈" component={HomePage} />
+        <Tab.Screen name="커뮤니티" component={CommunityPage} />
+        <Tab.Screen name="My" component={MyPage} />
     </Tab.Navigator>
   );
-}
-
-const HomePageStackNavi=()=>{
-  return(
-    <Stack.Navigator
-      screenOptions={{
-        headerShown:false,
-      }}>
-      <Stack.Screen name="HomePage" component={HomePage}/>
-      <Stack.Screen name="CategoryListPage" component={CategoryListPage} />
-      <Stack.Screen name="DetailPage" component={DetailPage} />
-    </Stack.Navigator>
-  )
-}
-const SearchStackNavi=()=>{
-  return(
-    <Stack.Navigator
-      screenOptions={{
-        headerShown:false,
-      }}>
-        <Stack.Screen name="SearchPage" component={SearchPage} />
-        <Stack.Screen name="CategoryListPage" component={CategoryListPage} />
-        <Stack.Screen name="SearchListPage" component={SearchListPage} />
-        <Stack.Screen name="DetailPage" component={DetailPage} />
-    </Stack.Navigator>
-  )
-}
-const CategoryStackNavi=()=>{
-  return(
-    <Stack.Navigator
-      screenOptions={{
-        headerShown:false,
-      }}>
-        <Stack.Screen name="CategoryPage" component={CategoryPage} />
-        <Stack.Screen name="CategoryListPage" component={CategoryListPage} />
-        <Stack.Screen name="DetailPage" component={DetailPage} />
-    </Stack.Navigator>
-  )
 }
 
 // main stack
@@ -129,8 +120,14 @@ const MainStackNavi=()=>{
         headerShown:false,
       }}>
         <Stack.Screen name="MainTabNavi" component={MainTabNavi} />
-        <Stack.Screen name="CategoryFilterPage" component={CategoryFilterPage} />
+        <Stack.Screen name="CategoryListPage" component={CategoryListPage} />
+        <Stack.Screen name="SearchListPage" component={SearchListPage} />
         <Stack.Screen name="SearchFilterPage" component={SearchFilterPage} />
+        <Stack.Screen name="DetailPage" component={DetailPage} />
+        <Stack.Screen name="CommunityDetailPage" component={CommunityDetailPage} />
+        <Stack.Screen name="CommunityAddPage" component={CommunityAddPage} />
+        <Stack.Screen name="ManageMyPage" component={ManageMyPage} />
+        <Stack.Screen name="ScrapListPage" component={ScrapListPage} />
     </Stack.Navigator>
   )
 }
@@ -139,9 +136,9 @@ export default MainStackNavi;
 
 const FocusedText=styled.Text`
   color : ${Color.p_color};
-  ${Styles.ss_font};
+  ${Styles.s_font};
 `
 const NText=styled.Text`
-  color : ${Color.g4_color};
-  ${Styles.ss_font};
+  color : ${Color.b_color};
+  ${Styles.s_font};
 `

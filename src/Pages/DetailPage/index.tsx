@@ -1,18 +1,22 @@
 // list detail Page
-import React,{useRef, useState} from 'react';
+import React,{ useRef, useState} from 'react';
 import {View,Text} from 'react-native';
+// library
 import moment from 'moment';
+import ImageViewer from 'react-native-image-zoom-viewer';
+import Modal from 'react-native-modal';
 // style
 import {Color,Container, Styles,IconSize,DWidth} from '~/Styles';
 import styled from 'styled-components/native';
 // components
 import ToTop from '~/Components/ToTop';
-import { ScrollView } from 'react-native-gesture-handler';
-import {HashTag} from '~/Components/HashTag';
+import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
+import {CategoryListTag} from '~/Components/HashTag';
 import Loading from '~/Components/Loading';
-import {OpenURLBtn} from '~/Components/Btn';
+import {BottomOpenURLBtn, OpenURLBtn} from '~/Components/Btn';
 import MarkIcon from '~/Assets/map-marker-alt-solid.svg';
 import Markdown from 'react-native-markdown-display';
+import Star from '~/Assets/star_outline_black_24dp.svg'
 // navi
 import {DetailPageProps} from '~/Types';
 import {SmallMap} from '~/Components/Map';
@@ -21,7 +25,10 @@ import { useQuery } from '@apollo/client';
 import {GET_DETAILS} from '~/queries';
 import { ErrorPage } from '~/Components/Error';
 
+
 const DetailPage =(props:DetailPageProps)=>{
+    // image viewer
+    const[imgModal,setImgModal]=useState<boolean>(false);
     // totop
     const scrollRef=useRef<ScrollView>();
     const[totop,setTotop]=useState<Boolean>(false);
@@ -58,59 +65,86 @@ const DetailPage =(props:DetailPageProps)=>{
     
     return(
         <Container>
-            <Box>
-                <ScrollView 
-                    ref={scrollRef}
-                    onScroll={(e)=>{
-                        if (e.nativeEvent.contentOffset.y===0){
-                            setTotop(false);
-                        }                            
-                    }}
-                    onScrollBeginDrag={()=>setTotop(true)}
-                    >
+            <ScrollView 
+            ref={scrollRef}
+            onScroll={(e)=>{
+                if (e.nativeEvent.contentOffset.y===0){
+                    setTotop(false);
+                }                            
+            }}
+            onScrollBeginDrag={()=>setTotop(true)}
+            >
+                <Box>
                     {!data.contest.posterURL?null:(
-                        <Poster source={{
-                            uri:`${data.contest.posterURL},w_594,h_840`
-                        }}/>      
+                        <TouchableOpacity onPress={()=>setImgModal(!imgModal)}>
+                            <Poster source={{
+                                uri:`${data.contest.posterURL},w_594,h_840`
+                            }}/>      
+                            <Modal isVisible={imgModal} backdropOpacity={1} onBackdropPress={()=>setImgModal(!imgModal)}>
+                                <ImageViewer 
+                                imageUrls={[{url: `${data.contest.posterURL},w_594,h_840`}]} 
+                                enableSwipeDown={true} 
+                                onSwipeDown={()=>setImgModal(!imgModal)} />
+                            </Modal>
+                        </TouchableOpacity>
                     )}
-                    
-                    <Title>{data.contest.title}</Title>
-                    <TextBox>
+                    <ComponentBox>
+                        <Title>{data.contest.title}</Title>
                         <Text style={Styles.s_font}>조회수 {data.contest.hits}</Text>
-                    </TextBox>
+                    </ComponentBox>
                     {!data.contest.categories?null:(
-                        <View>
+                        <ComponentBox>
                             <ContentTitle>카테고리</ContentTitle>
                             <TagBox>
                             {data.contest.categories.map((data)=>{
                                 return(
-                                    <HashTag key= {data.id} hashtag={data.label} picked={false}/>
+                                    <TouchableOpacity onPress={()=>
+                                        props.navigation.navigate('SearchListPage',{
+                                            search:data.label,
+                                            typeArray:null,
+                                            conditionArray:null,
+                                            })}
+                                        key= {data.id}
+                                        style={{paddingBottom:10}}
+                                        >
+                                        <CategoryListTag text={data.label} picked={false}/>
+                                    </TouchableOpacity>
                                 )
                             })}
                             </TagBox>
-                        </View>
+                        </ComponentBox>
                     )}
                     {!data.contest.types?null:(
-                        <View>
+                        <ComponentBox>
                             <ContentTitle>참여조건</ContentTitle>
                             <TagBox>
                                 {data.contest.types.map((data)=>{
                                     return(
-                                        <HashTag key = {data.id} hashtag={data.label} picked={false}/>
+                                        <TouchableOpacity onPress={()=>
+                                            props.navigation.navigate('SearchListPage',{
+                                                search:data.label,
+                                                typeArray:null,
+                                                conditionArray:null,
+                                                })}
+                                            key= {data.id}
+                                            style={{paddingBottom:10}}>
+                                            <CategoryListTag text={data.label} picked={false}/>
+                                        </TouchableOpacity>
                                     )
                                 })}
                             </TagBox>
-                        </View>
+                        </ComponentBox>
                     )}
-                    
-                    <Period Start={PeriodSplit(data.contest.application.period.startAt)} End={PeriodSplit(data.contest.application.period.endAt)}/>
-                    {!data.contest.siteURL?null:(
-                       <View style={{width:'100%',alignItems:'flex-end'}}>
+                    <ComponentBox>
+                        <Period Start={PeriodSplit(data.contest.application.period.startAt)} End={PeriodSplit(data.contest.application.period.endAt)}/>
+                        {!data.contest.siteURL?null:(
+                        <View style={{width:'100%',alignItems:'flex-end', paddingTop:10}}>
                             <OpenURLBtn url={data.contest.siteURL}>홈페이지</OpenURLBtn>
                         </View>
-                    )}
+                        )}
+                    </ComponentBox>
                     {!data.contest.content?null:(
-                        <View>
+                        <ComponentBox>
                             <ContentTitle>상세내용</ContentTitle>
                             <Markdown
                                 style={{
@@ -120,7 +154,7 @@ const DetailPage =(props:DetailPageProps)=>{
                                         marginVertical:10,
                                         paddingVertical:10,
                                         borderTopWidth:2,
-                                        borderColor:Color.g1_color
+                                        borderColor:Color.border
                                     },
                                     heading2: {
                                         fontSize: DWidth > 480 ? 22 : 18,
@@ -128,7 +162,7 @@ const DetailPage =(props:DetailPageProps)=>{
                                         marginVertical:10,
                                         paddingVertical:10,
                                         borderTopWidth:2,
-                                        borderColor:Color.g1_color
+                                        borderColor:Color.border
                                     },
                                     heading3: {
                                         fontSize: DWidth > 480 ? 20 : 16,
@@ -136,7 +170,7 @@ const DetailPage =(props:DetailPageProps)=>{
                                         marginVertical:10,
                                         paddingVertical:10,
                                         borderTopWidth:2,
-                                        borderColor:Color.g1_color
+                                        borderColor:Color.border
                                     },
                                     heading4: {
                                         fontSize: DWidth > 480 ? 20 : 16,
@@ -144,7 +178,7 @@ const DetailPage =(props:DetailPageProps)=>{
                                         marginVertical:10,
                                         paddingVertical:10,
                                         borderTopWidth:2,
-                                        borderColor:Color.g1_color
+                                        borderColor:Color.border
                                     },
                                     heading5: {
                                         fontSize: DWidth > 480 ? 18 : 16,
@@ -152,7 +186,7 @@ const DetailPage =(props:DetailPageProps)=>{
                                         marginVertical:10,
                                         paddingVertical:10,
                                         borderTopWidth:2,
-                                        borderColor:Color.g1_color
+                                        borderColor:Color.border
                                     },
                                     heading6: {
                                         fontSize: DWidth > 480 ? 16 : 12,
@@ -160,33 +194,35 @@ const DetailPage =(props:DetailPageProps)=>{
                                         marginVertical:10,
                                         paddingVertical:10,
                                         borderTopWidth:2,
-                                        borderColor:Color.g1_color
+                                        borderColor:Color.border
                                     },
                                     code_block:{
-                                        backgroundColor:Color.g2_color,
+                                        backgroundColor:Color.artbox,
                                     },
                                     code_inline:{
-                                        backgroundColor:Color.g4_color,
+                                        backgroundColor:Color.artbox,
                                         color:Color.w_color
                                     }
                                 }}    
                             >
                                 {data.contest.content}
                             </Markdown>
-                        </View>
+                        </ComponentBox>
                     )}
                     {!data.contest.place?null:(
+                        <ComponentBox>
                         <MapPart 
                             alias={data.contest.place.alias}
                             place={data.contest.place.fullAddress} 
                             lat={data.contest.place.latLng.lat} 
                             lng={data.contest.place.latLng.lng}
-                            />
+                            /></ComponentBox>
                     )}
-                    
-                </ScrollView>
-            </Box>
-            {totop?<ToTop onPressToTop={onPressToTop}/>:null}
+                </Box>
+            </ScrollView>
+            {totop?
+            <View style={{bottom:40}}><ToTop onPressToTop={onPressToTop}/></View>:null}
+            <BottomBtn url={data.contest.siteURL} onPressScrab={()=>null}/>
         </Container>
     )
 }
@@ -248,7 +284,7 @@ interface MapPartProps{
 const MapPart=({alias,place,lat,lng}:MapPartProps)=>{
     return(
         <View style={{marginBottom:30}}>
-            <View style={{flexDirection:'row',alignItems:'flex-end',justifyContent:'space-between'}}>
+            <View style={{flexDirection:'row',alignItems:'center',justifyContent:'space-between'}}>
                 <ContentTitle>대회 장소</ContentTitle>
                 <MapText>{alias}</MapText>
             </View>
@@ -261,37 +297,51 @@ const MapPart=({alias,place,lat,lng}:MapPartProps)=>{
                     />
             </MapBox>
             <View style={{flexDirection:'row',alignItems:'flex-start'}}>
-                <MarkIcon width={IconSize.sicon} height={IconSize.sicon} color={Color.g4_color} />
+                <MarkIcon width={IconSize.sicon} height={IconSize.sicon} color={Color.gray} />
                 <MapText>{place}</MapText>
             </View>
         </View>
     )
 }
 
+// bottom btn
+interface BottomBtnProps{
+    onPressScrab:()=>void;
+    url:string;
+}
+const BottomBtn = ({onPressScrab,url}:BottomBtnProps)=>{
+    return(
+        <BottomBtnContainer>
+            <BottomOpenURLBtn url={url}/>
+            <BottomBtnBox style={{padding:10,flexDirection:'row'}} onPress={onPressScrab}>
+                <Star width={IconSize.sicon} height={IconSize.sicon} fill={Color.gray}/>
+                <BottomBoxText>스크랩</BottomBoxText>
+            </BottomBtnBox>
+        </BottomBtnContainer>
+    )
+}
+
 // detail page
 const Box=styled.View`
-    margin:5px;
     background-color:${Color.w_color};
     border-radius:7px;
     padding:10px;
     border-width:1px;
-    border-color:${Color.g1_color};
+    border-color:${Color.border};
+    margin-bottom:60px;
 `
-
+const ComponentBox=styled.View`
+    margin-top:30px;
+`
 const Poster =styled.Image`
     width:100%;
     aspect-ratio:0.7;
     border-radius:10px;
     overflow:hidden;
-`
-const TextBox=styled.View`
-    margin-vertical:5px;
+    background-color:gray;
 `
 const ContentTitle=styled.Text`
-    ${Styles.m_font};
-    font-weight:bold;
-    margin-top:20px;
-    margin-bottom:5px;
+    ${Styles.m_b_font};
 `
 const TagBox=styled.View`
     flex-direction:row;
@@ -299,15 +349,13 @@ const TagBox=styled.View`
 `
 
 const Title=styled.Text`
-    ${Styles.b_font};
-    font-weight:bold;
-    margin-vertical:10px;
+    ${Styles.b_b_font};
 `
 
 const MapBox=styled.View`
     border-width:1px;
     border-radius:10px;
-    border-color:${Color.g1_color};
+    border-color:${Color.border};
     overflow:hidden;
     height:200px;
     margin-vertical:10px;
@@ -317,23 +365,47 @@ const MapBox=styled.View`
 const PeriodContainer=styled.View`
     flex-direction:row;
     justify-content:space-around;
-    background-color:${Color.g2_color};
+    background-color:${Color.border};
     border-radius:10px;
-    padding:10px;
-    margin-vertical:20px;
+    padding:20px;
 `
 const Time=styled.View`
     flex-direction:row;
 `
 const TimeText =styled.Text`
-    ${Styles.ss_font};
+    ${Styles.s_m_font};
     margin-horizontal:3px;
 `
 
 // map
 const MapText=styled.Text`
     ${Styles.s_font};
-    color:${Color.g4_color};
+    color:${Color.gray};
     margin-horizontal:3px;
+`
+
+// bottom btn
+const BottomBtnContainer = styled.View`
+    background-color:${Color.artbox};
+    border-width:1px;
+    border-color:${Color.p_color};
+    border-radius:10px;
+    flex-direction:row;
+    width:100%;
+    position:absolute;
+    margin:10px;
+    bottom:0;
+    justify-content:center;
+`
+const BottomBtnBox = styled.TouchableOpacity`
+    width:50%;
+    flex-direction:row;
+    align-items:center;
+    justify-content:center;
+`
+const BottomBoxText = styled.Text`
+    margin-left:10px;
+    ${Styles.m_font};
+    color:${Color.gray};
 `
 export default DetailPage;

@@ -22,6 +22,12 @@ export const GET_HOTS = gql`
           hits
           title
           posterURL
+          application{
+            period{
+              endAt
+            }
+            status
+          }
         }
       }
     }
@@ -30,14 +36,14 @@ export const GET_HOTS = gql`
 export const GET_SEARCH_LISTS= gql`
   query GetLists ($first:Int,$after:ID,$categories:[ID!],$search:String,$sort:ContestsSortType,$conditions:[ID!],$types:[ID!],$place:LatLngBoxInput){
     types{
-        id
-        label
-      }
-      conditions{
-        id
-        label
-      }
-    contests(first:$first,after:$after,categories:$categories,search:$search,sort:$sort,conditions:$conditions,types:$types,place:$place) {
+      id
+      label
+    }
+    conditions{
+      id
+      label
+    }
+    contests(first:$first,after:$after,categories:$categories,search:$search,sort:$sort,conditions:$conditions,types:$types) {
       pageInfo{
         endCursor
         hasNextPage
@@ -58,31 +64,15 @@ export const GET_SEARCH_LISTS= gql`
             }
           }
           posterURL
-          place{
-              alias
-              fullAddress
-              latLng{
-                lat
-                lng
-              }
-            }
         }
       }
     }
   }
 `;
 
-export const GET_CATEGORY_LISTS= gql`
-  query GetLists ($first:Int,$after:ID,$categories:[ID!],$search:String,$sort:ContestsSortType,$conditions:[ID!],$types:[ID!],$place:LatLngBoxInput){
-    types{
-        id
-        label
-      }
-      conditions{
-        id
-        label
-      }
-    contests(first:$first,after:$after,categories:$categories,search:$search,sort:$sort,conditions:$conditions,types:$types,place:$place) {
+export const GET_CATEGORY_LIST_HOTS= gql`
+  query GetListHot ($first:Int,$after:ID,$categories:[ID!],$sort:ContestsSortType){
+    contests(first:$first,after:$after,categories:$categories,sort:$sort) {
       pageInfo{
         endCursor
         hasNextPage
@@ -91,7 +81,6 @@ export const GET_CATEGORY_LISTS= gql`
         node{
           id
           title
-          hits
           categories{
             id
             label
@@ -103,19 +92,69 @@ export const GET_CATEGORY_LISTS= gql`
             }
           }
           posterURL
-          place{
-              alias
-              fullAddress
-              latLng{
-                lat
-                lng
-              }
-            }
         }
       }
     }
   }
 `;
+
+export const GET_CATEGORY_LIST_LATEST= gql`
+  query GetListLatest ($first:Int,$after:ID,$categories:[ID!],$sort:ContestsSortType){
+    contests(first:$first,after:$after,categories:$categories,sort:$sort) {
+      pageInfo{
+        endCursor
+        hasNextPage
+      }
+      edges{
+        node{
+          id
+          title
+          categories{
+            id
+            label
+          }
+          application{
+            status
+            period{
+              endAt
+            }
+          }
+          posterURL
+        }
+      }
+    }
+  }
+`;
+
+export const GET_CATEGORY_LIST_IMM= gql`
+  query GetListImm ($first:Int,$after:ID,$categories:[ID!],$sort:ContestsSortType){
+    contests(first:$first,after:$after,categories:$categories,sort:$sort) {
+      pageInfo{
+        endCursor
+        hasNextPage
+      }
+      edges{
+        node{
+          id
+          title
+          categories{
+            id
+            label
+          }
+          application{
+            status
+            period{
+              endAt
+            }
+          }
+          posterURL
+        }
+      }
+    }
+  }
+`;
+
+
 
  export const GET_DETAILS= gql`
     query ($id:ID!){

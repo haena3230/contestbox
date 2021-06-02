@@ -1,101 +1,120 @@
 // main home page
 import React, { useEffect } from 'react';
-import {View, TouchableOpacity, Text,StyleSheet, Image} from 'react-native';
+import {View, TouchableOpacity, Text,StyleSheet, Image,ScrollView} from 'react-native';
 import styled from 'styled-components/native';
-import { ScrollView } from 'react-native-gesture-handler';
+import LinearGradient from 'react-native-linear-gradient';
+
 // component
 import Header from '~/Components/Header';
-import {Container,Styles,Color,DWidth,ComponentContainer} from '~/Styles';
+import {Container,Styles,Color,DWidth, DHeight} from '~/Styles';
 import Swiper from 'react-native-swiper';
 import {HashTag} from '~/Components/HashTag';
 import Loading from '~/Components/Loading';
 import {CategoryView} from '~/Components/Filter';
 import {ErrorPage} from '~/Components/Error';
+import {CategotySport, CategotyIT,CategotyStudy,CategotyUCC,CategotyMusic,CategotyDesign, TypeFirst, TypeSecond, TypeThird} from '~/Components/CategoryBtn';
 // data
 import {useQuery} from '@apollo/client';
 import {GET_HOTS} from '~/queries';
 import {HomaPageProps} from '~/Types';
 import {newStateArray} from '~/Components/Filter';
+import { status } from '~/Components/TextList';
 
 const HomePage = ({navigation}:HomaPageProps) => {
   useEffect(()=>{
     console.log('home')
   },[])
   // catrgory && hot data
-  const { loading, error, data,refetch } = useQuery(GET_HOTS,{
-    variables:{
-      existPoster:true,
-      sort:'HITS',
-      applicationStatuses:['NOTSTARTED','INPROGRESS'],
-      first:15
-    },
-    fetchPolicy:'cache-and-network'
-  });
-  let categoriesData=[];
-  let hotData='';
-  if(loading) return <Loading />
-  if(error)return <ErrorPage onPress={async ()=>{
-    try{
-        await refetch({
-            existPoster:true,
-            sort:'HITS',
-            applicationStatuses:['NOTSTARTED','INPROGRESS'],
-            first:15
-        })
-        console.log('refetch')
-    } catch(e){
-        console.log('refetch err')
-    }}} />
-  if(data.categories){
-    // max 10개
-    categoriesData=CategoryView(data.categories).slice(0,9).map((cate)=>
-    <TouchableOpacity  
-        key = {cate[0].id} onPress={()=>{
-        navigation.navigate('CategoryListPage',{
-          categoryArray:newStateArray(cate),
-          typeArray:null,
-          conditionArray:null,
-        });
-        }}>
-      <HashTag hashtag={cate[0].label} picked={false}/>
-    </TouchableOpacity>
-    )
-  }
-  if(data.contests){
-    hotData=data.contests.edges.map((contest)=>
-    <PosterContainer key = {contest.node.id.toString()} onPress={()=>
-      navigation.push('DetailPage',{
-        listId:contest.node.id
-      })
-    }>
-      <Poster source={{uri:`${contest.node.posterURL},w_297,h_420`}}/>
-      <PosterText numberOfLines={2}>{contest.node.title}</PosterText>
-    </PosterContainer>
-    )
-  }
+  // const { loading, error, data,refetch } = useQuery(GET_HOTS,{
+  //   variables:{
+  //     existPoster:true,
+  //     sort:'HITS',
+  //     applicationStatuses:['NOTSTARTED','INPROGRESS'],
+  //     first:15
+  //   },
+  //   fetchPolicy:'cache-and-network'
+  // });
+  // let categoriesData=[];
+  // let hotData='';
+  // if(loading) return <Loading />
+  // if(error)return <ErrorPage onPress={async ()=>{
+  //   try{
+  //       await refetch({
+  //           existPoster:true,
+  //           sort:'HITS',
+  //           applicationStatuses:['NOTSTARTED','INPROGRESS'],
+  //           first:15
+  //       })
+  //       console.log('refetch')
+  //   } catch(e){
+  //       console.log('refetch err')
+  //   }}} />
+  // if(data.categories){
+  //   // max 10개
+  //   // categoriesData=CategoryView(data.categories).slice(0,9).map((cate)=>
+  //   // <TouchableOpacity  
+  //   //     key = {cate[0].id} onPress={()=>{
+  //   //     navigation.navigate('CategoryListPage',{
+  //   //       categoryArray:newStateArray(cate),
+  //   //       typeArray:null,
+  //   //       conditionArray:null,
+  //   //     });
+  //   //     }}>
+  //   //   <HashTag hashtag={cate[0].label} picked={false}/>
+  //   // </TouchableOpacity>
+  //   // )
+  // }
+  // if(data.contests){
+  //   hotData=data.contests.edges.map((contest)=>
+  //   <PosterContainer key = {contest.node.id.toString()} onPress={()=>
+  //     navigation.push('DetailPage',{
+  //       listId:contest.node.id
+  //     })
+  //   }>
+  //     <Recruitbox>
+  //         {status(contest.node.application.status,contest.node.application.period.endAt)}
+  //     </Recruitbox>
+  //     <Image
+  //         source={{uri:`${contest.node.posterURL},w_297,h_420`}}
+  //         style={{width:'100%',height:'100%',borderRadius:10}}
+  //     />
+  //     <LinearGradient 
+  //       colors={['transparent', Color.b_color]} 
+  //       start={{ x: 0.5, y: 0.3 }} end={{ x: 0.5, y: 1 }}
+  //       style={{position:'absolute',width:'100%',height:'100%', opacity:0.7,borderRadius:10}} />
+  //     <PosterText numberOfLines={2}>{contest.node.title}</PosterText>
+  //   </PosterContainer>
+  //   )
+  // }
   return (
-    <Container>
+    <View>
       <Header/>
-      <View style={{flex:3,justifyContent:'center'}}>
-        <Banner />
-      </View>
-      <ComponentContainer flex={2} padding={10}>
-        <Title>
-          카테고리
-        </Title>
-        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={{marginVertical:20}}>
-          {categoriesData}
+        <ScrollView>
+          <Container>
+          <View style={{height:(DWidth-20)*(1/3)}}>
+            <Banner />
+          </View>
+          <Title>
+            인기카테고리
+          </Title>
+          <View style={{flexWrap:'wrap',flexDirection:'row', justifyContent:'space-between'}}>
+            <CategotySport />
+            <CategotyIT />
+            <CategotyStudy />
+            <CategotyUCC />
+            <CategotyMusic />
+            <CategotyDesign />
+          </View>
+          <Title>
+            인기대회
+          </Title>
+          <View style={{flexWrap:'wrap',flexDirection:'row', justifyContent:'space-between'}}>
+            {/* {hotData} */}
+          </View>
+          <View style={{height:50}}/>
+          </Container>
         </ScrollView>
-      </ComponentContainer>
-      <ComponentContainer flex={7} padding={10}>
-        <Title>
-          인기대회
-        </Title>
-        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-          {hotData}
-        </ScrollView>
-      </ComponentContainer>
-    </Container>
+    </View>
   );
 };
 
@@ -109,17 +128,11 @@ const Banner = ()=>{
 }
   return(
     <Swiper autoplay={true} renderPagination={renderPagination}>
-        <TouchableOpacity onPress={() =>null}>
-          <Image
-            style={styles.bannerImg}
-            source={require('~/Assets/SearchBanner.png')}
-          />
+        <TouchableOpacity onPress={() =>null} >
+          <Image source={require('~/Assets/FirstBanner.png')} style={styles.bannerImg}/>
         </TouchableOpacity>
         <TouchableOpacity onPress={() =>null}>
-          <Image
-            style={styles.bannerImg}
-            source={require('~/Assets/RegBanner.png')}
-          />
+          <Image source={require('~/Assets/SecondBanner.png')} style={styles.bannerImg}/>
         </TouchableOpacity>
     </Swiper>
   )
@@ -128,17 +141,22 @@ const Banner = ()=>{
 // banner
 const styles=StyleSheet.create({
   bannerImg:{
-    width:DWidth,
-    height:DWidth*(100/300)
+    width:DWidth-20,
+    height:(DWidth-20)*(1/3),
+    backgroundColor:'#1C7698',
+    borderRadius:10,
   },
   bannerPg:{
-    backgroundColor:Color.g4_color,
-    opacity:0.5,
+    backgroundColor:Color.b_color,
+    opacity:0.4,
     borderRadius:10,
-    paddingHorizontal:10,
+    justifyContent:'center',
+    alignItems:'center',
+    height:20,
+    width:50,
     position:'absolute',
-    right:10,
-    top:DWidth*(100/300)*(7/10),
+    bottom:10,
+    right:10
   }
 })
 const BannerText=styled.Text`
@@ -146,24 +164,29 @@ const BannerText=styled.Text`
   color:${Color.w_color};
 `
 const Title=styled.Text`
-  ${Styles.m_font};
-  font-weight:bold;
+  ${Styles.m_b_font};
+  padding:20px 0 15px 0;
 `
 // poster
 const PosterContainer=styled.TouchableOpacity`
-  height:100%;
-  aspect-ratio:0.55;
-  margin:15px;
-  
-`
-const Poster=styled.Image`
-  height:85%;
+  align-items:center;
+  width:50%;
   aspect-ratio:0.7;
-  border-radius:10px;
-  overflow:hidden;
+  margin-right:10px;
 `
-const PosterText=styled.Text`
-  ${Styles.s_font};
-  margin-horizontal:3px;
+export const PosterText=styled.Text`
+  ${Styles.s_m_font};
+  color:${Color.w_color};
+  padding-horizontal:3px;
+  position:absolute;
+  padding:10px;
+  bottom:0;
+`
+export const Recruitbox=styled.View`
+  flex-direction:row;
+  position:absolute;
+  left:10px;
+  bottom:60px;
+  z-index:3;
 `
 export default HomePage;

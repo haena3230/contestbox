@@ -1,6 +1,6 @@
 // modal 
-import React, { useState } from "react";
-import {Alert, Text,TouchableOpacity,View} from "react-native";
+import React from "react";
+import {Text,TouchableOpacity,View} from "react-native";
 import styled from 'styled-components/native';
 import {Styles,Color}  from '~/Styles';
 import {HashTag} from '~/Components/HashTag';
@@ -39,7 +39,7 @@ const ModalComponent = ({modalVisible,title,tag,onPressConfirm,onPressCancle}:Ma
                             <Confirm>적용</Confirm>
                         </TouchableOpacity>
                         <TouchableOpacity onPress={onPressCancle}>
-                            <Text style={Styles.m_font}>닫기</Text>
+                            <Text style={Styles.m_m_font}>닫기</Text>
                         </TouchableOpacity>
                     </ModalConfirm>
                 </ModalView>
@@ -78,7 +78,7 @@ const ModalView =styled.View`
     border-radius:10px;
 `
 const ModalTitle =styled.Text`
-    ${Styles.m_font};
+    ${Styles.m_m_font};
     padding-bottom:20px;
 `
 const ModalTag =styled.View`
@@ -92,7 +92,7 @@ const ModalConfirm=styled.View`
     padding-top:10px;
 `
 const Confirm=styled.Text`
-    ${Styles.m_font};
+    ${Styles.m_m_font};
     color:${Color.p_color};
     padding-right:30px;
 `

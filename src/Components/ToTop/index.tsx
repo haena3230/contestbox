@@ -3,6 +3,7 @@ import React from 'react';
 import TopIcon from '~/Assets/chevron-up-solid.svg';
 import {Color,IconSize} from '~/Styles';
 import styled from 'styled-components/native';
+import { TouchableOpacity, View } from 'react-native';
 
 
 
@@ -11,24 +12,26 @@ interface ToTopProps{
 }
 const ToTop=({onPressToTop}:ToTopProps)=>{
     return(
-        <Btn onPress={onPressToTop}>
-            <TopIcon height={IconSize.icon} width={IconSize.icon} color={Color.w_color} />
-        </Btn>
+        <TouchableOpacity 
+        onPress={onPressToTop}    
+        style={{
+            elevation: 3,
+            justifyContent:'center',
+            alignItems:'center',
+            position:'absolute',
+            bottom:20,
+            right:20,
+            padding:5,
+            backgroundColor:Color.p_color,
+            borderRadius:20,
+        }}>
+            <TopIcon height={IconSize.sicon} width={IconSize.sicon} color={Color.w_color} />
+        </TouchableOpacity>
     )
 }
 
 
-const Btn=styled.TouchableOpacity`
-    justify-content:center;
-    align-items:center;
-    position:absolute;
-    bottom:20px;
-    right:20px;
-    padding:5px;
-    background-color:${Color.p_color};
-    border-radius:20px;
-    z-index:2;
-`
+
 
 
 

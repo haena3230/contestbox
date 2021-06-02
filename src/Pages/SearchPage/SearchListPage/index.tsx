@@ -1,7 +1,7 @@
 // SearchListPage
 import React,{useState,useRef, useEffect} from 'react';
 import {View,ScrollView,RefreshControl,Text, TouchableOpacity} from 'react-native';
-import {Container,Styles,Color, IconSize} from '~/Styles';
+import {Container,Styles,Color, IconSize, DWidth} from '~/Styles';
 import styled from 'styled-components/native';
 // data
 import {SearchListPageProps, SearchPageProps} from '~/Types';
@@ -11,16 +11,15 @@ import {SortStatus} from '~/Types';
 // components
 import Arrow from '~/Assets/chevron-left-solid.svg';
 import Search from '~/Assets/search-solid.svg';
-import {SortBtn,FilterBtn,MapBtn, ListBtn} from  '~/Components/Btn';
+import {SortBtn,FilterBtn} from  '~/Components/Btn';
 import {SortComponent} from '~/Components/Sort';
-import TextList,{TagBox,ListBox} from '~/Components/TextList';
-import {HashTag} from '~/Components/HashTag';
+import TextList from '~/Components/TextList';
 import ToTop from '~/Components/ToTop';
 import Loading, { LastData } from '~/Components/Loading';
 import {pickedIdArray,newStateArray} from '~/Components/Filter';
-import {SearchMap} from '~/Components/Map';
 import { InfoModalComponent } from '~/Components/Modal';
 import { ErrorPage } from '~/Components/Error';
+import { TextInput } from 'react-native-gesture-handler';
 
 interface pageInfoProps{
     endCursor:string,
@@ -88,7 +87,7 @@ const SearchListPage =(props:SearchListPageProps)=>{
             types:pickedTypeId,
             conditions:pickedConditionId
         },
-        fetchPolicy:'cache-and-network'
+        fetchPolicy:'network-only'
     })
     // 정렬버튼 함수
     const onPressTagOne=()=>{
@@ -179,29 +178,6 @@ const SearchListPage =(props:SearchListPageProps)=>{
     }
     return(
         <Container>
-            {map?(
-                <View>
-                    <SearchBarSmall navigation={props.navigation}/>
-                    <SearchListBar 
-                        isMap={true}
-                        search={search} 
-                        count={data.contests.edges.length} 
-                        onPressFilter={onPressFilter}
-                        onPressSort={()=>setSort(!sort)}
-                        onPressMap={()=>setMap(!map)}
-                        sortState={sortState.statusName}
-                        badgeNumber={pickedTypeId.length+pickedConditionId.length}
-                        />
-                    <View style={{height:'80%', width:'100%', padding:5}}>
-                        <SearchMap 
-                            search={search}
-                            categoryState={null}
-                            conditions={pickedConditionId}
-                            types={pickedTypeId}
-                            />
-                    </View>
-                </View>
-            ):(
                 <ScrollView 
                     ref={scrollRef}
                     onScroll={(e)=>{
@@ -223,8 +199,7 @@ const SearchListPage =(props:SearchListPageProps)=>{
                     onScrollBeginDrag={()=>setTotop(true)}
                     >
                     <SearchBarSmall navigation={props.navigation}/>
-                    <SearchListBar
-                        isMap={false} 
+                    <SearchListBar 
                         search={search} 
                         count={data.contests.edges.length} 
                         onPressFilter={()=>onPressFilter()}
@@ -238,7 +213,6 @@ const SearchListPage =(props:SearchListPageProps)=>{
                     </View>
                     {pageInfo.hasNextPage?<Loading />:<LastData />}
                 </ScrollView>
-            )}
             <SortComponent 
                 onPressCancle={onPressSort} 
                 modalVisible={sort} 
@@ -249,7 +223,7 @@ const SearchListPage =(props:SearchListPageProps)=>{
                 onPressTagTwo={onPressTagTwo}
                 onPressTagThree={onPressTagThree}
                 />
-                {totop&&!map?(
+                {totop?(
                     <ToTop onPressToTop={onPressToTop}/>
                 ):(
                     null
@@ -258,7 +232,6 @@ const SearchListPage =(props:SearchListPageProps)=>{
     )
 }
 interface SearchListBarProps{
-    isMap:boolean;
     search:string|undefined;
     count:number;
     onPressFilter:()=>void;
@@ -267,7 +240,7 @@ interface SearchListBarProps{
     sortState:string;
     badgeNumber:number;
 }
-const SearchListBar=({isMap,search,count,onPressFilter,onPressSort,onPressMap,sortState,badgeNumber}:SearchListBarProps)=>{
+const SearchListBar=({search,count,onPressFilter,onPressSort,onPressMap,sortState,badgeNumber}:SearchListBarProps)=>{
     
     return(
         <BarBox>
@@ -276,13 +249,8 @@ const SearchListBar=({isMap,search,count,onPressFilter,onPressSort,onPressMap,so
                 <BarBoxCount> {count}</BarBoxCount>
             </View>
             <View style={{flexDirection:'row'}}>
-                {isMap?null:
-                <SortBtn onPressSort={onPressSort} state={sortState}/>}
+                <SortBtn onPressSort={onPressSort} state={sortState}/>
                 <FilterBtn onPressFilter={onPressFilter} number={badgeNumber}/>
-                {isMap?
-                <ListBtn onPressMap={onPressMap}/>:<MapBtn onPressMap={onPressMap}/>
-                }
-                
             </View>
         </BarBox>
     )
@@ -308,13 +276,14 @@ export const SearchBarSmall=(props:SearchPageProps)=>{
     }
     return(
         <SearchHeader>
-            <Arrow onPress={()=>props.navigation.goBack()} height={IconSize.icon} width={IconSize.icon} color={Color.g3_color}/>
+            <Arrow onPress={()=>props.navigation.goBack()} height={IconSize.sicon} width={IconSize.sicon} color={Color.gray}/>
             <SmallSearchBarStyle>
                 <TouchableOpacity onPress={onSubmet} style={{paddingHorizontal:15}}>
-                    <Search height={IconSize.sicon} width={IconSize.sicon} color={Color.g3_color}/>
+                    <Search height={IconSize.sicon} width={IconSize.sicon} color={Color.gray}/>
                 </TouchableOpacity>
-                <SearchHeaderText 
-                    placeholder={'검색어를 입력해 주세요.'} 
+                <TextInput
+                    style={Styles.m_font}
+                    placeholder={'검색어를 입력해 주세요'} 
                     value={searchText} 
                     onChangeText={(text)=>{setSearchText(text)}} 
                     maxLength={35}
@@ -322,7 +291,7 @@ export const SearchBarSmall=(props:SearchPageProps)=>{
                     />
             </SmallSearchBarStyle>
             <InfoModalComponent 
-                Info={'검색어를 입력해 주세요.'}
+                Info={'검색어를 입력해 주세요'}
                 modalVisible={infoModal}
                 />
         </SearchHeader>
@@ -334,36 +303,29 @@ const BarBox=styled.View`
     flex-direction:row;
     justify-content:space-between;
     align-items:center;
-    padding:10px;
 `
 const BarBoxText=styled.Text`
-    ${Styles.m_font};
-    font-weight:bold;
+    ${Styles.m_b_font};
 `
 const BarBoxCount=styled.Text`
-    ${Styles.m_font};
-    color:${Color.g3_color};
+    ${Styles.m_m_font};
 `
 // search bar
 const SearchHeader=styled.View`
     width:100%;
     flex-direction:row;
-    justify-content:space-around;
     align-items:center;
 `
 const SmallSearchBarStyle=styled.View`
   width:90%;
+  height:${DWidth > 480 ? 60 : 40}px;
   background-color:${Color.w_color};
-  border-radius:15px;
+  border-radius:20px;
   flex-direction:row;
   align-items:center;
   margin-vertical:10px;
+  margin-left:10px;
   border-width:1px;
-  border-color:${Color.g1_color};
-`
-const SearchHeaderText=styled.TextInput`
-    ${Styles.m_font};
-    padding:3px;
-
+  border-color:${Color.border};
 `
 export default SearchListPage;

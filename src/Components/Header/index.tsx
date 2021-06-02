@@ -1,77 +1,108 @@
 // 헤더 
 import React from 'react';
-import {Text} from 'react-native';
 // icon
 import Flame from '~/Assets/fire-solid.svg';
-import Search from '~/Assets/search-solid.svg';
-import FilterIcon from '~/Assets/filter-solid.svg';
+import BackIcon from '~/Assets/chevron-left-solid.svg';
+import MenuIcon from '~/Assets/more_horiz_black_24dp.svg'
 // style
 import {Color,Styles,IconSize} from '~/Styles'
 import styled from 'styled-components/native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-
-
+import { Text, View } from 'react-native';
 
 const Header=()=>{
     return(
-        <HeaderContainer backgroundColor={Color.l_color}>
-            <Box>
-                <Item>
-                    <Flame height={IconSize.icon} width={IconSize.icon} color={Color.p_color} />
-                </Item>
-                <Item>
-                    <Text style={Styles.b_font}>Contest Box</Text>
-                </Item>
-            </Box>
+        <HeaderContainer>
+            <Item>
+                <Flame height={IconSize.icon} width={IconSize.icon} color={Color.p_color} />
+            </Item>
+            <Item>
+                <HeaderText>Contest Box</HeaderText>
+            </Item>
         </HeaderContainer>
     )
 }
-interface FilterHeaderProps{
-    onPress:()=>void;
+interface PageHeaderProps{
+    pageName:string;
+    onPressClose:()=>void;
 }
-export const FilterHeader = ({onPress}:FilterHeaderProps)=>{
+export const PageHeader = ({pageName,onPressClose}:PageHeaderProps)=>{
     return(
-        <HeaderContainer backgroundColor={Color.w_color}>
-            <Box>
-                <Item>
-                    <FilterIcon width={IconSize.icon} height={IconSize.icon} color={Color.g4_color} />
-                </Item>
-                <Item>
-                    <Text style={Styles.m_font}>필터</Text>
-                </Item>
-            </Box>
-            <Box>
-                <Item>
-                    <TouchableOpacity onPress={onPress}>
-                        <Exit>닫기</Exit>
-                    </TouchableOpacity>
-                </Item>
-            </Box>
+        <HeaderContainer>
+            <Item>
+                <BackIcon width={IconSize.sicon} height={IconSize.sicon} color={Color.gray} onPress={onPressClose}/>
+            </Item>
+            <Item>
+                <HeaderText>{pageName}</HeaderText>
+            </Item>
         </HeaderContainer>
     )
 }
 
-interface HeaderContainerProps{
-    backgroundColor:string;
+// 완료 버튼 있는 header
+interface SubmitHeaderProps{
+    pageName:string;
+    onPressClose:()=>void;
+    onPressSubmit:()=>void;
 }
+export const SubmitHeader = ({pageName,onPressClose,onPressSubmit}:SubmitHeaderProps)=>{
+    return(
+        <View style={{flexDirection:'row', justifyContent:'space-between', alignItems:'center', width:'100%'}}>
+            <SubmitHeaderContainer>
+                <Item>
+                    <BackIcon width={IconSize.sicon} height={IconSize.sicon} color={Color.gray} onPress={onPressClose}/>
+                </Item>
+                <Item>
+                    <HeaderText>{pageName}</HeaderText>
+                </Item>
+            </SubmitHeaderContainer>
+            <TouchableOpacity onPress={onPressSubmit} style={{marginRight:10}}>
+                <HeaderText>완료</HeaderText>
+            </TouchableOpacity>
+        </View>
+    )
+}
+
+// 메뉴버튼 있는 header
+// 완료 버튼 있는 header
+interface SubmitHeaderProps{
+    pageName:string;
+    onPressClose:()=>void;
+    onPressSubmit:()=>void;
+}
+export const MenuHeader = ({pageName,onPressClose,onPressSubmit}:SubmitHeaderProps)=>{
+    return(
+        <View style={{flexDirection:'row', justifyContent:'space-between', alignItems:'center', width:'100%'}}>
+            <SubmitHeaderContainer>
+                <Item>
+                    <BackIcon width={IconSize.sicon} height={IconSize.sicon} color={Color.gray} onPress={onPressClose}/>
+                </Item>
+                <Item>
+                    <HeaderText>{pageName}</HeaderText>
+                </Item>
+            </SubmitHeaderContainer>
+            <TouchableOpacity onPress={onPressSubmit} style={{marginRight:10}}>
+                <MenuIcon width={IconSize.bicon} height={IconSize.bicon} fill={Color.gray}/>
+            </TouchableOpacity>
+        </View>
+    )
+}
+
 const HeaderContainer=styled.View`
     width:100%;
-    padding-vertical:15px;
     flex-direction:row;
-    justify-content:space-between;
     align-items:center;
-    background-color:${(props:HeaderContainerProps)=>props.backgroundColor};
 `
-const Box = styled.View`
+
+const SubmitHeaderContainer=styled.View`
     flex-direction:row;
     align-items:center;
+`
+const HeaderText=styled.Text`
+    ${Styles.mb_b_font};
 `
 const Item=styled.View`
-    padding-horizontal:10px;
-`
-const Exit=styled.Text`
-    ${Styles.m_font};
-    color:${Color.g3_color};
+    padding-left:10px;
 `
 
 export default Header

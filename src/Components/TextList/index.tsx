@@ -6,7 +6,7 @@ import styled from 'styled-components/native'
 import {PreRecruit,Recruit,NoRecruit,CancelRecruit,ImmenentRecruit} from '~/Components/Recruit';
 import {Styles,Color} from '~/Styles';
 import moment from 'moment';
-import {HashTag} from '~/Components/HashTag';
+import {HashTag, ListBoxCategory} from '~/Components/HashTag';
 
 interface TextListProps{
     recruit:string;
@@ -17,46 +17,44 @@ interface TextListProps{
     poster:string;
     onPress:()=>void;
 }
-export const Immenent=(deadline)=>{
+export const status=(status,deadline)=>{
     // 현재로부터 7일 미만이면 마감임박
     let now = moment();        
     let after = moment(now).add(7,'days');
-    if(moment(now).isBefore(deadline)&&moment(after).isAfter(deadline))       
-    return <ImmenentRecruit />;
+    
+    switch(status){
+        case 'NOTSTARTED':
+            return <PreRecruit />;
+        case 'INPROGRESS':
+            if(moment(now).isBefore(deadline)&&moment(after).isAfter(deadline))       
+                return <ImmenentRecruit />;
+            else return <Recruit />;
+        case 'COMPLETED':
+            return <NoRecruit />;
+    }
 }
 const TextList=({recruit,deadline,title,viewcount,categories,poster,onPress}:TextListProps)=>{
-    const status=(status)=>{
-        switch(status){
-            case 'NOTSTARTED':
-                return <PreRecruit />;
-            case 'INPROGRESS':
-                return <Recruit />;
-            case 'COMPLETED':
-                return <NoRecruit />;
-        }
-    }
     
     return(
         <ListBox onPress={onPress}>
             <View style={{width:'75%',padding:10}}>
                 <Recruitbox>
-                    {status(recruit)}
-                    {Immenent(deadline)}
+                    {status(recruit,deadline)}
                 </Recruitbox>
                 <Title numberOfLines={1}>{title}</Title>
                 <ViewCount>조회수 {viewcount}</ViewCount>
                 {!categories?null:(
                     <TagBox>
                         {categories.slice(0,2).map((tag)=>
-                        <HashTag key={tag.id.toString()} hashtag={tag.label} picked={false}/>
+                        <ListBoxCategory key={tag.id.toString()} category={tag.label}/>
                         )}
                         {categories.length>2?(
-                        <HashTag hashtag={'+'+ (categories.length-2)} picked={false}/>
+                        <ListBoxCategory category={'+'+ (categories.length-2)}/>
                         ):null}
                     </TagBox>
                     )}
             </View>
-            <View style={{width:'25%'}}>
+            <View style={{width:'25%',justifyContent:'center'}}>
             {!poster?null:(
                 <Poster source={{
                     uri:`${poster},w_594,h_840`
@@ -72,7 +70,7 @@ export const ListBox = styled.TouchableOpacity`
     background-color:white;
     border-radius:10px;
     border-width:1px;
-    border-color:${Color.g1_color};
+    border-color:${Color.border};
     margin-vertical:5px;
     flex-direction:row;  
     justify-content:space-between;
@@ -88,19 +86,17 @@ export const Poster =styled.Image`
     aspect-ratio:0.7;
     border-radius:5px;
     overflow:hidden;
-    right:0
+    right:0;
+    width:22%;
 `
 const Recruitbox=styled.View`
     flex-direction:row;
 `
 const Title=styled.Text`
-    margin-top:10px;
-    ${Styles.m_font};
-    font-weight:bold
+    ${Styles.m_b_font};
 
 `
 const ViewCount=styled.Text`
-    margin-top:5px;
     ${Styles.ss_font};
 `
 export default TextList;

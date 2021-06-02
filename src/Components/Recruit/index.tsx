@@ -4,7 +4,7 @@ import styled from 'styled-components/native'
 
 export const PreRecruit=()=>{
     return(
-        <Box color={Color.p_l_color}>
+        <Box bg_color={Color.p_l_color}>
             <DText>접수예정</DText>
         </Box>
     )
@@ -12,7 +12,7 @@ export const PreRecruit=()=>{
 
 export const Recruit=()=>{
     return(
-        <Box color={Color.p_color}>
+        <Box bg_color={Color.p_color}>
             <Text>접수중</Text>
         </Box>
     )
@@ -20,7 +20,7 @@ export const Recruit=()=>{
 
 export const NoRecruit=()=>{
     return(
-        <Box color={Color.g3_color}>
+        <Box bg_color={Color.gray}>
             <Text>접수마감</Text>
         </Box>
     )
@@ -28,7 +28,7 @@ export const NoRecruit=()=>{
 
 export const CancelRecruit=()=>{
     return(
-        <Box color={Color.g3_color}>
+        <Box bg_color={Color.gray}>
             <Text>취소</Text>
         </Box>
     )
@@ -36,34 +36,30 @@ export const CancelRecruit=()=>{
 
 export const ImmenentRecruit=()=>{
     return(
-        <Box color={Color.r_color}>
+        <Box bg_color={Color.r_color}>
             <Text>마감임박</Text>
         </Box>
     )
 }
 
 interface BoxColor{
-    color:string;
+    bg_color:string;
 }
 const Box = styled.View`
     margin-right:15px;
-    
     width:60px;
-    background-color:${(props:BoxColor)=>props.color};
+    background-color:${(props:BoxColor)=>props.bg_color};
     border-radius:10px;
     justify-content:center;
     align-items:center;
-
 `
 
 const Text=styled.Text`
-    ${Styles.ss_font};
+    ${Styles.s_font};
     color:${Color.w_color};
-    font-weight:bold;
 `
 
 const DText=styled.Text`
-    ${Styles.ss_font};
+    ${Styles.s_font};
     color:${Color.p_color};
-    font-weight:bold;
 `

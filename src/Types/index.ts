@@ -22,16 +22,16 @@ type StackParamList={
   CategoryPage:undefined;
   CategoryListPage:{
     categoryArray:Array<ArrayProps>
-    typeArray:null|Array<ArrayProps>,
-    conditionArray:null|Array<ArrayProps>
+    categoryIdArr:Array<string>
   };
-  CategoryFilterPage:{
-    categoryArray:Array<ArrayProps>
-    typeArray:null|Array<ArrayProps>,
-    conditionArray:null|Array<ArrayProps>
-  };
-  FilterPage:undefined;
   DetailPage:{listId:string};
+  CommunityPage:undefined
+  CommunityDetailPage:{category:string}
+  CommunityAddPage:undefined
+  MyPage:undefined;
+  ManageMyPage:undefined;
+  ScrapListPage:undefined;
+  LoginPage:undefined
 };
 
 export interface SearchPageProps{
@@ -60,13 +60,24 @@ export interface CategoryListPageProps {
   navigation: StackNavigationProp<StackParamList, 'DetailPage'>;
   route: RouteProp<StackParamList, 'CategoryListPage'>;
 }
-export interface CategoryFilterPageProps {
-  navigation: StackNavigationProp<StackParamList, 'CategoryListPage'>;
-  route: RouteProp<StackParamList, 'CategoryFilterPage'>;
-}
 
 export interface DetailPageProps {
+  navigation: StackNavigationProp<StackParamList, 'SearchListPage'>;
   route: RouteProp<StackParamList, 'DetailPage'>;
+}
+
+export interface CommunityPageProps{
+  navigation:StackNavigationProp<StackParamList,'CommunityPage'>
+}
+
+export interface CommunityDetailPageProps {
+  navigation: StackNavigationProp<StackParamList, 'CommunityPage'>;
+  route: RouteProp<StackParamList, 'CommunityDetailPage'>;
+}
+
+
+export interface MyPageProps {
+  navigation: StackNavigationProp<StackParamList, 'MyPage'>;
 }
 
 

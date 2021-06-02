@@ -1,11 +1,14 @@
 // filterpage component
-import React, { useState } from 'react';
-import { Text, TouchableOpacity} from 'react-native';
+import React from 'react';
 import styled from 'styled-components/native';
-import { Styles,Color } from '~/Styles';
+import { Styles,Color, IconSize, DWidth } from '~/Styles';
 
 // components
-import {FilterBtn, ShortBtn} from  '~/Components/Btn';
+import {Btn} from  '~/Components/Btn';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { Text, View } from 'react-native';
+import CheckIcon from '~/Assets/check_circle_outline_black_24dp.svg';
+import CheckIconFill from '~/Assets/check_circle_black_24dp.svg';
 
 // 함수
 
@@ -35,9 +38,14 @@ export const newStateArray=(array:Array<any>)=>{
         return []
     }
     else{
-        let i=0;
+        let i;
         let state=[]
-        for(i=0;i<array.length;i++){
+        state.push({
+                id:array[0].id,
+                label:array[0].label,
+                value:true
+            })
+        for(i=1;i<array.length;i++){
             state.push({
                 id:array[i].id,
                 label:array[i].label,
@@ -82,34 +90,6 @@ export const pickedIdArraies=(array:Array<any>)=>{
 }
 
 
-// 필터페이지 헤더
-export const FilterHeader=()=>{
-    return(
-        <HeaderContainer>
-            <HeaderTitle>
-                <HeaderBox>
-                    <FilterBtn onPressFilter={()=>null} number={0}/> 
-                </HeaderBox>
-                <Text style={Styles.b_font}>필터</Text>
-            </HeaderTitle>
-        </HeaderContainer>
-    )   
-}
-
-// 닫기 버튼
-interface CloseBtnProps{
-    onPressClose:()=>void;
-}
-const Close = ({onPressClose}:CloseBtnProps)=>{
-    return(
-        <TouchableOpacity onPress={onPressClose}>
-            <HeaderBox>
-                <CloseBtn>닫기</CloseBtn>
-            </HeaderBox>
-        </TouchableOpacity>
-    )
-}
-
 // bottom btn
 interface FilterBottomProps{
     onPressReset:()=>void;
@@ -118,38 +98,45 @@ interface FilterBottomProps{
 export const FilterBottom=({onPressReset,onPressConfirm}:FilterBottomProps)=>{
     return(
         <BottomContainer>
-            <ShortBtn color={Color.g2_color} text={' 초기화 '} onPress={onPressReset}/>
-            <ShortBtn color={Color.p_color} text={'적용하기'} onPress={onPressConfirm}/>
+            <Btn color={Color.gray} text={' 초기화 '} onPress={onPressReset} widthPercent={30}/>
+            <Btn color={Color.p_color} text={'적용하기'} onPress={onPressConfirm} widthPercent={60}/>
         </BottomContainer>
     )
 }
 
-// header
-const HeaderContainer=styled.View`
-    flex-direction:row;
-    justify-content:space-between;
-    align-items:center;
-    border-bottom-width:1px;
-    border-color:${Color.g2_color};
-`
-const HeaderTitle=styled.View`
-    flex-direction:row;
-    align-items:center;
-    padding:5px;
-`
-const HeaderBox=styled.View`
-    margin-horizontal:10px;
-`
-// close
-const CloseBtn=styled.Text`
-    ${Styles.m_font};
-    color:${Color.g3_color};
-    font-weight:bold;
+// filter category btn
+interface FilterCategoryBtnProps{
+    picked:boolean;
+    category:string;
+}
+export const FilterCategoryBtn = ({picked,category}:FilterCategoryBtnProps)=>{
+    return( 
+        <View>
+            {picked?(
+                <PickedCategoryMenuItem  style={{borderColor:Color.p_color}} onPress={()=>null}>
+                    <CheckIconFill width={IconSize.ssicon} height={IconSize.ssicon} fill={Color.p_color} />
+                    <Text style={Styles.m_m_font}>{category}</Text>
+                </PickedCategoryMenuItem>
+            ):(
+                <PickedCategoryMenuItem style={{borderColor:Color.place_holder}} onPress={()=>null}>
+                        <CheckIcon width={IconSize.ssicon} height={IconSize.ssicon} fill={Color.place_holder} />
+                        <Text style={Styles.m_m_font}>{category}</Text>
+                </PickedCategoryMenuItem>
+            )}
+            
+        </View>
+    )
+}
+
+// 모두삭제
+export const AllDeleteText =styled.Text`
+    ${Styles.s_m_font};
+    color:${Color.p_color};
 `
 // filter menu
 export const MenuContainer=styled.View`
     border-bottom-width:1px;
-    border-color:${Color.g2_color};
+    border-color:${Color.border};
 `
 export const MenuBox=styled.TouchableOpacity`
     flex-direction:row;
@@ -159,16 +146,30 @@ export const MenuBox=styled.TouchableOpacity`
     padding-vertical:10px;
 `
 export const MenuTitle=styled.Text`
-    ${Styles.m_font};
-    color:${Color.g4_color};
-    font-weight:bold;
+    ${Styles.m_m_font};
 `
-// 종류
-export const Type = styled.View`
+export const PickedMenuBox = styled.View`
     flex-direction:row;
     flex-wrap:wrap;
-    padding:15px;
+    justify-content:space-around;
+    padding-horizontal:20px;
+    padding-bottom:20px;
 `
+
+export const PickedCategoryMenuBox= styled.View`
+    flex-direction:row;
+    flex-wrap:wrap;
+`
+let half = DWidth/2
+const PickedCategoryMenuItem= styled.TouchableOpacity`
+    border-width:0.5px;
+    flex-direction:row;
+    align-items:center;
+    justify-content:space-between;
+    padding-horizontal:20px;
+    width:${half};
+`
+
 // bottom
 const BottomContainer=styled.View`
     width:100%;
@@ -178,7 +179,7 @@ const BottomContainer=styled.View`
     justify-content:space-around;
     padding:15px;
     border-top-width:1px;
-    border-color:${Color.g2_color};
+    border-color:${Color.border};
     position:absolute;
     bottom:0;
 `

@@ -413,8 +413,7 @@ const MenuContainer = styled.TouchableOpacity`
     border-top-width:1px;
 `
 const Title = styled.Text`
-    ${Styles.b_font};
-    font-weight:bold;
+    ${Styles.b_b_font};
 `
 const Hits = styled.Text`
     ${Styles.ss_font};

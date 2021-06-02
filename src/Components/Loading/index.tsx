@@ -10,8 +10,8 @@ const Loading = () => (
 
 export const LastData=()=>{
   return(
-    <View style={{alignItems:'center', paddingHorizontal:20,paddingBottom:20}}>
-        <Text style={Styles.s_font}>
+    <View style={styles.info}>
+        <Text style={Styles.s_m_font}>
             더이상 대회가 없습니다.
         </Text>
     </View>
@@ -28,6 +28,11 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     padding: 10
   },
+  info:{
+    alignItems:'center', 
+    paddingBottom:30,
+    margin:10
+  }
 });
 
 export default Loading;
