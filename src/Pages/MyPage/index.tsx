@@ -21,7 +21,7 @@ const MyPage= ({navigation}:MyPageProps)=>{
                     <UserIcon style={{marginRight:10}} height={IconSize.bicon} width={IconSize.bicon} fill={Color.gray} />
                     <Text style={Styles.m_m_font}>개인정보 변경</Text>
                 </BoxContainer>
-                <BoxContainer>
+                <BoxContainer onPress={()=>navigation.navigate('ScrapListPage')}>
                     <StarIcon style={{marginRight:10}} height={IconSize.bicon} width={IconSize.bicon} fill={Color.gray} />
                     <Text style={Styles.m_m_font}>스크랩 목록</Text>
                 </BoxContainer>

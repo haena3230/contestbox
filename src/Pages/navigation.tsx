@@ -28,6 +28,7 @@ import User from '~/Assets/assignment_ind_black_24dp.svg'
 // style
 import {Color,Styles,IconSize,DWidth} from '~/Styles';
 import styled from 'styled-components/native';
+import ScrapListPage from './MyPage/ScrapListPage';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -126,6 +127,7 @@ const MainStackNavi=()=>{
         <Stack.Screen name="CommunityDetailPage" component={CommunityDetailPage} />
         <Stack.Screen name="CommunityAddPage" component={CommunityAddPage} />
         <Stack.Screen name="ManageMyPage" component={ManageMyPage} />
+        <Stack.Screen name="ScrapListPage" component={ScrapListPage} />
     </Stack.Navigator>
   )
 }

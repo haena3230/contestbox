@@ -30,6 +30,7 @@ type StackParamList={
   CommunityAddPage:undefined
   MyPage:undefined;
   ManageMyPage:undefined;
+  ScrapListPage:undefined;
   LoginPage:undefined
 };
 

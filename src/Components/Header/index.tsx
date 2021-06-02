@@ -3,6 +3,7 @@ import React from 'react';
 // icon
 import Flame from '~/Assets/fire-solid.svg';
 import BackIcon from '~/Assets/chevron-left-solid.svg';
+import MenuIcon from '~/Assets/more_horiz_black_24dp.svg'
 // style
 import {Color,Styles,IconSize} from '~/Styles'
 import styled from 'styled-components/native';
@@ -57,6 +58,31 @@ export const SubmitHeader = ({pageName,onPressClose,onPressSubmit}:SubmitHeaderP
             </SubmitHeaderContainer>
             <TouchableOpacity onPress={onPressSubmit} style={{marginRight:10}}>
                 <HeaderText>완료</HeaderText>
+            </TouchableOpacity>
+        </View>
+    )
+}
+
+// 메뉴버튼 있는 header
+// 완료 버튼 있는 header
+interface SubmitHeaderProps{
+    pageName:string;
+    onPressClose:()=>void;
+    onPressSubmit:()=>void;
+}
+export const MenuHeader = ({pageName,onPressClose,onPressSubmit}:SubmitHeaderProps)=>{
+    return(
+        <View style={{flexDirection:'row', justifyContent:'space-between', alignItems:'center', width:'100%'}}>
+            <SubmitHeaderContainer>
+                <Item>
+                    <BackIcon width={IconSize.sicon} height={IconSize.sicon} color={Color.gray} onPress={onPressClose}/>
+                </Item>
+                <Item>
+                    <HeaderText>{pageName}</HeaderText>
+                </Item>
+            </SubmitHeaderContainer>
+            <TouchableOpacity onPress={onPressSubmit} style={{marginRight:10}}>
+                <MenuIcon width={IconSize.bicon} height={IconSize.bicon} fill={Color.gray}/>
             </TouchableOpacity>
         </View>
     )
