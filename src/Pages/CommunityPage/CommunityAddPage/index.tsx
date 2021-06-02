@@ -3,10 +3,10 @@ import React, { useState } from 'react';
 import { Keyboard, TextInput, TouchableWithoutFeedback } from 'react-native';
 import { SubmitHeader } from '~/Components/Header';
 import { Container,Color, Styles } from '~/Styles';
-import { CommunityAddPageProps } from '~/Types';
+import { CommunityPageProps } from '~/Types';
 import styled from 'styled-components/native'
 
-const CommunityAddPage=({navigation}:CommunityAddPageProps)=>{
+const CommunityAddPage=({navigation}:CommunityPageProps)=>{
     const[title,setTitle]=useState<null|string>();
     const[body,setBody]=useState<null|string>();
     const[infoModal,setInfoModal]=useState<boolean>(false);

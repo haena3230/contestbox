@@ -29,6 +29,7 @@ type StackParamList={
   CommunityDetailPage:{category:string}
   CommunityAddPage:undefined
   MyPage:undefined;
+  ManageMyPage:undefined;
   LoginPage:undefined
 };
 
@@ -73,8 +74,9 @@ export interface CommunityDetailPageProps {
   route: RouteProp<StackParamList, 'CommunityDetailPage'>;
 }
 
-export interface CommunityAddPageProps {
-  navigation: StackNavigationProp<StackParamList, 'CommunityAddPage'>;
+
+export interface MyPageProps {
+  navigation: StackNavigationProp<StackParamList, 'MyPage'>;
 }
 
 

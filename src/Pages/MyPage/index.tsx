@@ -10,13 +10,14 @@ import { Container } from '~/Styles'
 import UserIcon from '~/Assets/assignment_ind_black_24dp.svg'
 import StarIcon from '~/Assets/star_outline_black_24dp.svg'
 import PenIcon from '~/Assets/create_black_24dp.svg';
+import { MyPageProps } from '~/Types'
 
-const MyPage= ()=>{
+const MyPage= ({navigation}:MyPageProps)=>{
     return(
         <View style={{flex:1}}>
             <Header />
             <Container style={{justifyContent:'center'}}>
-                <BoxContainer>
+                <BoxContainer onPress={()=>navigation.navigate('ManageMyPage')}>
                     <UserIcon style={{marginRight:10}} height={IconSize.bicon} width={IconSize.bicon} fill={Color.gray} />
                     <Text style={Styles.m_m_font}>개인정보 변경</Text>
                 </BoxContainer>
