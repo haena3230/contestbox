@@ -25,7 +25,7 @@ const MyPage= ({navigation}:MyPageProps)=>{
                     <StarIcon style={{marginRight:10}} height={IconSize.bicon} width={IconSize.bicon} fill={Color.gray} />
                     <Text style={Styles.m_m_font}>스크랩 목록</Text>
                 </BoxContainer>
-                <BoxContainer>
+                <BoxContainer onPress={()=>navigation.navigate('MyPostPage')}>
                     <PenIcon style={{marginRight:10}} height={IconSize.bicon} width={IconSize.bicon} fill={Color.gray} />
                     <Text style={Styles.m_m_font}>내가 쓴 글</Text>
                 </BoxContainer>            

@@ -68,18 +68,49 @@ export const InfoModalComponent = ({modalVisible,Info}:InfoMadalProps) => {
   );
 };
 
+interface ConfirmMadalProps{
+    modalVisible:boolean;
+    Info:string;
+    onPressConfirm:()=>void
+    onPressCancle:()=>void
+}
+export const ConfirmModalComponent=({modalVisible,Info,onPressConfirm,onPressCancle}:ConfirmMadalProps)=>{
+    return(
+        <Modal
+            isVisible={modalVisible}
+            backdropOpacity={0.6}
+            onBackButtonPress={onPressCancle}
+            onBackdropPress={onPressCancle}
+        >
+            <View style={{ flex: 1,justifyContent: "center", alignItems: "center"}}>
+                <ModalView>
+                    <View style={{padding:20}}>
+                        <ModalTitle>{Info}</ModalTitle>
+                    </View>
+                    <View style={{flexDirection:'row', alignItems:'center',justifyContent:'space-around',paddingBottom:15}}>
+                        <TouchableOpacity style={{flex:0.5, alignItems:'center'}} onPress={onPressConfirm}>
+                            <ConfirmTest>확인</ConfirmTest>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={{flex:0.5, alignItems:'center'}} onPress={onPressCancle}>
+                            <Text style={Styles.m_b_font}>취소</Text>
+                        </TouchableOpacity>
+                    </View>
+                </ModalView>
+            </View>
+        </Modal>
+    )
+}
+
 
 
 
 const ModalView =styled.View`
     width:90%;
     background-color:white;
-    padding:30px;
     border-radius:10px;
 `
 const ModalTitle =styled.Text`
     ${Styles.m_m_font};
-    padding-bottom:20px;
 `
 const ModalTag =styled.View`
     flex-direction:row;
@@ -96,5 +127,10 @@ const Confirm=styled.Text`
     color:${Color.p_color};
     padding-right:30px;
 `
+const ConfirmTest = styled.Text`
+    ${Styles.m_b_font}
+    color:${Color.p_color}
+`
+
 
 export default ModalComponent;

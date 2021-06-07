@@ -31,6 +31,7 @@ type StackParamList={
   MyPage:undefined;
   ManageMyPage:undefined;
   ScrapListPage:undefined;
+  MyPostPage:undefined;
   LoginPage:undefined
 };
 

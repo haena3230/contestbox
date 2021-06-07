@@ -17,6 +17,7 @@ import CommunityDetailPage from './CommunityPage/CommunityDetailPage';
 import CommunityAddPage from './CommunityPage/CommunityAddPage';
 import MyPage from './MyPage';
 import ManageMyPage from './MyPage/ManageMyPage';
+import MyPostPage from '~/Pages/MyPage/MyPostPage'
 
 // icon
 import Search from '~/Assets/search-solid.svg';
@@ -128,6 +129,7 @@ const MainStackNavi=()=>{
         <Stack.Screen name="CommunityAddPage" component={CommunityAddPage} />
         <Stack.Screen name="ManageMyPage" component={ManageMyPage} />
         <Stack.Screen name="ScrapListPage" component={ScrapListPage} />
+        <Stack.Screen name="MyPostPage" component={MyPostPage} />
     </Stack.Navigator>
   )
 }
