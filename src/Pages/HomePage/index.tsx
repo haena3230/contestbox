@@ -23,6 +23,7 @@ import { status } from '~/Components/TextList';
 const HomePage = ({navigation}:HomaPageProps) => {
   useEffect(()=>{
     console.log('home')
+    console.log('test')
   },[])
   // catrgory && hot data
   // const { loading, error, data,refetch } = useQuery(GET_HOTS,{
