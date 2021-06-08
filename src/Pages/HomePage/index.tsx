@@ -20,6 +20,21 @@ import {HomaPageProps} from '~/Types';
 import {newStateArray} from '~/Components/Filter';
 import { status } from '~/Components/TextList';
 
+// test data
+import moment from 'moment';
+let testt = moment()
+const test={
+    categories:{
+        id:'12345',
+        label:'카테고리'
+    },
+    deadline:testt.format(),
+    poster:'https://user-images.githubusercontent.com/57908055/121138969-36232800-c873-11eb-9e24-ded05b8c732b.png',
+    recruit:'COMPLETED',
+    title:'제목이빈다.제목이빈다.제목이빈다.제목이빈다.제목이빈다.제목이빈다.',
+    viewcount:3,
+}
+
 const HomePage = ({navigation}:HomaPageProps) => {
   useEffect(()=>{
     console.log('home')
@@ -67,7 +82,8 @@ const HomePage = ({navigation}:HomaPageProps) => {
   // }
   // if(data.contests){
   //   hotData=data.contests.edges.map((contest)=>
-  //   <PosterContainer key = {contest.node.id.toString()} onPress={()=>
+        // <View style={{width:'48%', justifyContent:'center'}} key = {contest.node.id.toString()}>
+  //   <PosterContainer onPress={()=>
   //     navigation.push('DetailPage',{
   //       listId:contest.node.id
   //     })
@@ -85,6 +101,7 @@ const HomePage = ({navigation}:HomaPageProps) => {
   //       style={{position:'absolute',width:'100%',height:'100%', opacity:0.7,borderRadius:10}} />
   //     <PosterText numberOfLines={2}>{contest.node.title}</PosterText>
   //   </PosterContainer>
+        // </View>
   //   )
   // }
   return (
@@ -109,8 +126,58 @@ const HomePage = ({navigation}:HomaPageProps) => {
           <Title>
             인기대회
           </Title>
-          <View style={{flexWrap:'wrap',flexDirection:'row', justifyContent:'space-between'}}>
+          <View style={{flexWrap:'wrap',flexDirection:'row',justifyContent:'space-between'}}>
             {/* {hotData} */}
+            {/* test data */}
+            <View style={{width:'48%', justifyContent:'center'}}>
+            <PosterContainer>
+                <Recruitbox>
+                    {status(test.recruit,test.deadline)}
+                </Recruitbox>
+                <Image
+                    source={{uri:test.poster}}
+                    style={{width:'100%',height:'100%',borderRadius:10}}
+                />
+                <LinearGradient 
+                  colors={['transparent', Color.b_color]} 
+                  start={{ x: 0.5, y: 0.3 }} end={{ x: 0.5, y: 1 }}
+                  style={{position:'absolute',width:'100%',height:'100%', opacity:0.7,borderRadius:10}} />
+                <PosterText numberOfLines={2}>{test.title}</PosterText>
+              </PosterContainer>
+              </View>
+              <View style={{width:'48%', justifyContent:'center'}}>
+              <PosterContainer>
+                <Recruitbox>
+                    {status(test.recruit,test.deadline)}
+                </Recruitbox>
+                <Image
+                    source={{uri:test.poster}}
+                    style={{width:'100%',height:'100%',borderRadius:10}}
+                />
+                <LinearGradient 
+                  colors={['transparent', Color.b_color]} 
+                  start={{ x: 0.5, y: 0.3 }} end={{ x: 0.5, y: 1 }}
+                  style={{position:'absolute',width:'100%',height:'100%', opacity:0.7,borderRadius:10}} />
+                <PosterText numberOfLines={2}>{test.title}</PosterText>
+              </PosterContainer>
+              </View>
+              <View style={{width:'48%', justifyContent:'center'}}>
+            <PosterContainer>
+                <Recruitbox>
+                    {status(test.recruit,test.deadline)}
+                </Recruitbox>
+                <Image
+                    source={{uri:test.poster}}
+                    style={{width:'100%',height:'100%',borderRadius:10}}
+                />
+                <LinearGradient 
+                  colors={['transparent', Color.b_color]} 
+                  start={{ x: 0.5, y: 0.3 }} end={{ x: 0.5, y: 1 }}
+                  style={{position:'absolute',width:'100%',height:'100%', opacity:0.7,borderRadius:10}} />
+                <PosterText numberOfLines={2}>{test.title}</PosterText>
+              </PosterContainer>
+              </View>
+              {/* done */}
           </View>
           <View style={{height:50}}/>
           </Container>
@@ -170,10 +237,10 @@ const Title=styled.Text`
 `
 // poster
 const PosterContainer=styled.TouchableOpacity`
-  align-items:center;
-  width:50%;
+   
+  width:100%;
   aspect-ratio:0.7;
-  margin-right:10px;
+  margin-bottom:10px;
 `
 export const PosterText=styled.Text`
   ${Styles.s_m_font};
@@ -181,13 +248,13 @@ export const PosterText=styled.Text`
   padding-horizontal:3px;
   position:absolute;
   padding:10px;
-  bottom:0;
+  top:73%;
 `
 export const Recruitbox=styled.View`
   flex-direction:row;
   position:absolute;
   left:10px;
-  bottom:60px;
+  top:70%
   z-index:3;
 `
 export default HomePage;
