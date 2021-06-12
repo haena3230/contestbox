@@ -1,0 +1,44 @@
+{
+  "project_info": {
+    "project_number": "880797973035",
+    "project_id": "contestbox-7207a",
+    "storage_bucket": "contestbox-7207a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:880797973035:android:c14af87c8c9630d1d8486e",
+        "android_client_info": {
+          "package_name": "com.contestbox",
+          "certificate_hash": "60cdde3632c2b6173fd688176379c551b4860d8e"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "880797973035-7tdge846qrt91ihb7nqq0qo3kl9o57a7.apps.googleusercontent.com",
+          "client_type": 3,
+          "android_info": {
+            "package_name": "com.contestbox",
+            "certificate_hash": "60cdde3632c2b6173fd688176379c551b4860d8e"
+          }
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCodchWL_m-sMe01GPnOVh-9gIzo9pIzWY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "880797973035-oit01a4se5c1fkltvqfjk9hlhfjqpp0f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
