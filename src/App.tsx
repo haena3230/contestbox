@@ -29,6 +29,16 @@ const client = new ApolloClient({
     }
   })
 });
+
+// webclientId 초기화
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
+
+GoogleSignin.configure({
+  webClientId: '880797973035-o0ftppaj5qsge31eool340e3moao0faf.apps.googleusercontent.com',
+  offlineAccess: true
+});
+
+
 const App =()=>{
   useEffect(()=>{
     setTimeout(()=>{

@@ -3,11 +3,6 @@
 // webclientId 초기화
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
-GoogleSignin.configure({
-  webClientId: '880797973035-oit01a4se5c1fkltvqfjk9hlhfjqpp0f.apps.googleusercontent.com',
-  offlineAccess: false
-});
-
 // 로그인
 
 import auth from '@react-native-firebase/auth';;
@@ -18,12 +13,15 @@ export function GoogleSignIn() {
   return (
     <Button
       title="Google Sign-In"
-      onPress={() => onGoogleButtonPress().then(() => console.log('Signed in with Google!'))}
+      onPress={() => {
+        onGoogleButtonPress().then(() => console.log('Signed in with Google!'))}
+      }
     />
   );
 }
 
 async function onGoogleButtonPress() {
+
   // Get the users ID token
   const { idToken } = await GoogleSignin.signIn();
 

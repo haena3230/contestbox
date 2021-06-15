@@ -9,18 +9,21 @@
       "client_info": {
         "mobilesdk_app_id": "1:880797973035:android:c14af87c8c9630d1d8486e",
         "android_client_info": {
-          "package_name": "com.contestbox",
-          "certificate_hash": "60cdde3632c2b6173fd688176379c551b4860d8e"
+          "package_name": "com.contestbox"
         }
       },
       "oauth_client": [
         {
-          "client_id": "880797973035-7tdge846qrt91ihb7nqq0qo3kl9o57a7.apps.googleusercontent.com",
+          "client_id": "880797973035-o0ftppaj5qsge31eool340e3moao0faf.apps.googleusercontent.com",
           "client_type": 3,
           "android_info": {
             "package_name": "com.contestbox",
-            "certificate_hash": "60cdde3632c2b6173fd688176379c551b4860d8e"
+            "certificate_hash": "8db24a1fff359b84bc2c75121adda5784a22d60d"
           }
+        },
+        {
+          "client_id": "880797973035-oit01a4se5c1fkltvqfjk9hlhfjqpp0f.apps.googleusercontent.com",
+          "client_type": 3
         }
       ],
       "api_key": [
