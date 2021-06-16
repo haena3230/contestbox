@@ -14,16 +14,12 @@
       },
       "oauth_client": [
         {
-          "client_id": "880797973035-o0ftppaj5qsge31eool340e3moao0faf.apps.googleusercontent.com",
+          "client_id": "880797973035-32s5alunbevkb5lshlcqniioc7ubcjh3.apps.googleusercontent.com",
           "client_type": 3,
           "android_info": {
             "package_name": "com.contestbox",
-            "certificate_hash": "8db24a1fff359b84bc2c75121adda5784a22d60d"
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
           }
-        },
-        {
-          "client_id": "880797973035-oit01a4se5c1fkltvqfjk9hlhfjqpp0f.apps.googleusercontent.com",
-          "client_type": 3
         }
       ],
       "api_key": [

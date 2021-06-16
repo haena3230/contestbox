@@ -30,20 +30,22 @@ const client = new ApolloClient({
   })
 });
 
-// webclientId 초기화
+
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
-
-GoogleSignin.configure({
-  webClientId: '880797973035-o0ftppaj5qsge31eool340e3moao0faf.apps.googleusercontent.com',
-  offlineAccess: true
-});
-
+import { Platform } from 'react-native';
 
 const App =()=>{
   useEffect(()=>{
     setTimeout(()=>{
       SplashScreen.hide();
     },1000);
+    // webclientId 초기화
+    if (Platform.OS === 'android') {
+        GoogleSignin.configure({
+          webClientId :'880797973035-32s5alunbevkb5lshlcqniioc7ubcjh3.apps.googleusercontent.com',
+          offlineAccess:false
+        });
+      }    
   },[])
   return (
     // <ErrorBoundary onError={errorHandler} FallbackComponent={CustomFallback}>

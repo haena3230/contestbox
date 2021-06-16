@@ -1,6 +1,6 @@
 // my page
 import React from 'react'
-import { Text, View } from 'react-native'
+import { Button, Text, TouchableOpacity, View } from 'react-native'
 import styled from 'styled-components/native'
 import {Color, IconSize, Styles} from '~/Styles'
 // component
@@ -13,7 +13,7 @@ import PenIcon from '~/Assets/create_black_24dp.svg';
 import { MyPageProps } from '~/Types'
 
 // test 
-import { GoogleSignIn } from '~/Components/Login' 
+import { onGoogleButtonPress } from '~/Components/Login' 
 
 
 const MyPage= ({navigation}:MyPageProps)=>{
@@ -21,7 +21,11 @@ const MyPage= ({navigation}:MyPageProps)=>{
         <View style={{flex:1}}>
             <Header />
             <Container style={{justifyContent:'center'}}>
-                <GoogleSignIn />
+                {/* <GoogleSignIn /> */}
+                <Button
+                    title="Google Sign-In"
+                    onPress={() => onGoogleButtonPress().then(() => console.log('Signed in with Google!'))}
+                    />
                 <BoxContainer onPress={()=>navigation.navigate('ManageMyPage')}>
                     <UserIcon style={{marginRight:10}} height={IconSize.bicon} width={IconSize.bicon} fill={Color.gray} />
                     <Text style={Styles.m_m_font}>개인정보 변경</Text>
