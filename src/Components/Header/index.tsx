@@ -47,7 +47,7 @@ interface SubmitHeaderProps{
 }
 export const SubmitHeader = ({pageName,onPressClose,onPressSubmit}:SubmitHeaderProps)=>{
     return(
-        <View style={{flexDirection:'row', justifyContent:'space-between', alignItems:'center', width:'100%'}}>
+        <View style={{flexDirection:'row', justifyContent:'space-between', alignItems:'center', width:'100%', backgroundColor:Color.background}}>
             <SubmitHeaderContainer>
                 <Item>
                     <BackIcon width={IconSize.sicon} height={IconSize.sicon} color={Color.gray} onPress={onPressClose}/>
@@ -72,7 +72,7 @@ interface SubmitHeaderProps{
 }
 export const MenuHeader = ({pageName,onPressClose,onPressSubmit}:SubmitHeaderProps)=>{
     return(
-        <View style={{flexDirection:'row', justifyContent:'space-between', alignItems:'center', width:'100%'}}>
+        <View style={{flexDirection:'row', justifyContent:'space-between', alignItems:'center', width:'100%', backgroundColor:Color.background}}>
             <SubmitHeaderContainer>
                 <Item>
                     <BackIcon width={IconSize.sicon} height={IconSize.sicon} color={Color.gray} onPress={onPressClose}/>
@@ -92,11 +92,13 @@ const HeaderContainer=styled.View`
     width:100%;
     flex-direction:row;
     align-items:center;
+    background-color:${Color.background}
 `
 
 const SubmitHeaderContainer=styled.View`
     flex-direction:row;
     align-items:center;
+    background-color:${Color.background}
 `
 const HeaderText=styled.Text`
     ${Styles.mb_b_font};

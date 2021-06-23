@@ -13,7 +13,7 @@ import PenIcon from '~/Assets/create_black_24dp.svg';
 import { MyPageProps } from '~/Types'
 
 // test 
-import { onGoogleButtonPress } from '~/Components/Login' 
+import { SignOut } from '~/Components/Login'; 
 
 
 const MyPage= ({navigation}:MyPageProps)=>{
@@ -21,11 +21,6 @@ const MyPage= ({navigation}:MyPageProps)=>{
         <View style={{flex:1}}>
             <Header />
             <Container style={{justifyContent:'center'}}>
-                {/* <GoogleSignIn /> */}
-                <Button
-                    title="Google Sign-In"
-                    onPress={() => onGoogleButtonPress().then(() => console.log('Signed in with Google!'))}
-                    />
                 <BoxContainer onPress={()=>navigation.navigate('ManageMyPage')}>
                     <UserIcon style={{marginRight:10}} height={IconSize.bicon} width={IconSize.bicon} fill={Color.gray} />
                     <Text style={Styles.m_m_font}>개인정보 변경</Text>
@@ -37,7 +32,12 @@ const MyPage= ({navigation}:MyPageProps)=>{
                 <BoxContainer onPress={()=>navigation.navigate('MyPostPage')}>
                     <PenIcon style={{marginRight:10}} height={IconSize.bicon} width={IconSize.bicon} fill={Color.gray} />
                     <Text style={Styles.m_m_font}>내가 쓴 글</Text>
-                </BoxContainer>            
+                </BoxContainer> 
+                <TouchableOpacity onPress={()=>SignOut()} style={{alignItems:'flex-end',margin:10}}>
+                    <Text style={{color:Color.r_color, fontSize:13}}>
+                        다른 아이디로 로그인하기
+                    </Text>
+                </TouchableOpacity>
             </Container>    
         </View>
     )

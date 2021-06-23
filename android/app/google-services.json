@@ -15,7 +15,7 @@
       "oauth_client": [
         {
           "client_id": "880797973035-32s5alunbevkb5lshlcqniioc7ubcjh3.apps.googleusercontent.com",
-          "client_type": 3,
+          "client_type": 1,
           "android_info": {
             "package_name": "com.contestbox",
             "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"

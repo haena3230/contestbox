@@ -1,15 +1,20 @@
-import React,{useEffect} from 'react';
-import {NavigationContainer} from '@react-navigation/native';
-import MainStackNavi from './Pages/navigation';
-import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
+// app
+import React,{useEffect, useState} from 'react';
 import SplashScreen from 'react-native-splash-screen';
-import { relayStylePagination } from '@apollo/client/utilities';
 import ErrorBoundary from 'react-native-error-boundary'
 import {ErrorPage} from '~/Components/Error';
+import LoginPage from '~/Pages/LoginPage';
+// navi
+import {NavigationContainer} from '@react-navigation/native';
+import MainStackNavi from './Pages/navigation';
+// apollo
+import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
+import { relayStylePagination } from '@apollo/client/utilities';
+// login
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import auth from '@react-native-firebase/auth';
 
 // error 판별 시간 정하기 
-// 메일로 보내주기
-
 const CustomFallback = (props: { error: Error, resetError: Function }) => (
   <ErrorPage 
     onPress={()=>null}
@@ -30,23 +35,35 @@ const client = new ApolloClient({
   })
 });
 
-
-import { GoogleSignin } from '@react-native-google-signin/google-signin';
-import { Platform } from 'react-native';
-
 const App =()=>{
+  const [initializing, setInitializing] = useState<boolean>(true);
+  const [user, setUser] = useState();
+
+  // 로그인상태 확인
+  function onAuthStateChanged(user) {
+    setUser(user);
+    if (initializing) setInitializing(false);
+  }
   useEffect(()=>{
     setTimeout(()=>{
       SplashScreen.hide();
     },1000);
     // webclientId 초기화
-    if (Platform.OS === 'android') {
-        GoogleSignin.configure({
-          webClientId :'880797973035-32s5alunbevkb5lshlcqniioc7ubcjh3.apps.googleusercontent.com',
-          offlineAccess:false
-        });
-      }    
+    GoogleSignin.configure({
+      webClientId :'880797973035-oit01a4se5c1fkltvqfjk9hlhfjqpp0f.apps.googleusercontent.com',
+      offlineAccess:true
+    });
+    // login상태 확인
+    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+    return subscriber; // unsubscribe on unmount
+    
   },[])
+  if (initializing) return null;
+  if (!user) {
+    return (
+      <LoginPage />
+    );
+  }
   return (
     // <ErrorBoundary onError={errorHandler} FallbackComponent={CustomFallback}>
       <ApolloProvider client={client}>
