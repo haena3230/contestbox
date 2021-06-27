@@ -105,7 +105,7 @@ const SearchPage = ({navigation}:SearchPageProps) => {
 
 const Title=styled.Text`
   ${Styles.m_b_font};
-  margin:20px 0 15px 0;
+  margin:15px 0 15px 0;
 `
 
 const Point = styled.Text`

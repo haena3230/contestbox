@@ -1,6 +1,6 @@
 // scrap list page
 import React, { useState } from 'react';
-import { View,Text,TouchableOpacity } from 'react-native';
+import { View,ScrollView,TouchableOpacity } from 'react-native';
 import { MyPageProps } from '~/Types';
 // component
 import { MenuHeader } from '~/Components/Header';
@@ -27,12 +27,14 @@ const test={
 const ScrapListPage=({navigation}:MyPageProps)=>{
     const[menu,setMenu]=useState<boolean>(false)
     return(
-        <View style={{flex:1}}>
-            <MenuHeader pageName={'스크랩 목록'} onPressClose={()=>navigation.goBack()} onPressSubmit={()=>setMenu(!menu)}/>
+        <ScrollView showsVerticalScrollIndicator={false}>
             <Container>
-                <Item menu={menu}/>
+                <MenuHeader pageName={'스크랩 목록'} onPressClose={()=>navigation.goBack()} onPressSubmit={()=>setMenu(!menu)}/>
+                <View style={{marginVertical:10}}>
+                    <Item menu={menu}/>
+                </View>
             </Container>
-        </View>
+        </ScrollView>
     )
 }
 

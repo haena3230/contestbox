@@ -32,9 +32,11 @@ const CommunityDetailPage = (props:CommunityDetailPageProps)=>{
                     setTotop(false);
                 }                            
             }}
-            onScrollBeginDrag={()=>setTotop(true)}>
-                <PageHeader pageName={category} onPressClose={()=>props.navigation.goBack()}/>
+            onScrollBeginDrag={()=>setTotop(true)}
+            showsVerticalScrollIndicator={false}
+            >
                 <Container>
+                    <PageHeader pageName={category} onPressClose={()=>props.navigation.goBack()}/>
                 <BoxContainer>
                     <BoxHeader>
                         <View style={{flexDirection:'row', alignItems:'center'}}>
@@ -55,7 +57,7 @@ const CommunityDetailPage = (props:CommunityDetailPageProps)=>{
                 <Comment />
                 <Comment />
                 </Container>
-                <View style={{height:80}}/>
+                <View style={{height:60}}/>
             </ScrollView>
             <BottomBar />
             {totop?
@@ -127,7 +129,7 @@ const BoxContainer = styled.View`
     border-color:${Color.border};
     border-radius:5px;
     padding:10px;
-    margin-vertical:5px;
+    margin-Bottom:5px;
 `
 
 const BoxHeader = styled.View`

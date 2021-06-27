@@ -105,10 +105,9 @@ const HomePage = ({navigation}:HomaPageProps) => {
   //   )
   // }
   return (
-    <View>
-      <Header/>
-        <ScrollView>
-          <Container>
+    <ScrollView showsVerticalScrollIndicator={false}>
+      <Container>
+          <Header/>
           <View style={{height:(DWidth-20)*(1/3)}}>
             <Banner />
           </View>
@@ -179,10 +178,8 @@ const HomePage = ({navigation}:HomaPageProps) => {
               </View>
               {/* done */}
           </View>
-          <View style={{height:50}}/>
-          </Container>
-        </ScrollView>
-    </View>
+      </Container>
+      </ScrollView>
   );
 };
 

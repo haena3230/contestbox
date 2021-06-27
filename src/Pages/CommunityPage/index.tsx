@@ -5,11 +5,11 @@ import { Color, Container,  Styles } from '~/Styles'
 import styled from 'styled-components/native'
 // component
 import { CategoryListTag } from '~/Components/HashTag';
-import Header from '~/Components/Header';
 import {CommunityListBtn,CommunityMenuBtn} from '~/Components/Btn';
 import { BoxFeed, ListFeed } from '~/Components/CommunityFeed';
 import AddBtn from '~/Components/AddPost';
 import { CommunityPageProps } from '~/Types';
+import { CMSearchBar } from '~/Components/SearchBar';
 
 const test = [{label: '전체', value:false}, {label: '자유게시판', value:false}, {label: '팀원구해요', value:false}, {label: '후기', value:false}, {label: '공지', value:false}];
 
@@ -24,48 +24,50 @@ const CommunityPage= ({navigation}:CommunityPageProps)=>{
     }
     return(
         <View style={{flex:1}}>
-            <ScrollView>
-                <Header />
-                <Container>
-                    <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-                        {test.map((data)=>{
-                            return(
-                                <TouchableOpacity key={data.label} onPress={()=>null} >
-                                    <CategoryListTag text={data.label} picked={data.value}  />
-                                </TouchableOpacity>
-                            )
-                        })}
-                    </ScrollView>
-                    <CommunityBar boxFeed={boxFeed} sort={sort} onPressFeedList={()=>setBoxFeed(!boxFeed)} onPressSort={()=>setSort(!sort)}/>
-                    {/* feed */}
-                    {boxFeed?(
-                        <View>
-                            <TouchableOpacity onPress={onPressFeed}>
-                                <BoxFeed 
-                                    category={'자유게시판'} 
-                                    time={'10분전'} 
-                                    title={'제목입니당당당당다라다랃라다랃라다라다라달다랃라다'}
-                                    body={'바디입니다ㅏㅏ다다ㅏ다다바디입니다ㅏㅏ다다ㅏ다다바디입니다ㅏㅏ다다ㅏ다다바디입니다ㅏㅏ다다ㅏ다다바디입니다ㅏㅏ다다ㅏ다다'}
-                                    url={['2','2']}
-                                    comments={3}
-                                    />
+            <View style={{width:'100%',alignItems:'center', marginTop:10}}>
+              <CMSearchBar navigation={navigation}/>
+            </View>
+        <ScrollView showsVerticalScrollIndicator={false}>
+            <Container>
+                <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={{marginTop:10}}>
+                    {test.map((data)=>{
+                        return(
+                            <TouchableOpacity key={data.label} onPress={()=>null} >
+                                <CategoryListTag text={data.label} picked={data.value}  />
                             </TouchableOpacity>
-                        </View>
-                    ):(
-                        <View>
-                            <TouchableOpacity onPress={onPressFeed}>
-                                <ListFeed 
-                                    category={'자유게시판'}
-                                    title={'제목입니다다다다다ㅏ다다다'}
-                                    time={'2분전'}
-                                    comments={3}
+                        )
+                    })}
+                </ScrollView>
+                <CommunityBar boxFeed={boxFeed} sort={sort} onPressFeedList={()=>setBoxFeed(!boxFeed)} onPressSort={()=>setSort(!sort)}/>
+                {/* feed */}
+                {boxFeed?(
+                    <View>
+                        <TouchableOpacity onPress={onPressFeed}>
+                            <BoxFeed 
+                                category={'자유게시판'} 
+                                time={'10분전'} 
+                                title={'제목입니당당당당다라다랃라다랃라다라다라달다랃라다'}
+                                body={'바디입니다ㅏㅏ다다ㅏ다다바디입니다ㅏㅏ다다ㅏ다다바디입니다ㅏㅏ다다ㅏ다다바디입니다ㅏㅏ다다ㅏ다다바디입니다ㅏㅏ다다ㅏ다다'}
+                                url={['2','2']}
+                                comments={3}
                                 />
-                            </TouchableOpacity>
-                        </View>
-                    )}
-                </Container>
-            </ScrollView>
-            <AddBtn onPressAddBtn={()=>navigation.navigate('CommunityAddPage')}/>
+                        </TouchableOpacity>
+                    </View>
+                ):(
+                    <View>
+                        <TouchableOpacity onPress={onPressFeed}>
+                            <ListFeed 
+                                category={'자유게시판'}
+                                title={'제목입니다다다다다ㅏ다다다'}
+                                time={'2분전'}
+                                comments={3}
+                            />
+                        </TouchableOpacity>
+                    </View>
+                )}
+            </Container>
+        </ScrollView>
+        <AddBtn onPressAddBtn={()=>navigation.navigate('CommunityAddPage')}/>
         </View>
     )
 }

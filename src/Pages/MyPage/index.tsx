@@ -18,9 +18,9 @@ import { SignOut } from '~/Components/Login';
 
 const MyPage= ({navigation}:MyPageProps)=>{
     return(
-        <View style={{flex:1}}>
+        <Container>
             <Header />
-            <Container style={{justifyContent:'center'}}>
+            <View style={{flex:1,justifyContent:'center'}}>
                 <BoxContainer onPress={()=>navigation.navigate('ManageMyPage')}>
                     <UserIcon style={{marginRight:10}} height={IconSize.bicon} width={IconSize.bicon} fill={Color.gray} />
                     <Text style={Styles.m_m_font}>개인정보 변경</Text>
@@ -38,8 +38,8 @@ const MyPage= ({navigation}:MyPageProps)=>{
                         다른 아이디로 로그인하기
                     </Text>
                 </TouchableOpacity>
-            </Container>    
-        </View>
+            </View>
+        </Container>   
     )
 }
 

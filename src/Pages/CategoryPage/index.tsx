@@ -47,12 +47,10 @@ const CategoryPage =({navigation}:CategoryPageProps)=>{
         )
     }
     return(
-        <ScrollView>
+        <ScrollView showsVerticalScrollIndicator={false}>
             <Container>
-                <Title>
-                    <Text style={Styles.m_b_font}>인기 카테고리</Text>
-                </Title>
-                <View style={{flexWrap:'wrap',flexDirection:'row', justifyContent:'space-between'}}>
+                <Text style={Styles.m_b_font}>인기 카테고리</Text>
+                <View style={{flexWrap:'wrap',flexDirection:'row', justifyContent:'space-between', marginTop:10,marginBottom:20}}>
                     <CategotySport />
                     <CategotyIT />
                     <CategotyStudy />
@@ -60,14 +58,13 @@ const CategoryPage =({navigation}:CategoryPageProps)=>{
                     <CategotyMusic />
                     <CategotyDesign />
                 </View>
-                <Title>
+                <View style={{flexDirection:'row'}}>
                     <Point>카테고리</Point>
                     <Text style={Styles.mb_b_font}>를 통해 둘러보세요</Text>
-                </Title>
+                </View>
                 <View style={{flexDirection:'row',flexWrap:'wrap',justifyContent:'space-between'}}>
                     {categoryData}
                 </View>
-
             </Container>
         </ScrollView>
     )
@@ -75,10 +72,6 @@ const CategoryPage =({navigation}:CategoryPageProps)=>{
 
 
 export default CategoryPage;
-
-const Title=styled.Text`
-  margin:20px 0 15px 0;
-`
 
 const Point = styled.Text`
   ${Styles.mb_b_font};

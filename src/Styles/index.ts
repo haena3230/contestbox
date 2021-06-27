@@ -99,7 +99,7 @@ export const Styles = StyleSheet.create({
  // 페이지 스타일
  export const Container=styled.View`
   background-color:${Color.background};
-  padding-horizontal:10px;
+  padding:10px;
   flex:1;
 `
 // 비율 
