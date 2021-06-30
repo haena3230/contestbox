@@ -81,20 +81,19 @@ export const CategoryListTag = ({picked,text}:CategoryListTagProps)=>{
 const ListBoxCategoryBox = styled.View`
     justify-content:center;
     align-items:center;
-    background-color:${Color.artbox};
-    border-width:1px;
-    border-color:${Color.border};
-    border-radius:15px;
+    background-color:${Color.border};
+    border-radius:5px;
     min-width:40px;
-    padding:${DWidth>480? '0 20px 0 20px':'0 10px 0 10px'};
-    height:28px;
+    padding:${DWidth>480? '3px 10px 3px 10px':'2px 5px 2px 5px'};
     margin-right:6px;
 `
 
 
 // hashtag(filter btn)
 const BoxText=styled.Text`
-    ${Styles.s_m_font};
+    ${Styles.s_font};
+    font-weight:700;
+    color:${Color.gray}
     padding-horizontal:3px;
 `
 const PickedBoxText=styled.Text`

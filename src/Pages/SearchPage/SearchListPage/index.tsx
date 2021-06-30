@@ -154,6 +154,9 @@ const SearchListPage =(props:SearchListPageProps)=>{
             viewcount={data.node.hits}
             categories={data.node.categories}
             poster={data.node.posterURL}
+            host={'test'}
+            viewScrap={false}
+            isScrap={false}
             />
     )
     pageInfo=data.contests.pageInfo;
