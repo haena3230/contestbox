@@ -141,6 +141,6 @@ const CategoryListTagBox=styled.View`
     flex-direction:row;
     align-items:center;
     justify-content:center;
-    margin-right:6px;
+    margin-left:10px;
     padding:${DWidth>480? '0 20px 0 20px':'0 10px 0 10px'};
 `

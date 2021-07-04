@@ -1,7 +1,7 @@
 import React,{useState,useRef, useEffect} from 'react';
 import {View,ScrollView, Text, TouchableOpacity} from 'react-native';
 import styled from 'styled-components/native';
-import {Styles,Color} from '~/Styles';
+import {Styles,Color, Container} from '~/Styles';
 // data
 import {CategoryListPageProps } from '~/Types';
 // component
@@ -51,31 +51,30 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
     };
     
     return(
-        <View>
+        <View style = {{backgroundColor:Color.background, paddingTop:10,flex:1}}>
             <ScrollView 
-                style={{backgroundColor:Color.background}} 
-                ref={scrollRef}
-                onScroll={(e)=>{     
-                    if (e.nativeEvent.contentOffset.y===0){
-                        setTotop(false);
-                    }                    
-                }}
-                onScrollBeginDrag={()=>setTotop(true)}
-                >
-                <PageHeader onPressClose={()=>props.navigation.goBack()} pageName={category[0].label} />
+            ref={scrollRef}
+            onScroll={(e)=>{     
+                if (e.nativeEvent.contentOffset.y===0){
+                    setTotop(false);
+                }                    
+            }}
+            onScrollBeginDrag={()=>setTotop(true)}
+            showsVerticalScrollIndicator={false}
+            >
+                <View style={{paddingLeft:10}}>
+                    <PageHeader onPressClose={()=>props.navigation.goBack()} pageName={category[0].label}/>
+                </View>
                 {categoryArray.length>1?(
-                        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={{marginLeft:10}}>
-                            {category.slice(1).map((data,index)=>{
-                                return(
-                                    <TouchableOpacity key={data.id} onPress={()=>onPressCateBtn(data,index)} >
-                                        <CategoryListTag text={data.label} picked={data.value}  />
-                                    </TouchableOpacity>
-                                )
-                            })}
-                        </ScrollView>
-                    ):(
-                        null
-                    )}
+                    <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+                        {category.slice(1).map((data,index)=>{
+                            return(
+                                <TouchableOpacity key={data.id} onPress={()=>onPressCateBtn(data,index)} >
+                                    <CategoryListTag text={data.label} picked={data.value}  />
+                                </TouchableOpacity>
+                            )
+                        })}
+                    </ScrollView>):null}
                 <Title>
                     <Text style={Styles.m_b_font}>인기대회</Text>
                 </Title>

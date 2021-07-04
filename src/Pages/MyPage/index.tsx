@@ -1,5 +1,5 @@
 // my page
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, Text, TouchableOpacity, View } from 'react-native'
 import styled from 'styled-components/native'
 import {Color, IconSize, Styles} from '~/Styles'
@@ -11,12 +11,31 @@ import UserIcon from '~/Assets/assignment_ind_black_24dp.svg'
 import StarIcon from '~/Assets/star_outline_black_24dp.svg'
 import PenIcon from '~/Assets/create_black_24dp.svg';
 import { MyPageProps } from '~/Types'
-
-// test 
+// login
+import LoginPage from '~/Pages/LoginPage'
+import auth from '@react-native-firebase/auth';
 import { SignOut } from '~/Components/Login'; 
 
 
 const MyPage= ({navigation}:MyPageProps)=>{
+    const [initializing, setInitializing] = useState<boolean>(true);
+    const [user, setUser] = useState(); 
+    // 로그인상태 확인
+    function onAuthStateChanged(user) {
+        setUser(user);
+        if (initializing) setInitializing(false);
+    }
+    useEffect(()=>{
+        // login상태 확인
+        const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+        return subscriber; // unsubscribe on unmount
+    },[])
+    if (initializing) return null;
+    if (!user) {
+        return (
+        <LoginPage />
+        );
+    }
     return(
         <Container>
             <Header />

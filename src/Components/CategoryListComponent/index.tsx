@@ -98,7 +98,7 @@ export const CategoryListDataHOT=({categoryIdArr,props}:CategoryListDataProps)=>
     }
 
     return(
-        <View style={{marginLeft:10}}>
+        <View>
             <ScrollView 
                 horizontal={true} 
                 showsHorizontalScrollIndicator={false}
@@ -198,7 +198,7 @@ export const CategoryListDataLATEST=({categoryIdArr,props}:CategoryListDataProps
     }
 
     return(
-        <View style={{marginLeft:10}}>
+        <View>
             <ScrollView 
                 horizontal={true} 
                 showsHorizontalScrollIndicator={false}
@@ -298,7 +298,7 @@ export const CategoryListDataIMM=({categoryIdArr,props}:CategoryListDataProps)=>
     }
 
     return(
-        <View style={{marginLeft:10}}>
+        <View>
             <ScrollView 
                 horizontal={true} 
                 showsHorizontalScrollIndicator={false}
@@ -326,7 +326,7 @@ const PosterContainer=styled.TouchableOpacity`
   align-items:center;
   width:150px;
   aspect-ratio:0.7;
-  margin-right:10px;
+  margin-left:10px;
 `
 
 

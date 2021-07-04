@@ -1,6 +1,6 @@
 
 import React from 'react';
-import {View} from 'react-native';
+import {TouchableOpacity, View} from 'react-native';
 import {Styles,IconSize,Color} from '~/Styles';
 import styled from 'styled-components/native';
 
@@ -17,64 +17,67 @@ import Bulb from '~/Assets/emoji_objects_black_24dp.svg';
 
 
 // contest category btn
-export const CategotySport =()=>{
+interface HotCategoryBtnProps{
+    onPress:()=>void;
+}
+export const CategorySport =({onPress}:HotCategoryBtnProps)=>{
     return(
-        <View style={{alignItems:'center'}}>
+        <TouchableOpacity style={{alignItems:'center'}} onPress={onPress}>
             <CategoryBtnBox>
                 <Run height={IconSize.bicon} width={IconSize.bicon} fill={Color.gray}/>
             </CategoryBtnBox>
             <CategoryBtnText>스포츠</CategoryBtnText>
-        </View>
+        </TouchableOpacity>
     )
 }
-export const CategotyIT =()=>{
+export const CategoryIT =({onPress}:HotCategoryBtnProps)=>{
     return(
-        <View style={{alignItems:'center'}}>
+        <TouchableOpacity style={{alignItems:'center'}} onPress={onPress}>
             <CategoryBtnBox>
                 <PC height={IconSize.bicon} width={IconSize.bicon} fill={Color.gray}/>
             </CategoryBtnBox>
             <CategoryBtnText>IT</CategoryBtnText>
-        </View>
+        </TouchableOpacity>
     )
 }
-export const CategotyStudy =()=>{
+export const CategoryStudy =({onPress}:HotCategoryBtnProps)=>{
     return(
-        <View style={{alignItems:'center'}}>
+        <TouchableOpacity style={{alignItems:'center'}} onPress={onPress}>
             <CategoryBtnBox>
                 <Study height={IconSize.bicon} width={IconSize.bicon} fill={Color.gray}/>
             </CategoryBtnBox>
             <CategoryBtnText>학습</CategoryBtnText>
-        </View>
+        </TouchableOpacity>
     )
 }
-export const CategotyUCC =()=>{
+export const CategoryUCC =({onPress}:HotCategoryBtnProps)=>{
     return(
-        <View style={{alignItems:'center'}}>
+        <TouchableOpacity style={{alignItems:'center'}} onPress={onPress}>
             <CategoryBtnBox>
                 <Movie height={IconSize.bicon} width={IconSize.bicon} fill={Color.gray}/>
             </CategoryBtnBox>
             <CategoryBtnText>UCC</CategoryBtnText>
-        </View>
+        </TouchableOpacity>
     )
 }
-export const CategotyMusic =()=>{
+export const CategoryMusic =({onPress}:HotCategoryBtnProps)=>{
     return(
-        <View style={{alignItems:'center'}}>
+        <TouchableOpacity style={{alignItems:'center'}} onPress={onPress}>
             <CategoryBtnBox>
                 <Music height={IconSize.bicon} width={IconSize.bicon} fill={Color.gray}/>
             </CategoryBtnBox>
             <CategoryBtnText>음악</CategoryBtnText>
-        </View>
+        </TouchableOpacity>
     )
 }
-export const CategotyDesign =()=>{
+export const CategoryDesign =({onPress}:HotCategoryBtnProps)=>{
     return(
-        <View style={{alignItems:'center'}}>
+        <TouchableOpacity style={{alignItems:'center'}} onPress={onPress}>
             <CategoryBtnBox>
                 <Design height={IconSize.bicon} width={IconSize.bicon} fill={Color.gray}/>
             </CategoryBtnBox>
             <CategoryBtnText>미술</CategoryBtnText>
-        </View>
+        </TouchableOpacity>
     )
 }
 
@@ -120,7 +123,7 @@ export const ConditionBtn =({text}:CondiitonProps)=>{
 
 
 // category Btn
-const CategoryBtnBox=styled.TouchableOpacity`
+const CategoryBtnBox=styled.View`
     background-color:${Color.artbox};
     border-width:1px;
     border-color:${Color.border};

@@ -3,52 +3,21 @@ import React from 'react';
 import {View, Text, ScrollView} from 'react-native';
 import styled from 'styled-components/native';
 // Component
-import {HashTag} from '~/Components/HashTag';
 import {SearchBar} from '~/Components/SearchBar';
 import MapIcon from '~/Assets/map-marked-alt-solid.svg';
-
+import { CategoryDesign, CategoryIT, CategoryMusic, CategorySport, CategoryStudy, CategoryUCC, 
+    TypeFirst, TypeSecond, TypeThird,ConditionBtn} from '~/Components/CategoryBtn';
 // style 
 import {Color,Styles,Container,IconSize} from '~/Styles';
 import {TouchableOpacity } from 'react-native-gesture-handler';
 // data
 import {SearchPageProps} from '~/Types';
-import {newStateArray,CategoryView} from '~/Components/Filter';
-import { useQuery } from '@apollo/client';
-import { GET_CATEGORIES} from '~/queries';
-import Loading from '~/Components/Loading';
-import { ErrorPage } from '~/Components/Error';
-import { CategotyDesign, CategotyIT, CategotyMusic, CategotySport, CategotyStudy, CategotyUCC, 
-    TypeFirst, TypeSecond, TypeThird,ConditionBtn} from '~/Components/CategoryBtn';
+import { treeCategoriesVar } from '~/global';
+import { newStateArray } from '~/Components/Filter';
+
 
 const SearchPage = ({navigation}:SearchPageProps) => {
-  // catrgory data
-  // const {loading,error,data,refetch} =useQuery(GET_CATEGORIES,{
-  //   fetchPolicy:'cache-and-network'
-  // })
-  // let cateData=[];
-  // if(loading) return <Loading />
-  // if(error) return <ErrorPage onPress={async ()=>{
-  //       try{
-  //           await refetch()
-  //           console.log('refetch')
-  //       } catch(e){
-  //           console.log('refetch err')
-  //       }}} />
-  // if(data.categories){
-  //   cateData=CategoryView(data.categories).slice(0,9).map((cate)=>
-  //     <TouchableOpacity  key = {cate[0].id} onPress={()=>{
-  //         navigation.navigate('CategoryListPage',{
-  //           categoryArray:newStateArray(cate),
-  //           typeArray:null,
-  //           conditionArray:null,
-  //         })
-  //     }}
-  //     style={{paddingVertical:5}}
-  //     >
-  //       <HashTag hashtag={cate[0].label} picked={false}/>
-  //     </TouchableOpacity>
-  //   )
-  // }
+  const treeCategories = treeCategoriesVar()
   return (
       <ScrollView>
         <Container>
@@ -61,7 +30,7 @@ const SearchPage = ({navigation}:SearchPageProps) => {
             <View style={{width:'100%',alignItems:'center'}}>
               <SearchBar navigation={navigation}/>
             </View>
-            {/* map searcg */}
+            {/* map search */}
             <TouchableOpacity onPress={()=>null} style ={{flexDirection:'row',justifyContent:'flex-end', alignItems:'center', paddingRight:5}}>
               <MapIcon height={IconSize.sicon} width={IconSize.sicon} color={Color.p_color}/>
               <MapSearchText>지도로 찾아보기</MapSearchText>
@@ -71,12 +40,40 @@ const SearchPage = ({navigation}:SearchPageProps) => {
               인기카테고리
             </Title>
             <View style={{flexWrap:'wrap',flexDirection:'row', justifyContent:'space-between'}}>
-              <CategotySport />
-              <CategotyIT />
-              <CategotyStudy />
-              <CategotyUCC />
-              <CategotyMusic />
-              <CategotyDesign />
+              {treeCategories.map((group)=>{
+              if(group[0].label=="스포츠")
+                  <CategorySport key = {group[0].id} onPress={()=>navigation.navigate('CategoryListPage',{
+                    categoryArray:newStateArray(group),
+                    categoryIdArr:[group[0].id]
+                  })}/>
+              else if(group[0].label=="IT")
+                  <CategoryIT key = {group[0].id} onPress={()=>navigation.navigate('CategoryListPage',{
+                    categoryArray:newStateArray(group),
+                    categoryIdArr:[group[0].id]
+                  })}/>
+              else if(group[0].label=="학습")
+                  <CategoryStudy key = {group[0].id} onPress={()=>navigation.navigate('CategoryListPage',{
+                    categoryArray:newStateArray(group),
+                    categoryIdArr:[group[0].id]
+                  })}/>
+              else if(group[0].label=="UCC")
+                  <CategoryUCC key = {group[0].id} onPress={()=>navigation.navigate('CategoryListPage',{
+                    categoryArray:newStateArray(group),
+                    categoryIdArr:[group[0].id]
+                  })}/>
+              else if(group[0].label=="음악")
+                return(
+                  <CategoryMusic key = {group[0].id} onPress={()=>navigation.navigate('CategoryListPage',{
+                    categoryArray:newStateArray(group),
+                    categoryIdArr:[group[0].id]
+                  })}/>
+                )
+              else if(group[0].label=="미술")
+                  <CategoryDesign key = {group[0].id} onPress={()=>navigation.navigate('CategoryListPage',{
+                    categoryArray:newStateArray(group),
+                    categoryIdArr:[group[0].id]
+                  })}/>
+              })}
             </View>
             {/* contest type */}
             <Title>

@@ -8,102 +8,120 @@ import LinearGradient from 'react-native-linear-gradient';
 import Header from '~/Components/Header';
 import {Container,Styles,Color,DWidth, DHeight} from '~/Styles';
 import Swiper from 'react-native-swiper';
-import {HashTag} from '~/Components/HashTag';
 import Loading from '~/Components/Loading';
 import {CategoryView} from '~/Components/Filter';
 import {ErrorPage} from '~/Components/Error';
-import {CategotySport, CategotyIT,CategotyStudy,CategotyUCC,CategotyMusic,CategotyDesign, TypeFirst, TypeSecond, TypeThird} from '~/Components/CategoryBtn';
+import {CategoryDesign, CategoryIT, CategoryMusic, CategorySport, CategoryStudy, CategoryUCC} from '~/Components/CategoryBtn';
 // data
 import {useQuery} from '@apollo/client';
 import {GET_HOTS} from '~/queries';
 import {HomaPageProps} from '~/Types';
 import {newStateArray} from '~/Components/Filter';
 import { status } from '~/Components/TextList';
+import { treeCategoriesVar } from '~/global';
 
-// test data
-import moment from 'moment';
-let testt = moment()
-const test={
-    categories:{
-        id:'12345',
-        label:'카테고리'
-    },
-    deadline:testt.format(),
-    poster:'https://user-images.githubusercontent.com/57908055/121138969-36232800-c873-11eb-9e24-ded05b8c732b.png',
-    recruit:'COMPLETED',
-    title:'제목이빈다.제목이빈다.제목이빈다.제목이빈다.제목이빈다.제목이빈다.',
-    viewcount:3,
-}
 
 const HomePage = ({navigation}:HomaPageProps) => {
   useEffect(()=>{
     console.log('home')
-    console.log('test')
   },[])
   // catrgory && hot data
-  // const { loading, error, data,refetch } = useQuery(GET_HOTS,{
-  //   variables:{
-  //     existPoster:true,
-  //     sort:'HITS',
-  //     applicationStatuses:['NOTSTARTED','INPROGRESS'],
-  //     first:15
-  //   },
-  //   fetchPolicy:'cache-and-network'
-  // });
-  // let categoriesData=[];
-  // let hotData='';
-  // if(loading) return <Loading />
-  // if(error)return <ErrorPage onPress={async ()=>{
-  //   try{
-  //       await refetch({
-  //           existPoster:true,
-  //           sort:'HITS',
-  //           applicationStatuses:['NOTSTARTED','INPROGRESS'],
-  //           first:15
-  //       })
-  //       console.log('refetch')
-  //   } catch(e){
-  //       console.log('refetch err')
-  //   }}} />
-  // if(data.categories){
-  //   // max 10개
-  //   // categoriesData=CategoryView(data.categories).slice(0,9).map((cate)=>
-  //   // <TouchableOpacity  
-  //   //     key = {cate[0].id} onPress={()=>{
-  //   //     navigation.navigate('CategoryListPage',{
-  //   //       categoryArray:newStateArray(cate),
-  //   //       typeArray:null,
-  //   //       conditionArray:null,
-  //   //     });
-  //   //     }}>
-  //   //   <HashTag hashtag={cate[0].label} picked={false}/>
-  //   // </TouchableOpacity>
-  //   // )
-  // }
-  // if(data.contests){
-  //   hotData=data.contests.edges.map((contest)=>
-        // <View style={{width:'48%', justifyContent:'center'}} key = {contest.node.id.toString()}>
-  //   <PosterContainer onPress={()=>
-  //     navigation.push('DetailPage',{
-  //       listId:contest.node.id
-  //     })
-  //   }>
-  //     <Recruitbox>
-  //         {status(contest.node.application.status,contest.node.application.period.endAt)}
-  //     </Recruitbox>
-  //     <Image
-  //         source={{uri:`${contest.node.posterURL},w_297,h_420`}}
-  //         style={{width:'100%',height:'100%',borderRadius:10}}
-  //     />
-  //     <LinearGradient 
-  //       colors={['transparent', Color.b_color]} 
-  //       start={{ x: 0.5, y: 0.3 }} end={{ x: 0.5, y: 1 }}
-  //       style={{position:'absolute',width:'100%',height:'100%', opacity:0.7,borderRadius:10}} />
-  //     <PosterText numberOfLines={2}>{contest.node.title}</PosterText>
-  //   </PosterContainer>
-        // </View>
-  //   )
-  // }
+  const { loading, error, data, refetch } = useQuery(GET_HOTS,{
+    variables:{
+      existPoster:true,
+      sort:'HITS',
+      applicationStatuses:['NOTSTARTED','INPROGRESS'],
+      first:15
+    },
+    fetchPolicy:'cache-and-network'
+  });
+  let categories = []
+  let hotData=``;
+  if(loading) return <Loading />
+  if(error)return <ErrorPage onPress={async ()=>{
+    try{
+        await refetch({
+            existPoster:true,
+            sort:'HITS',
+            applicationStatuses:['NOTSTARTED','INPROGRESS'],
+            first:15
+        })
+        console.log('refetch')
+    } catch(e){
+        console.log('refetch err')
+    }}} />
+  // hot category
+  if(data.categories){
+    categories = CategoryView(data.categories).map((group)=>{
+      if(group[0].label=="스포츠")
+        return(
+           <CategorySport key = {group[0].id} onPress={()=>navigation.navigate('CategoryListPage',{
+             categoryArray:newStateArray(group),
+             categoryIdArr:[group[0].id]
+           })}/>
+        )
+      else if(group[0].label=="IT")
+        return(
+           <CategoryIT key = {group[0].id} onPress={()=>navigation.navigate('CategoryListPage',{
+             categoryArray:newStateArray(group),
+             categoryIdArr:[group[0].id]
+           })}/>
+        )
+      else if(group[0].label=="학습")
+        return(
+           <CategoryStudy key = {group[0].id} onPress={()=>navigation.navigate('CategoryListPage',{
+             categoryArray:newStateArray(group),
+             categoryIdArr:[group[0].id]
+           })}/>
+        )
+      else if(group[0].label=="UCC")
+        return(
+           <CategoryUCC key = {group[0].id} onPress={()=>navigation.navigate('CategoryListPage',{
+             categoryArray:newStateArray(group),
+             categoryIdArr:[group[0].id]
+           })}/>
+        )
+      else if(group[0].label=="음악")
+        return(
+           <CategoryMusic key = {group[0].id} onPress={()=>navigation.navigate('CategoryListPage',{
+             categoryArray:newStateArray(group),
+             categoryIdArr:[group[0].id]
+           })}/>
+        )
+      else if(group[0].label=="미술")
+        return(
+           <CategoryDesign key = {group[0].id} onPress={()=>navigation.navigate('CategoryListPage',{
+             categoryArray:newStateArray(group),
+             categoryIdArr:[group[0].id]
+           })}/>
+        )
+    })
+    treeCategoriesVar(CategoryView(data.categories))
+  }
+  if(data.contests){
+    hotData=data.contests.edges.map((contest)=>
+        <View style={{width:'48%', justifyContent:'center'}} key = {contest.node.id.toString()}>
+    <PosterContainer onPress={()=>
+      navigation.push('DetailPage',{
+        listId:contest.node.id
+      })
+    }>
+      <Recruitbox>
+          {status(contest.node.application.status,contest.node.application.period.endAt)}
+      </Recruitbox>
+      <Image
+          source={{uri:`${contest.node.posterURL},w_297,h_420`}}
+          style={{width:'100%',height:'100%',borderRadius:10}}
+      />
+      <LinearGradient 
+        colors={['transparent', Color.b_color]} 
+        start={{ x: 0.5, y: 0.3 }} end={{ x: 0.5, y: 1 }}
+        style={{position:'absolute',width:'100%',height:'100%', opacity:0.7,borderRadius:10}} />
+      <PosterText numberOfLines={2}>{contest.node.title}</PosterText>
+    </PosterContainer>
+        </View>
+    )
+  }
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <Container>
@@ -115,68 +133,13 @@ const HomePage = ({navigation}:HomaPageProps) => {
             인기카테고리
           </Title>
           <View style={{flexWrap:'wrap',flexDirection:'row', justifyContent:'space-between'}}>
-            <CategotySport />
-            <CategotyIT />
-            <CategotyStudy />
-            <CategotyUCC />
-            <CategotyMusic />
-            <CategotyDesign />
+            {categories}
           </View>
           <Title>
             인기대회
           </Title>
           <View style={{flexWrap:'wrap',flexDirection:'row',justifyContent:'space-between'}}>
-            {/* {hotData} */}
-            {/* test data */}
-            <View style={{width:'48%', justifyContent:'center'}}>
-            <PosterContainer>
-                <Recruitbox>
-                    {status(test.recruit,test.deadline)}
-                </Recruitbox>
-                <Image
-                    source={{uri:test.poster}}
-                    style={{width:'100%',height:'100%',borderRadius:10}}
-                />
-                <LinearGradient 
-                  colors={['transparent', Color.b_color]} 
-                  start={{ x: 0.5, y: 0.3 }} end={{ x: 0.5, y: 1 }}
-                  style={{position:'absolute',width:'100%',height:'100%', opacity:0.7,borderRadius:10}} />
-                <PosterText numberOfLines={2}>{test.title}</PosterText>
-              </PosterContainer>
-              </View>
-              <View style={{width:'48%', justifyContent:'center'}}>
-              <PosterContainer>
-                <Recruitbox>
-                    {status(test.recruit,test.deadline)}
-                </Recruitbox>
-                <Image
-                    source={{uri:test.poster}}
-                    style={{width:'100%',height:'100%',borderRadius:10}}
-                />
-                <LinearGradient 
-                  colors={['transparent', Color.b_color]} 
-                  start={{ x: 0.5, y: 0.3 }} end={{ x: 0.5, y: 1 }}
-                  style={{position:'absolute',width:'100%',height:'100%', opacity:0.7,borderRadius:10}} />
-                <PosterText numberOfLines={2}>{test.title}</PosterText>
-              </PosterContainer>
-              </View>
-              <View style={{width:'48%', justifyContent:'center'}}>
-            <PosterContainer>
-                <Recruitbox>
-                    {status(test.recruit,test.deadline)}
-                </Recruitbox>
-                <Image
-                    source={{uri:test.poster}}
-                    style={{width:'100%',height:'100%',borderRadius:10}}
-                />
-                <LinearGradient 
-                  colors={['transparent', Color.b_color]} 
-                  start={{ x: 0.5, y: 0.3 }} end={{ x: 0.5, y: 1 }}
-                  style={{position:'absolute',width:'100%',height:'100%', opacity:0.7,borderRadius:10}} />
-                <PosterText numberOfLines={2}>{test.title}</PosterText>
-              </PosterContainer>
-              </View>
-              {/* done */}
+            {hotData}
           </View>
       </Container>
       </ScrollView>

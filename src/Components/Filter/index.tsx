@@ -1,15 +1,13 @@
 // filterpage component
 import React from 'react';
+import { Text, View } from 'react-native';
 import styled from 'styled-components/native';
 import { Styles,Color, IconSize, DWidth } from '~/Styles';
 
 // components
 import {Btn} from  '~/Components/Btn';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import { Text, View } from 'react-native';
 import CheckIcon from '~/Assets/check_circle_outline_black_24dp.svg';
 import CheckIconFill from '~/Assets/check_circle_black_24dp.svg';
-
 // 함수
 
 // category treeview 저장
@@ -32,6 +30,7 @@ export const CategoryView=(array:Array<{id,label,parentID}>)=>{
   }
   return categories;
 }
+
 // value 들어간 배열 생성함수
 export const newStateArray=(array:Array<any>)=>{
     if(!array){
