@@ -32,7 +32,7 @@ export const CategoryView=(array:Array<{id,label,parentID}>)=>{
 }
 
 // value 들어간 배열 생성함수
-export const newStateArray=(array:Array<any>)=>{
+export const newStateArrayHot=(array:Array<any>)=>{
     if(!array){
         return []
     }
@@ -49,7 +49,37 @@ export const newStateArray=(array:Array<any>)=>{
                 id:array[i].id,
                 label:array[i].label,
                 value:false
+            })}
+        return state;
+    }
+}
+
+// value 들어간 배열 생성함수(일반 카테고리 포함)
+export const newStateArray=(array:Array<any>,pickedId:string|null)=>{
+    if(!array){
+        return []
+    }
+    else{
+        let i;
+        let state=[]
+        state.push({
+                id:array[0].id,
+                label:array[0].label,
+                value:true
             })
+        for(i=1;i<array.length;i++){
+            if(array[i].id==pickedId)
+                state.push({
+                    id:array[i].id,
+                    label:array[i].label,
+                    value:true
+                })
+            else
+                state.push({
+                    id:array[i].id,
+                    label:array[i].label,
+                    value:false
+                })
         }
         return state;
     }

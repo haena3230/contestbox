@@ -1,5 +1,5 @@
   // 첫번째 메인 탭 MainPage.tsx
-import React from 'react';
+import React, { useEffect } from 'react';
 import {View, Text, ScrollView} from 'react-native';
 import styled from 'styled-components/native';
 // Component
@@ -8,12 +8,12 @@ import MapIcon from '~/Assets/map-marked-alt-solid.svg';
 import { CategoryDesign, CategoryIT, CategoryMusic, CategorySport, CategoryStudy, CategoryUCC, 
     TypeFirst, TypeSecond, TypeThird,ConditionBtn} from '~/Components/CategoryBtn';
 // style 
-import {Color,Styles,Container,IconSize} from '~/Styles';
+import {Color,Styles,Container,IconSize,SectionTitle,PointText, Title} from '~/Styles';
 import {TouchableOpacity } from 'react-native-gesture-handler';
 // data
 import {SearchPageProps} from '~/Types';
 import { treeCategoriesVar } from '~/global';
-import { newStateArray } from '~/Components/Filter';
+import { newStateArray, newStateArrayHot } from '~/Components/Filter';
 
 
 const SearchPage = ({navigation}:SearchPageProps) => {
@@ -22,11 +22,11 @@ const SearchPage = ({navigation}:SearchPageProps) => {
       <ScrollView>
         <Container>
             {/* search */}
-            <Title>
-              <Text style={Styles.mb_b_font}>어떤 </Text>
-              <Point>대회</Point>
-              <Text style={Styles.mb_b_font}>를 찾고계신가요?</Text>
-            </Title>
+            <SectionTitle>
+              <Title>어떤 </Title>
+              <PointText>대회</PointText>
+              <Title>를 찾고계신가요?</Title>
+            </SectionTitle>
             <View style={{width:'100%',alignItems:'center'}}>
               <SearchBar navigation={navigation}/>
             </View>
@@ -36,58 +36,57 @@ const SearchPage = ({navigation}:SearchPageProps) => {
               <MapSearchText>지도로 찾아보기</MapSearchText>
             </TouchableOpacity>
             {/* hot category */}
-            <Title>
+            <SectionTitle>
               인기카테고리
-            </Title>
+            </SectionTitle>
             <View style={{flexWrap:'wrap',flexDirection:'row', justifyContent:'space-between'}}>
               {treeCategories.map((group)=>{
-              if(group[0].label=="스포츠")
+              if(group[0].label=="스포츠") return(
                   <CategorySport key = {group[0].id} onPress={()=>navigation.navigate('CategoryListPage',{
-                    categoryArray:newStateArray(group),
+                    categoryArray:newStateArrayHot(group),
                     categoryIdArr:[group[0].id]
-                  })}/>
-              else if(group[0].label=="IT")
+                  })}/>)
+              else if(group[0].label=="IT") return(
                   <CategoryIT key = {group[0].id} onPress={()=>navigation.navigate('CategoryListPage',{
-                    categoryArray:newStateArray(group),
+                    categoryArray:newStateArrayHot(group),
                     categoryIdArr:[group[0].id]
-                  })}/>
-              else if(group[0].label=="학습")
+                  })}/>)
+              else if(group[0].label=="학습") return(
                   <CategoryStudy key = {group[0].id} onPress={()=>navigation.navigate('CategoryListPage',{
-                    categoryArray:newStateArray(group),
+                    categoryArray:newStateArrayHot(group),
                     categoryIdArr:[group[0].id]
-                  })}/>
-              else if(group[0].label=="UCC")
+                  })}/>)
+              else if(group[0].label=="UCC") return(
                   <CategoryUCC key = {group[0].id} onPress={()=>navigation.navigate('CategoryListPage',{
-                    categoryArray:newStateArray(group),
+                    categoryArray:newStateArrayHot(group),
                     categoryIdArr:[group[0].id]
-                  })}/>
-              else if(group[0].label=="음악")
-                return(
+                  })}/>)
+              else if(group[0].label=="음악") return(
                   <CategoryMusic key = {group[0].id} onPress={()=>navigation.navigate('CategoryListPage',{
-                    categoryArray:newStateArray(group),
+                    categoryArray:newStateArrayHot(group),
                     categoryIdArr:[group[0].id]
-                  })}/>
-                )
-              else if(group[0].label=="미술")
+                  })}/>)
+              else if(group[0].label=="미술")return(
                   <CategoryDesign key = {group[0].id} onPress={()=>navigation.navigate('CategoryListPage',{
-                    categoryArray:newStateArray(group),
+                    categoryArray:newStateArrayHot(group),
                     categoryIdArr:[group[0].id]
-                  })}/>
+                  })}/>)
               })}
+              
             </View>
             {/* contest type */}
-            <Title>
+            <SectionTitle>
               대회 종류
-            </Title>
+            </SectionTitle>
             <View  style={{flexWrap:'wrap',flexDirection:'row', justifyContent:'space-around'}}>
               <TypeFirst />
               <TypeSecond />
               <TypeThird />
             </View>
             {/* contest condition */}
-            <Title>
+            <SectionTitle>
               참여 조건
-            </Title>
+            </SectionTitle>
             <View  style={{flexWrap:'wrap',flexDirection:'row', justifyContent:'space-around', paddingBottom:20}}>
               <ConditionBtn text={'13세 미만'} />
               <ConditionBtn text={'중고등학생'} />
@@ -100,15 +99,6 @@ const SearchPage = ({navigation}:SearchPageProps) => {
 };
 
 
-const Title=styled.Text`
-  ${Styles.m_b_font};
-  margin:15px 0 15px 0;
-`
-
-const Point = styled.Text`
-  ${Styles.mb_b_font};
-  color:${Color.p_color};
-`
 
 const MapSearchText =styled.Text`
   ${Styles.s_m_font}

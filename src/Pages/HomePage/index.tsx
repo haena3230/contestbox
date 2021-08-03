@@ -1,15 +1,15 @@
 // main home page
 import React, { useEffect } from 'react';
-import {View, TouchableOpacity, Text,StyleSheet, Image,ScrollView} from 'react-native';
+import {View, TouchableOpacity, StyleSheet, Image,ScrollView} from 'react-native';
 import styled from 'styled-components/native';
 import LinearGradient from 'react-native-linear-gradient';
 
 // component
 import Header from '~/Components/Header';
-import {Container,Styles,Color,DWidth, DHeight} from '~/Styles';
+import {Container,Styles,Color,DWidth} from '~/Styles';
 import Swiper from 'react-native-swiper';
 import Loading from '~/Components/Loading';
-import {CategoryView} from '~/Components/Filter';
+import {CategoryView, newStateArrayHot} from '~/Components/Filter';
 import {ErrorPage} from '~/Components/Error';
 import {CategoryDesign, CategoryIT, CategoryMusic, CategorySport, CategoryStudy, CategoryUCC} from '~/Components/CategoryBtn';
 // data
@@ -56,42 +56,42 @@ const HomePage = ({navigation}:HomaPageProps) => {
       if(group[0].label=="스포츠")
         return(
            <CategorySport key = {group[0].id} onPress={()=>navigation.navigate('CategoryListPage',{
-             categoryArray:newStateArray(group),
+             categoryArray:newStateArrayHot(group),
              categoryIdArr:[group[0].id]
            })}/>
         )
       else if(group[0].label=="IT")
         return(
            <CategoryIT key = {group[0].id} onPress={()=>navigation.navigate('CategoryListPage',{
-             categoryArray:newStateArray(group),
+             categoryArray:newStateArrayHot(group),
              categoryIdArr:[group[0].id]
            })}/>
         )
       else if(group[0].label=="학습")
         return(
            <CategoryStudy key = {group[0].id} onPress={()=>navigation.navigate('CategoryListPage',{
-             categoryArray:newStateArray(group),
+             categoryArray:newStateArrayHot(group),
              categoryIdArr:[group[0].id]
            })}/>
         )
       else if(group[0].label=="UCC")
         return(
            <CategoryUCC key = {group[0].id} onPress={()=>navigation.navigate('CategoryListPage',{
-             categoryArray:newStateArray(group),
+             categoryArray:newStateArrayHot(group),
              categoryIdArr:[group[0].id]
            })}/>
         )
       else if(group[0].label=="음악")
         return(
            <CategoryMusic key = {group[0].id} onPress={()=>navigation.navigate('CategoryListPage',{
-             categoryArray:newStateArray(group),
+             categoryArray:newStateArrayHot(group),
              categoryIdArr:[group[0].id]
            })}/>
         )
       else if(group[0].label=="미술")
         return(
            <CategoryDesign key = {group[0].id} onPress={()=>navigation.navigate('CategoryListPage',{
-             categoryArray:newStateArray(group),
+             categoryArray:newStateArrayHot(group),
              categoryIdArr:[group[0].id]
            })}/>
         )

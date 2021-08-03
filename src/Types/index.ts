@@ -2,9 +2,18 @@
 import {RouteProp} from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 
+// tag
 interface ArrayProps{
   id:string,label:string,value:boolean
 }
+
+// sort 
+export interface SortStatus{
+  statusName:string,
+  status:string,
+  statusArr:Array<boolean>
+}
+
 // navigation
 type StackParamList={
   HomePage:undefined;
@@ -82,12 +91,6 @@ export interface MyPageProps {
 }
 
 
-// sort 
-export interface SortStatus{
-  statusName:string,
-  status:string,
-  statusArr:Array<boolean>
-}
 
 
 

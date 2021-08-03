@@ -10,7 +10,7 @@ import styled from 'styled-components/native'
 
 const LoginPage= ()=>{
     return(
-        <View style={{flex:1}}>
+        <Container>
             <Header />
             <View style={{flex:1, backgroundColor:Color.background, justifyContent:'center',alignItems:'center', paddingBottom:50}}>
                 <SigninText>
@@ -23,7 +23,7 @@ const LoginPage= ()=>{
                     onPress={()=>SignIn()}
                 />
             </View>
-        </View>
+        </Container>
     )
 }
 const SigninText = styled.Text`

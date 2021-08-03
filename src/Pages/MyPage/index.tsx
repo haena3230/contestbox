@@ -54,7 +54,7 @@ const MyPage= ({navigation}:MyPageProps)=>{
                 </BoxContainer> 
                 <TouchableOpacity onPress={()=>SignOut()} style={{alignItems:'flex-end',margin:10}}>
                     <Text style={{color:Color.r_color, fontSize:13}}>
-                        다른 아이디로 로그인하기
+                        로그아웃
                     </Text>
                 </TouchableOpacity>
             </View>

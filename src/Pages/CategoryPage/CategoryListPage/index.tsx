@@ -51,7 +51,7 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
     };
     
     return(
-        <View style = {{backgroundColor:Color.background, paddingTop:10,flex:1}}>
+        <View>
             <ScrollView 
             ref={scrollRef}
             onScroll={(e)=>{     
@@ -62,6 +62,7 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
             onScrollBeginDrag={()=>setTotop(true)}
             showsVerticalScrollIndicator={false}
             >
+            <Container>
                 <View style={{paddingLeft:10}}>
                     <PageHeader onPressClose={()=>props.navigation.goBack()} pageName={category[0].label}/>
                 </View>
@@ -88,6 +89,7 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
                 </Title>
                 <CategoryListDataIMM categoryIdArr={categoryId} props={props}/>
                 <View style={{height:10}}/>
+            </Container>
             </ScrollView>
             {totop?(
                 <ToTop onPressToTop={()=>onPressToTop()}/>

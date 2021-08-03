@@ -117,3 +117,20 @@ export const IconSize={
   bbicon:DWidth>480?40:35,
 }
 
+// section title
+export const SectionTitle=styled.Text`
+  ${Styles.m_b_font};
+  margin:15px 0 15px 0;
+`
+
+// poiont text
+export const PointText = styled.Text`
+  ${Styles.mb_b_font};
+  color:${Color.p_color};
+`
+
+// title
+export const Title = styled.Text`
+  ${Styles.mb_b_font};
+`
+
