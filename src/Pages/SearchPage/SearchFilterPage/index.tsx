@@ -19,11 +19,16 @@ const SearchFilterPage =(props:SearchFilterPageProps)=>{
     const [resetModal,setResetModal]=useState<boolean>(false);
     return(
         <View style={{backgroundColor:Color.background,flex:1}}>
-            <PageHeader pageName={'필터'} onPressClose={()=>null}/>
+            <View style={{padding:10}}>
+                <PageHeader pageName={'필터'} onPressClose={()=>null}/>
+            </View>
             <ScrollView style={{marginBottom:60}}>
                 {/* picked  */}
                 <View style={{borderBottomWidth:1, borderBottomColor:Color.border}}>
-                    <ScrollView horizontal={true} style={{flexWrap:'wrap',flexDirection:'row',marginLeft:20}}>
+                    <ScrollView
+                        horizontal={true} 
+                        showsHorizontalScrollIndicator={false}
+                        style={{flexWrap:'wrap',flexDirection:'row'}}>
                         <FilterPickedTag text={'경진'}/>
                         <FilterPickedTag text={'경진'}/>
                         <FilterPickedTag text={'경진'}/>

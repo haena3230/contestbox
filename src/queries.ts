@@ -36,21 +36,27 @@ export const GET_CATEGORIES = gql`
 `
 
 // search page
+export const GET_FILTER=gql`
+    query{
+      types{
+        id
+        label
+      }
+      conditions{
+        id
+        label
+      }
+    }
+`
+
 export const GET_SEARCH_LISTS= gql`
-  query GetLists ($first:Int,$after:ID,$categories:[ID!],$search:String,$sort:ContestsSortType,$conditions:[ID!],$types:[ID!],$place:LatLngBoxInput){
-    types{
-      id
-      label
-    }
-    conditions{
-      id
-      label
-    }
+  query GetLists ($first:Int,$after:ID,$categories:[ID!],$search:String,$sort:ContestsSortType,$conditions:[ID!],$types:[ID!]){
     contests(first:$first,after:$after,categories:$categories,search:$search,sort:$sort,conditions:$conditions,types:$types) {
       pageInfo{
         endCursor
         hasNextPage
       }
+      totalCount
       edges{
         node{
           id
@@ -73,6 +79,7 @@ export const GET_SEARCH_LISTS= gql`
   }
 `;
 
+// category list page
 export const GET_CATEGORY_LIST_HOTS= gql`
   query GetCategotyList ($first:Int, $after:ID,$categories:[ID!]){
     hotContests : contests(first:$first,after:$after,categories:$categories,sort:HITS) {
@@ -129,7 +136,7 @@ export const GET_CATEGORY_LIST_LATEST= gql`
 `;
 
 
-
+// detail page
  export const GET_DETAILS= gql`
     query ($id:ID!){
         contest(id: $id) {
@@ -164,17 +171,4 @@ export const GET_CATEGORY_LIST_LATEST= gql`
         }
     }
 `;
-
-export const GET_FILTER=gql`
-    query{
-      types{
-        id
-        label
-      }
-      conditions{
-        id
-        label
-      }
-    }
-`
 

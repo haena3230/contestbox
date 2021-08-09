@@ -180,10 +180,10 @@ export const TypeThird =()=>{
 }
 
 // contest condition btn
-interface CondiitonProps{
+interface ConditonProps{
     text:string
 }
-export const ConditionBtn =({text}:CondiitonProps)=>{
+export const ConditionBtn =({text}:ConditonProps)=>{
     return(
         <ConditionBox>
             <ConditionText>{text}</ConditionText>

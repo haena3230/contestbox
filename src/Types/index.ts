@@ -20,13 +20,13 @@ type StackParamList={
   SearchPage:undefined;
   SearchListPage:{
     search:string;
-    typeArray:null|Array<ArrayProps>,
-    conditionArray:null|Array<ArrayProps>
+    typeIdArray:Array<string>,
+    conditionIdArray:Array<string>
   };
   SearchFilterPage:{
     search:string;
-    typeArray:null|Array<ArrayProps>,
-    conditionArray:null|Array<ArrayProps>
+    typeIdArray:Array<string>,
+    conditionIdArray:Array<string>
   };
   CategoryPage:undefined;
   CategoryListPage:{

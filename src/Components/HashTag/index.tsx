@@ -128,7 +128,7 @@ const FilterPickedTagBox=styled.View`
     height:30px;
     flex-direction:row;
     align-items:center;
-    margin-right:6px;
+    margin-left:6px;
     padding:${DWidth>480? '0 20px 0 20px':'0 10px 0 10px'};
 `
 
