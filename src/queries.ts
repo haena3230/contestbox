@@ -63,8 +63,8 @@ export const GET_SEARCH_LISTS= gql`
 `;
 
 export const GET_CATEGORY_LIST_HOTS= gql`
-  query GetListHot ($cursor:ID,$categories:[ID!]){
-    contests(first:10,after:$cursor,categories:$categories,sort:HITS) {
+  query GetCategotyList ($first:Int, $after:ID,$categories:[ID!]){
+    hotContests : contests(first:$first,after:$after,categories:$categories,sort:HITS) {
       pageInfo{
         endCursor
         hasNextPage
@@ -89,38 +89,9 @@ export const GET_CATEGORY_LIST_HOTS= gql`
     }
   }
 `;
-
 export const GET_CATEGORY_LIST_LATEST= gql`
-  query GetListLatest ($cursor:ID,$categories:[ID!]){
-    contests(first:10,after:$cursor,categories:$categories,sort:LATEST) {
-      pageInfo{
-        endCursor
-        hasNextPage
-      }
-      edges{
-        node{
-          id
-          title
-          categories{
-            id
-            label
-          }
-          application{
-            status
-            period{
-              endAt
-            }
-          }
-          posterURL
-        }
-      }
-    }
-  }
-`;
-
-export const GET_CATEGORY_LIST_IMM= gql`
-  query GetListImm ($cursor:ID,$categories:[ID!]){
-    contests(first:10,after:$cursor,categories:$categories,sort:HITS) {
+  query GetCategotyList ($first:Int, $after:ID,$categories:[ID!]){
+    latestContests : contests(first:$first,after:$after,categories:$categories,sort:LATEST) {
       pageInfo{
         endCursor
         hasNextPage
@@ -195,3 +166,4 @@ export const GET_FILTER=gql`
       }
     }
 `
+

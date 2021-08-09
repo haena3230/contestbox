@@ -28,7 +28,7 @@ const client = new ApolloClient({
     typePolicies:{
       Query:{
         fields:{
-          contests: relayStylePagination(),
+          contests: relayStylePagination(['existPoster', 'categories', 'search', 'sort']),
         }
       }
     }

@@ -10,7 +10,7 @@
     "lint": "eslint ."
   },
   "dependencies": {
-    "@apollo/client": "3.3.6",
+    "@apollo/client": "3.4.5",
     "@bam.tech/react-native-make": "3.0.0",
     "@react-native-community/masked-view": "0.1.10",
     "@react-native-firebase/app": "12.1.0",
