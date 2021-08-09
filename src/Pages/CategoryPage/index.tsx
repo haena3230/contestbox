@@ -1,6 +1,6 @@
 // 1차 카테고리 분류 페이지
 import React, { useEffect } from 'react';
-import {Text, View} from 'react-native';
+import {View} from 'react-native';
 // styles
 import { ScrollView } from 'react-native-gesture-handler';
 import {Container, Styles,Color,SectionTitle, PointText, Title} from '~/Styles';
@@ -8,8 +8,8 @@ import styled from 'styled-components/native';
 
 // component
 import {CategoryPageProps} from '~/Types';
-import {newStateArray,newStateArrayHot, pickedIdArray} from '~/Components/Filter';
-import {CategoryDesign, CategoryIT, CategoryMusic, CategorySport, CategoryStudy, CategoryUCC} from '~/Components/CategoryBtn';
+import {newStateArray,pickedIdArray} from '~/Components/Filter';
+import { HotCategory} from '~/Components/CategoryBtn';
 // data
 import { treeCategoriesVar } from '~/global';
 
@@ -23,41 +23,7 @@ const CategoryPage =({navigation}:CategoryPageProps)=>{
         <ScrollView showsVerticalScrollIndicator={false}>
             <Container>
                 <SectionTitle>인기 카테고리</SectionTitle>
-                <View style={{flexWrap:'wrap',flexDirection:'row', justifyContent:'space-between'}}>
-              {treeCategories.map((group)=>{
-              if(group[0].label=="스포츠") return(
-                  <CategorySport key = {group[0].id} onPress={()=>navigation.navigate('CategoryListPage',{
-                    categoryArray:newStateArrayHot(group),
-                    categoryIdArr:[group[0].id]
-                  })}/>)
-              else if(group[0].label=="IT") return(
-                  <CategoryIT key = {group[0].id} onPress={()=>navigation.navigate('CategoryListPage',{
-                    categoryArray:newStateArrayHot(group),
-                    categoryIdArr:[group[0].id]
-                  })}/>)
-              else if(group[0].label=="학습") return(
-                  <CategoryStudy key = {group[0].id} onPress={()=>navigation.navigate('CategoryListPage',{
-                    categoryArray:newStateArrayHot(group),
-                    categoryIdArr:[group[0].id]
-                  })}/>)
-              else if(group[0].label=="UCC") return(
-                  <CategoryUCC key = {group[0].id} onPress={()=>navigation.navigate('CategoryListPage',{
-                    categoryArray:newStateArrayHot(group),
-                    categoryIdArr:[group[0].id]
-                  })}/>)
-              else if(group[0].label=="음악") return(
-                  <CategoryMusic key = {group[0].id} onPress={()=>navigation.navigate('CategoryListPage',{
-                    categoryArray:newStateArrayHot(group),
-                    categoryIdArr:[group[0].id]
-                  })}/>)
-              else if(group[0].label=="미술")return(
-                  <CategoryDesign key = {group[0].id} onPress={()=>navigation.navigate('CategoryListPage',{
-                    categoryArray:newStateArrayHot(group),
-                    categoryIdArr:[group[0].id]
-                  })}/>)
-              })}
-              
-            </View>
+                    <HotCategory />
                 <SectionTitle>
                     <PointText>카테고리</PointText>
                     <Title>를 통해 둘러보세요</Title>

@@ -1,103 +1,75 @@
 // main home page
-import React, { useEffect } from 'react';
-import {View, TouchableOpacity, StyleSheet, Image,ScrollView} from 'react-native';
+import React, { useState } from 'react';
+import {View, TouchableOpacity, StyleSheet, Image,ScrollView, RefreshControl} from 'react-native';
 import styled from 'styled-components/native';
 import LinearGradient from 'react-native-linear-gradient';
-
 // component
 import Header from '~/Components/Header';
 import {Container,Styles,Color,DWidth} from '~/Styles';
 import Swiper from 'react-native-swiper';
 import Loading from '~/Components/Loading';
-import {CategoryView, newStateArrayHot} from '~/Components/Filter';
 import {ErrorPage} from '~/Components/Error';
-import {CategoryDesign, CategoryIT, CategoryMusic, CategorySport, CategoryStudy, CategoryUCC} from '~/Components/CategoryBtn';
 // data
 import {useQuery} from '@apollo/client';
-import {GET_HOTS} from '~/queries';
+import {GET_HOT_CONTESTS} from '~/queries';
 import {HomaPageProps} from '~/Types';
-import {newStateArray} from '~/Components/Filter';
 import { status } from '~/Components/TextList';
-import { treeCategoriesVar } from '~/global';
-
+import { HotCategory } from '~/Components/CategoryBtn';
 
 const HomePage = ({navigation}:HomaPageProps) => {
-  useEffect(()=>{
-    console.log('home')
-  },[])
+  const [refreshing,setRefreshing]=useState<boolean>(false);
   // catrgory && hot data
-  const { loading, error, data, refetch } = useQuery(GET_HOTS,{
+  const { loading, error, data, refetch, fetchMore } = useQuery(GET_HOT_CONTESTS,{
     variables:{
+      after:null,
       existPoster:true,
       sort:'HITS',
       applicationStatuses:['NOTSTARTED','INPROGRESS'],
-      first:15
-    },
-    fetchPolicy:'cache-and-network'
+      first:8
+    }
   });
-  let categories = []
   let hotData=``;
   if(loading) return <Loading />
-  if(error)return <ErrorPage onPress={async ()=>{
+  if(error)return <ErrorPage onPress={()=>onRefetch} />
+  // refetch
+  const onRefetch =async ()=>{
     try{
-        await refetch({
-            existPoster:true,
-            sort:'HITS',
-            applicationStatuses:['NOTSTARTED','INPROGRESS'],
-            first:15
-        })
-        console.log('refetch')
-    } catch(e){
-        console.log('refetch err')
-    }}} />
-  // hot category
-  if(data.categories){
-    categories = CategoryView(data.categories).map((group)=>{
-      if(group[0].label=="스포츠")
-        return(
-           <CategorySport key = {group[0].id} onPress={()=>navigation.navigate('CategoryListPage',{
-             categoryArray:newStateArrayHot(group),
-             categoryIdArr:[group[0].id]
-           })}/>
-        )
-      else if(group[0].label=="IT")
-        return(
-           <CategoryIT key = {group[0].id} onPress={()=>navigation.navigate('CategoryListPage',{
-             categoryArray:newStateArrayHot(group),
-             categoryIdArr:[group[0].id]
-           })}/>
-        )
-      else if(group[0].label=="학습")
-        return(
-           <CategoryStudy key = {group[0].id} onPress={()=>navigation.navigate('CategoryListPage',{
-             categoryArray:newStateArrayHot(group),
-             categoryIdArr:[group[0].id]
-           })}/>
-        )
-      else if(group[0].label=="UCC")
-        return(
-           <CategoryUCC key = {group[0].id} onPress={()=>navigation.navigate('CategoryListPage',{
-             categoryArray:newStateArrayHot(group),
-             categoryIdArr:[group[0].id]
-           })}/>
-        )
-      else if(group[0].label=="음악")
-        return(
-           <CategoryMusic key = {group[0].id} onPress={()=>navigation.navigate('CategoryListPage',{
-             categoryArray:newStateArrayHot(group),
-             categoryIdArr:[group[0].id]
-           })}/>
-        )
-      else if(group[0].label=="미술")
-        return(
-           <CategoryDesign key = {group[0].id} onPress={()=>navigation.navigate('CategoryListPage',{
-             categoryArray:newStateArrayHot(group),
-             categoryIdArr:[group[0].id]
-           })}/>
-        )
-    })
-    treeCategoriesVar(CategoryView(data.categories))
+          await refetch({
+              after:null,
+              existPoster:true,
+              sort:'HITS',
+              applicationStatuses:['NOTSTARTED','INPROGRESS'],
+              first:8
+          })
+      } catch(e){
+          console.log('refetch err')
+      }
   }
+  const onRefresh=()=>{
+      console.log('refetch')
+      setRefreshing(true);
+      onRefetch()
+      setRefreshing(false);
+  }
+  // fetchMore
+  const onEndReached = ()=>{
+    try{
+      fetchMore({
+          variables:{
+              after:data.contests.pageInfo.endCursor,
+              existPoster:true,
+              sort:'HITS',
+              applicationStatuses:['NOTSTARTED','INPROGRESS'],
+              first:8
+          }
+      })
+    }catch(e){
+      console.log('fetch error')
+      console.log(e)
+    }
+      
+  }
+
   if(data.contests){
     hotData=data.contests.edges.map((contest)=>
         <View style={{width:'48%', justifyContent:'center'}} key = {contest.node.id.toString()}>
@@ -123,7 +95,19 @@ const HomePage = ({navigation}:HomaPageProps) => {
     )
   }
   return (
-    <ScrollView showsVerticalScrollIndicator={false}>
+    <ScrollView 
+      showsVerticalScrollIndicator={false}
+      onScroll={(e)=>{
+            if (e.nativeEvent.contentOffset.y + e.nativeEvent.layoutMeasurement.height >= e.nativeEvent.contentSize.height && data.contests.pageInfo.hasNextPage){
+                onEndReached()
+            }}}
+      refreshControl={
+        <RefreshControl 
+            refreshing={refreshing} 
+            onRefresh={onRefresh}
+            colors={[Color.p_color]}
+            />}
+      >
       <Container>
           <Header/>
           <View style={{height:(DWidth-20)*(1/3)}}>
@@ -132,9 +116,7 @@ const HomePage = ({navigation}:HomaPageProps) => {
           <Title>
             인기카테고리
           </Title>
-          <View style={{flexWrap:'wrap',flexDirection:'row', justifyContent:'space-between'}}>
-            {categories}
-          </View>
+          <HotCategory />
           <Title>
             인기대회
           </Title>
@@ -143,9 +125,10 @@ const HomePage = ({navigation}:HomaPageProps) => {
           </View>
       </Container>
       </ScrollView>
-  );
-};
+  )
+}
 
+// banner
 const Banner = ()=>{
   const renderPagination = (index, total)=> {
     return (
@@ -165,6 +148,7 @@ const Banner = ()=>{
     </Swiper>
   )
 }
+
 
 // banner
 const styles=StyleSheet.create({

@@ -1,14 +1,13 @@
 import { gql } from '@apollo/client';
 
 // homepage
-export const GET_HOTS = gql`
-  query ($existPoster:Boolean,$sort:ContestsSortType, $first:Int, $applicationStatuses:[ContestApplicationStatus!]){
-    categories {
-      id
-      label
-      parentID
-    }
-    contests(existPoster:$existPoster,sort:$sort,first:$first,applicationStatuses:$applicationStatuses){
+export const GET_HOT_CONTESTS = gql`
+  query ($after:ID,$existPoster:Boolean,$sort:ContestsSortType, $first:Int, $applicationStatuses:[ContestApplicationStatus!]){
+    contests(after:$after,existPoster:$existPoster,sort:$sort,first:$first,applicationStatuses:$applicationStatuses){
+      pageInfo{
+        hasNextPage
+        endCursor
+      }
       edges{
         node{
           id
@@ -25,6 +24,18 @@ export const GET_HOTS = gql`
     }
   }
 `;
+
+export const GET_CATEGORIES = gql`
+  query {
+    categories {
+      id
+      label
+      parentID
+    }
+  }
+`
+
+// search page
 export const GET_SEARCH_LISTS= gql`
   query GetLists ($first:Int,$after:ID,$categories:[ID!],$search:String,$sort:ContestsSortType,$conditions:[ID!],$types:[ID!],$place:LatLngBoxInput){
     types{
