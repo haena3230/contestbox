@@ -22,9 +22,7 @@ export const SearchBar=({navigation}:SearchPageProps)=>{
     }
     else{
       navigation.navigate('SearchListPage',{
-          search:searchText,
-          typeIdArray:[],
-          conditionIdArray:[],
+          search:searchText
         });
     }
   }
@@ -35,7 +33,6 @@ export const SearchBar=({navigation}:SearchPageProps)=>{
           <Search height={IconSize.sicon} width={IconSize.sicon} color={Color.gray}/>
         </TouchableOpacity>
         <View style={{alignItems:'center'}}>
-
           <TextInput 
             style={Styles.m_font} 
             placeholder={'검색어를 입력해 주세요.'} 
@@ -66,32 +63,32 @@ export const SearchBarSmall=({navigation}:SearchPageProps)=>{
         }
         else{
         navigation.push('SearchListPage',{
-            search:searchText,
-            typeIdArray:[],
-            conditionIdArray:[],
+            search:searchText
             });
         }
     }
     return(
         <SearchHeader>
+          <View style={{width:'5%'}}>
             <Arrow onPress={()=>navigation.goBack()} height={IconSize.sicon} width={IconSize.sicon} color={Color.gray}/>
-            <SmallSearchBarStyle>
-                <TouchableOpacity onPress={onSubmet} style={{paddingHorizontal:15}}>
-                    <Search height={IconSize.sicon} width={IconSize.sicon} color={Color.gray}/>
-                </TouchableOpacity>
-                <TextInput
-                    style={Styles.m_font}
-                    placeholder={'검색어를 입력해 주세요'} 
-                    value={searchText} 
-                    onChangeText={(text)=>{setSearchText(text)}} 
-                    maxLength={35}
-                    onSubmitEditing={onSubmet}
-                    />
-            </SmallSearchBarStyle>
-            <InfoModalComponent 
-                Info={'검색어를 입력해 주세요'}
-                modalVisible={infoModal}
-                />
+          </View>
+          <SmallSearchBarStyle>
+              <TouchableOpacity onPress={onSubmet} style={{paddingHorizontal:15}}>
+                  <Search height={IconSize.sicon} width={IconSize.sicon} color={Color.gray}/>
+              </TouchableOpacity>
+              <TextInput
+                  style={Styles.m_font}
+                  placeholder={'검색어를 입력해 주세요'} 
+                  value={searchText} 
+                  onChangeText={(text)=>{setSearchText(text)}} 
+                  maxLength={35}
+                  onSubmitEditing={onSubmet}
+                  />
+          </SmallSearchBarStyle>
+          <InfoModalComponent 
+              Info={'검색어를 입력해 주세요'}
+              modalVisible={infoModal}
+              />
         </SearchHeader>
     )
 }

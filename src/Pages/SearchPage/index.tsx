@@ -14,6 +14,8 @@ import { useQuery } from '@apollo/client';
 import { GET_FILTER } from '~/queries';
 import Loading from '~/Components/Loading';
 import { conditionsVar, typesVar } from '~/global';
+import { changeValue, newStateArraySearch } from '~/Components/Filter';
+import { useNavigation } from '@react-navigation/core';
 
 
 const SearchPage = ({navigation}:SearchPageProps) => {
@@ -49,22 +51,43 @@ const SearchPage = ({navigation}:SearchPageProps) => {
 const TypeConditionBtn = () =>{
   const {loading, data } = useQuery(GET_FILTER)
   let types = ``
-  // let conditions = ``
+  let conditions = ``
+  const navigation = useNavigation()
   if(loading) return <Loading />
   if(data){
     types = data.types.map((type)=>{
       if(type.label == "경시전")
-        return <TypeFirst key = {type.id}/>
+        return <TypeFirst key = {type.id} onPress={()=>{
+          typesVar(changeValue(newStateArraySearch(data.types),type.id))
+          navigation.navigate('SearchListPage',{
+            search:null
+          })
+        }}/>
       else if(type.label == "경진전")
-        return <TypeSecond key = {type.id}/>
+        return <TypeSecond key = {type.id} onPress={()=>{
+          typesVar(changeValue(newStateArraySearch(data.types),type.id))
+          navigation.navigate('SearchListPage',{
+            search:null
+          })
+        }}/>
       else if(type.label == "공모전")
-        return <TypeThird key = {type.id}/>
+        return <TypeThird key = {type.id} onPress={()=>{
+          typesVar(changeValue(newStateArraySearch(data.types),type.id))
+          navigation.navigate('SearchListPage',{
+            search:null
+          })
+        }}/>
+    }),
+    conditions = data.conditions.map((condition)=>{
+      return(<ConditionBtn key = {condition.id} text = {condition.label} onPress={()=>{
+          conditionsVar(changeValue(newStateArraySearch(data.conditions),condition.id))
+          navigation.navigate('SearchListPage',{
+            search:null
+          })
+        }}/>)
     })
-    typesVar(data.types)
-    conditionsVar(data.conditions)
-    // conditions = data.conditions.map((condition)=>{
-    //   <ConditionBtn key = {condition.id.toString()} text = {'test'}/>
-    // })
+    typesVar(newStateArraySearch(data.types))
+    conditionsVar(newStateArraySearch(data.conditions))
   }
   return(
     <View>
@@ -75,12 +98,12 @@ const TypeConditionBtn = () =>{
         {types}
       </View>
       {/* contest condition */}
-      {/* <SectionTitle>
+      <SectionTitle>
         참여 조건
       </SectionTitle>
       <View  style={{flexWrap:'wrap',flexDirection:'row', justifyContent:'space-around', paddingBottom:20}}>
         {conditions}
-      </View> */}
+      </View>
     </View>
   )
 }

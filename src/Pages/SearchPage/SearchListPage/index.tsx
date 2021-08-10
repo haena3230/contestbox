@@ -1,10 +1,10 @@
 // SearchListPage
-import React,{useState,useRef, useEffect} from 'react';
-import {View,ScrollView,RefreshControl,Text, TouchableOpacity} from 'react-native';
-import {Container,Styles,Color, IconSize, DWidth} from '~/Styles';
+import React,{useState,useRef} from 'react';
+import {View,ScrollView,RefreshControl} from 'react-native';
+import {Container,Styles,Color} from '~/Styles';
 import styled from 'styled-components/native';
 // data
-import {SearchListPageProps, SearchPageProps} from '~/Types';
+import {SearchListPageProps} from '~/Types';
 import {GET_SEARCH_LISTS} from '~/queries';
 import {useQuery} from '@apollo/client';
 // components
@@ -13,23 +13,17 @@ import {SortComponent} from '~/Components/Sort';
 import TextList from '~/Components/TextList';
 import ToTop from '~/Components/ToTop';
 import Loading, { LastData } from '~/Components/Loading';
-import {pickedIdArray,newStateArray} from '~/Components/Filter';
-import { InfoModalComponent } from '~/Components/Modal';
+import {pickedIdArray} from '~/Components/Filter';
 import { ErrorPage } from '~/Components/Error';
-import { TextInput } from 'react-native-gesture-handler';
-import { sortVar } from '~/global';
+import { categoriesVar, conditionsVar, sortVar, typesVar } from '~/global';
 import { SearchBarSmall } from '~/Components/SearchBar';
 
 const SearchListPage =(props:SearchListPageProps)=>{
-    const {search,typeIdArray,conditionIdArray}=props.route.params;
-    // 필터 선택
-    const onPressFilter =()=>{
-        props.navigation.push('SearchFilterPage',{
-            search:search,
-            typeIdArray:typeIdArray,
-            conditionIdArray:conditionIdArray
-        });
-    }
+    
+    const {search}=props.route.params;
+    const typeIdArray = pickedIdArray(typesVar())
+    const conditionIdArray = pickedIdArray(conditionsVar())
+    const categoryIdArray = pickedIdArray(categoriesVar())
     // totop
     const [totop,setTotop]=useState<boolean>(false);
     const scrollRef=useRef<ScrollView>();
@@ -54,7 +48,8 @@ const SearchListPage =(props:SearchListPageProps)=>{
             search:search,
             sort:sortState.status,
             types:typeIdArray,
-            conditions:conditionIdArray
+            conditions:conditionIdArray,
+            categories:categoryIdArray,
         }
     })
     // 정렬버튼 함수
@@ -97,14 +92,19 @@ const SearchListPage =(props:SearchListPageProps)=>{
                 search:search,
                 sort:sortState.status,
                 types:typeIdArray,
-                conditions:conditionIdArray
+                conditions:conditionIdArray,
+                categories:categoryIdArray,
             })
             setRefreshing(false);
         } catch(e){
             console.log('refetch err')
         }
     }
-    if(loading) return <Loading />
+    if(loading) return(
+    <Container>
+        <SearchBarSmall navigation={props.navigation}/>
+        <Loading />
+    </Container>)
     if(error) return <ErrorPage onPress={onRefresh} />
     if(data&&data.contests){
     listData=data.contests.edges.map((data)=>
@@ -136,7 +136,8 @@ const SearchListPage =(props:SearchListPageProps)=>{
                 search:search,
                 sort:sortState.status,
                 types:typeIdArray,
-                conditions:conditionIdArray
+                conditions:conditionIdArray,
+                categories:categoryIdArray,
             }
         })
         }catch(e){
@@ -171,10 +172,13 @@ const SearchListPage =(props:SearchListPageProps)=>{
                     <SearchListBar 
                         search={search} 
                         count={data.contests.totalCount} 
-                        onPressFilter={()=>onPressFilter()}
+                        onPressFilter={()=>
+                            props.navigation.push('SearchFilterPage',{
+                                search:search,
+                            })}
                         onPressSort={()=>setSort(!sort)}
                         sortState={sortState.statusName}
-                        badgeNumber={typeIdArray.length+conditionIdArray.length}
+                        badgeNumber={typeIdArray.length+conditionIdArray.length+categoryIdArray.length}
                         />
                     <View>
                         {listData}
@@ -215,7 +219,7 @@ const SearchListBar=({search,count,onPressFilter,onPressSort,sortState,badgeNumb
                 <BarBoxText>' {search} ' 검색결과 </BarBoxText>
                 <BarBoxCount> {count}</BarBoxCount>
             </View>
-            <View style={{flexDirection:'row'}}>
+            <View style={{flexDirection:'row',marginRight:2}}>
                 <SortBtn onPressSort={onPressSort} state={sortState}/>
                 <FilterBtn onPressFilter={onPressFilter} number={badgeNumber}/>
             </View>

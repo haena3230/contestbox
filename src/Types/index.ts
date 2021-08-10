@@ -3,7 +3,7 @@ import {RouteProp} from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 
 // tag
-interface ArrayProps{
+export interface ArrayProps{
   id:string,label:string,value:boolean
 }
 
@@ -19,14 +19,10 @@ type StackParamList={
   HomePage:undefined;
   SearchPage:undefined;
   SearchListPage:{
-    search:string;
-    typeIdArray:Array<string>,
-    conditionIdArray:Array<string>
+    search:string|null;
   };
   SearchFilterPage:{
-    search:string;
-    typeIdArray:Array<string>,
-    conditionIdArray:Array<string>
+    search:string|null;
   };
   CategoryPage:undefined;
   CategoryListPage:{

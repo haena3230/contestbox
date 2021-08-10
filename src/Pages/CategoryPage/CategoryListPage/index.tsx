@@ -6,7 +6,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
 // data
 import { useQuery } from '@apollo/client';
-import {CategoryListPageProps } from '~/Types';
+import {ArrayProps, CategoryListPageProps } from '~/Types';
 import { GET_CATEGORY_LIST_HOTS, GET_CATEGORY_LIST_LATEST } from '~/queries';
 // component
 import {CategoryListTag} from '~/Components/HashTag';
@@ -27,7 +27,7 @@ const CategoryListPage=(props:CategoryListPageProps)=>{
     // category & type & condition 
     const {categoryArray,categoryIdArr} =props.route.params;
     // state
-    const [category,setCategory]=useState<Array<{id:string,label:string,value:boolean}>>(categoryArray)
+    const [category,setCategory]=useState<Array<ArrayProps>>(categoryArray)
     let categoryId = categoryIdArr
     
     // 카테고리 선택

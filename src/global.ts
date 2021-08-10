@@ -10,6 +10,7 @@ import {  makeVar } from '@apollo/client';
 export const treeCategoriesVar = makeVar<Array<any>>([]);
 export const typesVar = makeVar<Array<any>>([])
 export const conditionsVar = makeVar<Array<any>>([])
+export const categoriesVar = makeVar<Array<any>>([])
 export const sortVar = makeVar<{
     statusName:string,
     status:string,

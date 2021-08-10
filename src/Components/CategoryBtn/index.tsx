@@ -6,8 +6,8 @@ import styled from 'styled-components/native';
 
 import { useNavigation } from '@react-navigation/native';
 import { GET_CATEGORIES } from '~/queries';
-import { treeCategoriesVar } from '~/global';
-import { CategoryView, newStateArrayHot } from '../Filter';
+import { categoriesVar, treeCategoriesVar } from '~/global';
+import { CategoryView, newStateArrayHot, newStateArraySearch } from '../Filter';
 import { useQuery } from '@apollo/client';
 import Loading from '../Loading';
 
@@ -78,6 +78,7 @@ export const HotCategory = () =>{
         )
     })
     treeCategoriesVar(CategoryView(data.categories))
+    categoriesVar(newStateArraySearch(data.categories))
   }
   return(
     <View style={{flexWrap:'wrap',flexDirection:'row', justifyContent:'space-between'}}>
@@ -152,27 +153,30 @@ export const CategoryDesign =({onPress}:HotCategoryBtnProps)=>{
 }
 
 // contest type btn
-export const TypeFirst =()=>{
+interface TypeBtnProps{
+    onPress:()=>void
+}
+export const TypeFirst =({onPress}:TypeBtnProps)=>{
     return(
-        <TypeBtnBox>
+        <TypeBtnBox onPress={onPress}>
             <Trophy height={IconSize.bbicon} width={IconSize.bbicon} fill={Color.gray}/>
             <CategoryBtnText>경시대회</CategoryBtnText>
         </TypeBtnBox>
     )
 }
 
-export const TypeSecond =()=>{
+export const TypeSecond =({onPress}:TypeBtnProps)=>{
     return(
-        <TypeBtnBox>
+        <TypeBtnBox onPress={onPress}>
             <Group height={IconSize.bbicon} width={IconSize.bbicon} fill={Color.gray}/>
             <CategoryBtnText>경진대회</CategoryBtnText>
         </TypeBtnBox>
     )
 }
 
-export const TypeThird =()=>{
+export const TypeThird =({onPress}:TypeBtnProps)=>{
     return(
-        <TypeBtnBox>
+        <TypeBtnBox onPress={onPress}>
             <Bulb height={IconSize.bbicon} width={IconSize.bbicon} fill={Color.gray}/>
             <CategoryBtnText>공모전</CategoryBtnText>
         </TypeBtnBox>
@@ -182,10 +186,11 @@ export const TypeThird =()=>{
 // contest condition btn
 interface ConditonProps{
     text:string
+    onPress:()=>void
 }
-export const ConditionBtn =({text}:ConditonProps)=>{
+export const ConditionBtn =({text,onPress}:ConditonProps)=>{
     return(
-        <ConditionBox>
+        <ConditionBox onPress={onPress}>
             <ConditionText>{text}</ConditionText>
         </ConditionBox>
     )
