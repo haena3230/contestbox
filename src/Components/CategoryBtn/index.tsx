@@ -1,8 +1,15 @@
 
 import React from 'react';
-import {View} from 'react-native';
+import {TouchableOpacity, View} from 'react-native';
 import {Styles,IconSize,Color} from '~/Styles';
 import styled from 'styled-components/native';
+
+import { useNavigation } from '@react-navigation/native';
+import { GET_CATEGORIES } from '~/queries';
+import { categoriesVar, treeCategoriesVar } from '~/global';
+import { CategoryView, newStateArrayHot, newStateArraySearch } from '../Filter';
+import { useQuery } from '@apollo/client';
+import Loading from '../Loading';
 
 import Run from '~/Assets/directions_run_black_24dp.svg';
 import PC from '~/Assets/computer_black_24dp.svg';
@@ -16,90 +23,160 @@ import Group from '~/Assets/groups_black_24dp.svg';
 import Bulb from '~/Assets/emoji_objects_black_24dp.svg';
 
 
+
+
+// hot category
+export const HotCategory = () =>{
+  const navigation = useNavigation()
+  const { loading, data } = useQuery(GET_CATEGORIES);
+  let categories = []
+  // hot category
+  if(loading) return <Loading />
+  if(data){
+    categories = CategoryView(data.categories).map((group)=>{
+      if(group[0].label=="스포츠")
+        return(
+           <CategorySport key = {group[0].id} onPress={()=>navigation.navigate('CategoryListPage',{
+             categoryArray:newStateArrayHot(group),
+             categoryIdArr:[group[0].id]
+           })}/>
+        )
+      else if(group[0].label=="IT")
+        return(
+           <CategoryIT key = {group[0].id} onPress={()=>navigation.navigate('CategoryListPage',{
+             categoryArray:newStateArrayHot(group),
+             categoryIdArr:[group[0].id]
+           })}/>
+        )
+      else if(group[0].label=="학습")
+        return(
+           <CategoryStudy key = {group[0].id} onPress={()=>navigation.navigate('CategoryListPage',{
+             categoryArray:newStateArrayHot(group),
+             categoryIdArr:[group[0].id]
+           })}/>
+        )
+      else if(group[0].label=="UCC")
+        return(
+           <CategoryUCC key = {group[0].id} onPress={()=>navigation.navigate('CategoryListPage',{
+             categoryArray:newStateArrayHot(group),
+             categoryIdArr:[group[0].id]
+           })}/>
+        )
+      else if(group[0].label=="음악")
+        return(
+           <CategoryMusic key = {group[0].id} onPress={()=>navigation.navigate('CategoryListPage',{
+             categoryArray:newStateArrayHot(group),
+             categoryIdArr:[group[0].id]
+           })}/>
+        )
+      else if(group[0].label=="미술")
+        return(
+           <CategoryDesign key = {group[0].id} onPress={()=>navigation.navigate('CategoryListPage',{
+             categoryArray:newStateArrayHot(group),
+             categoryIdArr:[group[0].id]
+           })}/>
+        )
+    })
+    treeCategoriesVar(CategoryView(data.categories))
+    categoriesVar(newStateArraySearch(data.categories))
+  }
+  return(
+    <View style={{flexWrap:'wrap',flexDirection:'row', justifyContent:'space-between'}}>
+      {categories}
+    </View>
+  )
+}
+
 // contest category btn
-export const CategotySport =()=>{
+interface HotCategoryBtnProps{
+    onPress:()=>void;
+}
+export const CategorySport =({onPress}:HotCategoryBtnProps)=>{
     return(
-        <View style={{alignItems:'center'}}>
+        <TouchableOpacity style={{alignItems:'center'}} onPress={onPress}>
             <CategoryBtnBox>
                 <Run height={IconSize.bicon} width={IconSize.bicon} fill={Color.gray}/>
             </CategoryBtnBox>
             <CategoryBtnText>스포츠</CategoryBtnText>
-        </View>
+        </TouchableOpacity>
     )
 }
-export const CategotyIT =()=>{
+export const CategoryIT =({onPress}:HotCategoryBtnProps)=>{
     return(
-        <View style={{alignItems:'center'}}>
+        <TouchableOpacity style={{alignItems:'center'}} onPress={onPress}>
             <CategoryBtnBox>
                 <PC height={IconSize.bicon} width={IconSize.bicon} fill={Color.gray}/>
             </CategoryBtnBox>
             <CategoryBtnText>IT</CategoryBtnText>
-        </View>
+        </TouchableOpacity>
     )
 }
-export const CategotyStudy =()=>{
+export const CategoryStudy =({onPress}:HotCategoryBtnProps)=>{
     return(
-        <View style={{alignItems:'center'}}>
+        <TouchableOpacity style={{alignItems:'center'}} onPress={onPress}>
             <CategoryBtnBox>
                 <Study height={IconSize.bicon} width={IconSize.bicon} fill={Color.gray}/>
             </CategoryBtnBox>
             <CategoryBtnText>학습</CategoryBtnText>
-        </View>
+        </TouchableOpacity>
     )
 }
-export const CategotyUCC =()=>{
+export const CategoryUCC =({onPress}:HotCategoryBtnProps)=>{
     return(
-        <View style={{alignItems:'center'}}>
+        <TouchableOpacity style={{alignItems:'center'}} onPress={onPress}>
             <CategoryBtnBox>
                 <Movie height={IconSize.bicon} width={IconSize.bicon} fill={Color.gray}/>
             </CategoryBtnBox>
             <CategoryBtnText>UCC</CategoryBtnText>
-        </View>
+        </TouchableOpacity>
     )
 }
-export const CategotyMusic =()=>{
+export const CategoryMusic =({onPress}:HotCategoryBtnProps)=>{
     return(
-        <View style={{alignItems:'center'}}>
+        <TouchableOpacity style={{alignItems:'center'}} onPress={onPress}>
             <CategoryBtnBox>
                 <Music height={IconSize.bicon} width={IconSize.bicon} fill={Color.gray}/>
             </CategoryBtnBox>
             <CategoryBtnText>음악</CategoryBtnText>
-        </View>
+        </TouchableOpacity>
     )
 }
-export const CategotyDesign =()=>{
+export const CategoryDesign =({onPress}:HotCategoryBtnProps)=>{
     return(
-        <View style={{alignItems:'center'}}>
+        <TouchableOpacity style={{alignItems:'center'}} onPress={onPress}>
             <CategoryBtnBox>
                 <Design height={IconSize.bicon} width={IconSize.bicon} fill={Color.gray}/>
             </CategoryBtnBox>
             <CategoryBtnText>미술</CategoryBtnText>
-        </View>
+        </TouchableOpacity>
     )
 }
 
 // contest type btn
-export const TypeFirst =()=>{
+interface TypeBtnProps{
+    onPress:()=>void
+}
+export const TypeFirst =({onPress}:TypeBtnProps)=>{
     return(
-        <TypeBtnBox>
+        <TypeBtnBox onPress={onPress}>
             <Trophy height={IconSize.bbicon} width={IconSize.bbicon} fill={Color.gray}/>
             <CategoryBtnText>경시대회</CategoryBtnText>
         </TypeBtnBox>
     )
 }
 
-export const TypeSecond =()=>{
+export const TypeSecond =({onPress}:TypeBtnProps)=>{
     return(
-        <TypeBtnBox>
+        <TypeBtnBox onPress={onPress}>
             <Group height={IconSize.bbicon} width={IconSize.bbicon} fill={Color.gray}/>
             <CategoryBtnText>경진대회</CategoryBtnText>
         </TypeBtnBox>
     )
 }
 
-export const TypeThird =()=>{
+export const TypeThird =({onPress}:TypeBtnProps)=>{
     return(
-        <TypeBtnBox>
+        <TypeBtnBox onPress={onPress}>
             <Bulb height={IconSize.bbicon} width={IconSize.bbicon} fill={Color.gray}/>
             <CategoryBtnText>공모전</CategoryBtnText>
         </TypeBtnBox>
@@ -107,12 +184,13 @@ export const TypeThird =()=>{
 }
 
 // contest condition btn
-interface CondiitonProps{
+interface ConditonProps{
     text:string
+    onPress:()=>void
 }
-export const ConditionBtn =({text}:CondiitonProps)=>{
+export const ConditionBtn =({text,onPress}:ConditonProps)=>{
     return(
-        <ConditionBox>
+        <ConditionBox onPress={onPress}>
             <ConditionText>{text}</ConditionText>
         </ConditionBox>
     )
@@ -120,7 +198,7 @@ export const ConditionBtn =({text}:CondiitonProps)=>{
 
 
 // category Btn
-const CategoryBtnBox=styled.TouchableOpacity`
+const CategoryBtnBox=styled.View`
     background-color:${Color.artbox};
     border-width:1px;
     border-color:${Color.border};

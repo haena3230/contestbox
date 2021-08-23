@@ -21,14 +21,15 @@ export const Color = {
   p_color: '#039BE5',
   p_l_color:'#F0FAFF',
   r_color:'#C13259',
+  y_color:'#FFCB02'
 };
 
 // 텍스트 스타일
 export const Styles = StyleSheet.create({
   // 패딩, 색상 없
   ss_font:{
-    fontSize: DWidth > 480 ? 14 : 8,
-    fontWeight:"500"
+    fontSize: DWidth > 480 ? 14 : 9,
+    fontWeight:"700"
   },
   s_font: {
     fontSize: DWidth > 480 ? 16 : 11,
@@ -37,7 +38,7 @@ export const Styles = StyleSheet.create({
     fontSize: DWidth > 480 ? 20 : 13,
   },
   mb_font:{
-    fontSize: DWidth > 480 ? 22 : 16,
+    fontSize: DWidth > 480 ? 22 : 15,
   },
   b_font: {
     fontSize: DWidth > 480 ? 24 : 18,
@@ -45,7 +46,7 @@ export const Styles = StyleSheet.create({
   // Medium 
   ss_m_font:{
     fontFamily:'NotoSansKR-Medium',
-    fontSize: DWidth > 480 ? 14 : 8,
+    fontSize: DWidth > 480 ? 14 : 9,
     color:Color.b_color
   },
   s_m_font: {
@@ -60,7 +61,7 @@ export const Styles = StyleSheet.create({
   },
   mb_m_font:{
     fontFamily:'NotoSansKR-Medium',
-    fontSize: DWidth > 480 ? 22 : 16,
+    fontSize: DWidth > 480 ? 22 : 15,
     color:Color.b_color
   },
   b_m_font: {
@@ -71,7 +72,7 @@ export const Styles = StyleSheet.create({
   // bold
   ss_b_font:{
     fontFamily:'NotoSansKR-Bold',
-    fontSize: DWidth > 480 ? 14 : 8,
+    fontSize: DWidth > 480 ? 14 : 9,
     color:Color.b_color
   },
   s_b_font: {
@@ -86,7 +87,7 @@ export const Styles = StyleSheet.create({
   },
   mb_b_font:{
     fontFamily:'NotoSansKR-Bold',
-    fontSize: DWidth > 480 ? 22 : 16,
+    fontSize: DWidth > 480 ? 22 : 15,
     color:Color.b_color
   },
   b_b_font: {
@@ -99,7 +100,7 @@ export const Styles = StyleSheet.create({
  // 페이지 스타일
  export const Container=styled.View`
   background-color:${Color.background};
-  padding-horizontal:10px;
+  padding:10px;
   flex:1;
 `
 // 비율 
@@ -115,4 +116,21 @@ export const IconSize={
   bicon:DWidth>480?35:30,
   bbicon:DWidth>480?40:35,
 }
+
+// section title
+export const SectionTitle=styled.Text`
+  ${Styles.m_b_font};
+  margin:15px 0 15px 0;
+`
+
+// poiont text
+export const PointText = styled.Text`
+  ${Styles.mb_b_font};
+  color:${Color.p_color};
+`
+
+// title
+export const Title = styled.Text`
+  ${Styles.mb_b_font};
+`
 

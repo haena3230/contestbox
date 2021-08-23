@@ -64,7 +64,7 @@ const DetailPage =(props:DetailPageProps)=>{
     if(data&&data.contest)
     
     return(
-        <Container>
+        <View>
             <ScrollView 
             ref={scrollRef}
             onScroll={(e)=>{
@@ -73,7 +73,8 @@ const DetailPage =(props:DetailPageProps)=>{
                 }                            
             }}
             onScrollBeginDrag={()=>setTotop(true)}
-            >
+            showsVerticalScrollIndicator={false}
+            ><Container>
                 <Box>
                     {!data.contest.posterURL?null:(
                         <TouchableOpacity onPress={()=>setImgModal(!imgModal)}>
@@ -100,9 +101,7 @@ const DetailPage =(props:DetailPageProps)=>{
                                 return(
                                     <TouchableOpacity onPress={()=>
                                         props.navigation.navigate('SearchListPage',{
-                                            search:data.label,
-                                            typeArray:null,
-                                            conditionArray:null,
+                                            search:data.label
                                             })}
                                         key= {data.id}
                                         style={{paddingBottom:10}}
@@ -122,9 +121,7 @@ const DetailPage =(props:DetailPageProps)=>{
                                     return(
                                         <TouchableOpacity onPress={()=>
                                             props.navigation.navigate('SearchListPage',{
-                                                search:data.label,
-                                                typeArray:null,
-                                                conditionArray:null,
+                                                search:data.label
                                                 })}
                                             key= {data.id}
                                             style={{paddingBottom:10}}>
@@ -219,11 +216,12 @@ const DetailPage =(props:DetailPageProps)=>{
                             /></ComponentBox>
                     )}
                 </Box>
+            </Container>
             </ScrollView>
             {totop?
             <View style={{bottom:40}}><ToTop onPressToTop={onPressToTop}/></View>:null}
             <BottomBtn url={data.contest.siteURL} onPressScrab={()=>null}/>
-        </Container>
+        </View>
     )
 }
 

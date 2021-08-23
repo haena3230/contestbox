@@ -8,6 +8,8 @@ target 'ContestBox' do
 
   use_react_native!(:path => config["reactNativePath"])
 
+  pod 'react-native-mail', :path => '../node_modules/react-native-mail'
+
   target 'ContestBoxTests' do
     inherit! :complete
     # Pods for testing

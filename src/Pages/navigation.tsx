@@ -8,6 +8,7 @@ import HomePage from './HomePage';
 import SearchPage from './SearchPage';
 import SearchListPage from './SearchPage/SearchListPage';
 import SearchFilterPage from './SearchPage/SearchFilterPage';
+import SearchMapPage from './SearchPage/SearchMapPage';
 import CategoryPage from './CategoryPage';
 import CategoryListPage from './CategoryPage/CategoryListPage';
 import DetailPage from './DetailPage';
@@ -17,6 +18,8 @@ import CommunityDetailPage from './CommunityPage/CommunityDetailPage';
 import CommunityAddPage from './CommunityPage/CommunityAddPage';
 import MyPage from './MyPage';
 import ManageMyPage from './MyPage/ManageMyPage';
+import MyPostPage from '~/Pages/MyPage/MyPostPage'
+import ScrapListPage from './MyPage/ScrapListPage';
 
 // icon
 import Search from '~/Assets/search-solid.svg';
@@ -28,7 +31,7 @@ import User from '~/Assets/assignment_ind_black_24dp.svg'
 // style
 import {Color,Styles,IconSize,DWidth} from '~/Styles';
 import styled from 'styled-components/native';
-import ScrapListPage from './MyPage/ScrapListPage';
+import SearchMapFilterPage from './SearchPage/SearchMapPage/SearchMapFilterPage';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -123,11 +126,14 @@ const MainStackNavi=()=>{
         <Stack.Screen name="CategoryListPage" component={CategoryListPage} />
         <Stack.Screen name="SearchListPage" component={SearchListPage} />
         <Stack.Screen name="SearchFilterPage" component={SearchFilterPage} />
+        <Stack.Screen name="SearchMapPage" component={SearchMapPage} />
+        <Stack.Screen name="SearchMapFilterPage" component={SearchMapFilterPage} />
         <Stack.Screen name="DetailPage" component={DetailPage} />
         <Stack.Screen name="CommunityDetailPage" component={CommunityDetailPage} />
         <Stack.Screen name="CommunityAddPage" component={CommunityAddPage} />
         <Stack.Screen name="ManageMyPage" component={ManageMyPage} />
         <Stack.Screen name="ScrapListPage" component={ScrapListPage} />
+        <Stack.Screen name="MyPostPage" component={MyPostPage} />
     </Stack.Navigator>
   )
 }

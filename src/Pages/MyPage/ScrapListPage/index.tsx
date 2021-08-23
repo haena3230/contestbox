@@ -1,10 +1,10 @@
 // scrap list page
-import React from 'react';
-import { View,Text,TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
+import { View,ScrollView,TouchableOpacity } from 'react-native';
 import { MyPageProps } from '~/Types';
 // component
-import { MenuHeader } from '~/Components/Header';
-import { Container } from '~/Styles';
+import { PageHeader } from '~/Components/Header';
+import { Color, Container, IconSize } from '~/Styles';
 import TextList from '~/Components/TextList';
 
 
@@ -16,29 +16,38 @@ const test={
         label:'카테고리'
     },
     deadline:testt.format(),
-    poster:null,
+    poster:'~/Assets/poster.png',
     recruit:'COMPLETED',
     title:'제목이빈다.',
+    host:'국립지방뭐시기',
     viewcount:3,
 }
 
+
 const ScrapListPage=({navigation}:MyPageProps)=>{
+    const[menu,setMenu]=useState<boolean>(false)
     return(
-        <View>
-            <MenuHeader pageName={'스크랩 목록'} onPressClose={()=>navigation.goBack()} onPressSubmit={()=>null}/>
+        <ScrollView showsVerticalScrollIndicator={false}>
             <Container>
-                <TextList 
-                    categories={[test.categories]}
-                    deadline={test.deadline}
-                    poster={test.poster}
-                    recruit={test.recruit}
-                    title={test.title}
-                    viewcount={test.viewcount}
-                    onPress={()=>null}
-                    />
+                <PageHeader pageName={'스크랩 목록'} onPressClose={()=>navigation.goBack()} />
+                <View style={{marginVertical:10}}>
+                   <TextList 
+                        categories={[test.categories]}
+                        deadline={test.deadline}
+                        onPress={()=>null}
+                        poster={test.poster}
+                        recruit={test.recruit}
+                        title={test.title}
+                        host={test.host}
+                        viewcount={test.viewcount}
+                        viewScrap={true}
+                        isScrap={true}
+                   />
+                </View>
             </Container>
-        </View>
+        </ScrollView>
     )
 }
+
 
 export default ScrapListPage
