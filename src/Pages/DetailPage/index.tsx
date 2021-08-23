@@ -101,9 +101,7 @@ const DetailPage =(props:DetailPageProps)=>{
                                 return(
                                     <TouchableOpacity onPress={()=>
                                         props.navigation.navigate('SearchListPage',{
-                                            search:data.label,
-                                            typeArray:null,
-                                            conditionArray:null,
+                                            search:data.label
                                             })}
                                         key= {data.id}
                                         style={{paddingBottom:10}}
@@ -123,9 +121,7 @@ const DetailPage =(props:DetailPageProps)=>{
                                     return(
                                         <TouchableOpacity onPress={()=>
                                             props.navigation.navigate('SearchListPage',{
-                                                search:data.label,
-                                                typeArray:null,
-                                                conditionArray:null,
+                                                search:data.label
                                                 })}
                                             key= {data.id}
                                             style={{paddingBottom:10}}>

@@ -32,7 +32,9 @@ const SearchPage = ({navigation}:SearchPageProps) => {
               <SearchBar navigation={navigation}/>
             </View>
             {/* map search */}
-            <TouchableOpacity onPress={()=>null} style ={{flexDirection:'row',justifyContent:'flex-end', alignItems:'center', paddingRight:5}}>
+            <TouchableOpacity onPress={()=>{
+              navigation.navigate('SearchMapPage')
+            }} style ={{flexDirection:'row',justifyContent:'flex-end', alignItems:'center', paddingRight:5}}>
               <MapIcon height={IconSize.sicon} width={IconSize.sicon} color={Color.p_color}/>
               <MapSearchText>지도로 찾아보기</MapSearchText>
             </TouchableOpacity>

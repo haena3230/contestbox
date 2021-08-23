@@ -9,6 +9,7 @@ import {Color,Styles,IconSize} from '~/Styles'
 import styled from 'styled-components/native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Text, View } from 'react-native';
+import { FilterBtn } from '../Btn';
 
 const Header=()=>{
     return(
@@ -77,6 +78,28 @@ export const MenuHeader = ({pageName,onPressClose,onPressSubmit}:SubmitHeaderPro
             <TouchableOpacity onPress={onPressSubmit}>
                 <MenuIcon width={IconSize.icon} height={IconSize.icon} fill={Color.gray}/>
             </TouchableOpacity>
+        </View>
+    )
+}
+
+// filter btn 있는 header
+interface FilterHeaderProps{
+    pageName:string;
+    onPressClose:()=>void;
+    onPressFilter:()=>void;
+    filterNum:number
+}
+export const FilterHeader = ({pageName,onPressClose,onPressFilter,filterNum}:FilterHeaderProps)=>{
+    return(
+        <View style={{flexDirection:'row', justifyContent:'space-between', alignItems:'center', width:'100%', backgroundColor:Color.background}}>
+            <SubmitHeaderContainer>
+                <BackIcon width={IconSize.sicon} height={IconSize.sicon} color={Color.gray} onPress={onPressClose}/>
+                <Item>
+                    <HeaderText>{pageName}</HeaderText>
+                </Item>
+            </SubmitHeaderContainer>
+            
+            <FilterBtn number={filterNum} onPressFilter={onPressFilter}/>
         </View>
     )
 }

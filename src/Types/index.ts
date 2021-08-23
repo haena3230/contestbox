@@ -24,6 +24,8 @@ type StackParamList={
   SearchFilterPage:{
     search:string|null;
   };
+  SearchMapPage:undefined;
+  SearchMapFilterPage:undefined;
   CategoryPage:undefined;
   CategoryListPage:{
     categoryArray:Array<ArrayProps>
@@ -53,6 +55,11 @@ export interface SearchFilterPageProps{
   navigation:StackNavigationProp<StackParamList,'SearchListPage'>
   route: RouteProp<StackParamList, 'SearchFilterPage'>;
 }
+
+export interface SearchMapPageProps{
+  navigation:StackNavigationProp<StackParamList,'SearchMapPage'>
+}
+
 
 export interface HomaPageProps{
   navigation:StackNavigationProp<StackParamList,'HomePage'>

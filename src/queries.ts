@@ -79,6 +79,27 @@ export const GET_SEARCH_LISTS= gql`
   }
 `;
 
+// search map 
+export const GET_MAP_LISTS = gql`
+  query GetMap ($place:LatLngBoxInput, $types:[ID!], $conditions:[ID!], $categories:[ID!]){
+    contests(place:$place, types:$types, conditions:$conditions, categories:$categories){
+      edges{
+        node{
+          id
+          title
+          hits
+          application{
+            status
+            period{
+              endAt
+            }
+          }
+        }
+      }
+    }
+  }
+`
+
 // category list page
 export const GET_CATEGORY_LIST_HOTS= gql`
   query GetCategotyList ($first:Int, $after:ID,$categories:[ID!]){
