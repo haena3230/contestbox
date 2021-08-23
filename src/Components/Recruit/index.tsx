@@ -47,19 +47,21 @@ interface BoxColor{
 }
 const Box = styled.View`
     margin-right:15px;
-    width:60px;
     background-color:${(props:BoxColor)=>props.bg_color};
-    border-radius:10px;
+    border-radius:5px;
     justify-content:center;
     align-items:center;
+    padding:2px 5px 2px 5px
 `
 
 const Text=styled.Text`
     ${Styles.s_font};
+    font-weight:700
     color:${Color.w_color};
 `
 
 const DText=styled.Text`
     ${Styles.s_font};
+    font-weight:700
     color:${Color.p_color};
 `

@@ -2,23 +2,30 @@
 import {RouteProp} from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 
-interface ArrayProps{
+// tag
+export interface ArrayProps{
   id:string,label:string,value:boolean
 }
+
+// sort 
+export interface SortStatus{
+  statusName:string,
+  status:string,
+  statusArr:Array<boolean>
+}
+
 // navigation
 type StackParamList={
   HomePage:undefined;
   SearchPage:undefined;
   SearchListPage:{
-    search:string;
-    typeArray:null|Array<ArrayProps>,
-    conditionArray:null|Array<ArrayProps>
+    search:string|null;
   };
   SearchFilterPage:{
-    search:string;
-    typeArray:null|Array<ArrayProps>,
-    conditionArray:null|Array<ArrayProps>
+    search:string|null;
   };
+  SearchMapPage:undefined;
+  SearchMapFilterPage:undefined;
   CategoryPage:undefined;
   CategoryListPage:{
     categoryArray:Array<ArrayProps>
@@ -48,6 +55,11 @@ export interface SearchFilterPageProps{
   navigation:StackNavigationProp<StackParamList,'SearchListPage'>
   route: RouteProp<StackParamList, 'SearchFilterPage'>;
 }
+
+export interface SearchMapPageProps{
+  navigation:StackNavigationProp<StackParamList,'SearchMapPage'>
+}
+
 
 export interface HomaPageProps{
   navigation:StackNavigationProp<StackParamList,'HomePage'>
@@ -82,12 +94,6 @@ export interface MyPageProps {
 }
 
 
-// sort 
-export interface SortStatus{
-  statusName:string,
-  status:string,
-  statusArr:Array<boolean>
-}
 
 
 

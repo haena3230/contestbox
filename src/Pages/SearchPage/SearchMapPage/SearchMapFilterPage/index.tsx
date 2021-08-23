@@ -1,4 +1,4 @@
-// SearchFilterPage
+// SearchMapFilterPage
 import React, { useEffect, useState } from 'react';
 import { ScrollView, TouchableOpacity, Text, View} from 'react-native';
 import {Styles,Color, IconSize} from '~/Styles';
@@ -10,20 +10,16 @@ import {FilterPickedTag, HashTag} from '~/Components/HashTag';
 import CheckIcon from '~/Assets/check_circle_outline_black_24dp.svg';
 import CheckIconFill from '~/Assets/check_circle_black_24dp.svg';
 
-import { ArrayProps, SearchFilterPageProps } from '~/Types';
+import { ArrayProps, SearchMapPageProps } from '~/Types';
 import { categoriesVar, conditionsVar, typesVar } from '~/global';
 import styled from 'styled-components/native';
 
 
-
-const SearchFilterPage =(props:SearchFilterPageProps)=>{
+const SearchMapFilterPage =({navigation}:SearchMapPageProps)=>{
     const [ch,setCh] = useState<boolean>(false)
     useEffect(()=>{
         console.log('filter page')
     },[ch])
-    
-    const {search} = props.route.params
-
     
     const [types,setTypes] = useState<Array<ArrayProps>>(typesVar())
     const [conditions,setConditions] = useState<Array<ArrayProps>>(conditionsVar())
@@ -41,7 +37,7 @@ const SearchFilterPage =(props:SearchFilterPageProps)=>{
     return(
         <View style={{backgroundColor:Color.background,flex:1}}>
             <View style={{padding:10}}>
-                <PageHeader pageName={'필터'} onPressClose={()=>props.navigation.goBack()}/>
+                <PageHeader pageName={'필터'} onPressClose={()=>navigation.goBack()}/>
             </View>
             <ScrollView 
             showsVerticalScrollIndicator={false}
@@ -195,9 +191,7 @@ const SearchFilterPage =(props:SearchFilterPageProps)=>{
                         typesVar(types)
                         conditionsVar(conditions)
                         categoriesVar(categories)
-                        props.navigation.navigate('SearchListPage',{
-                            search:search
-                        })
+                        navigation.replace('SearchMapPage')
                     }} text={'적용하기'} widthPercent={90}/>
             </View>
         </View>
@@ -306,4 +300,4 @@ const BottomContainer=styled.View`
 
 
 
-export default SearchFilterPage;
+export default SearchMapFilterPage;

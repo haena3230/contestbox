@@ -4,7 +4,7 @@ import { Image,TouchableOpacity,Text, View, TextInput, Keyboard } from 'react-na
 import { MyPageProps } from '~/Types'
 import styled from 'styled-components/native'
 // component
-import { Color, IconSize, Styles} from '~/Styles'
+import { Color, Container, IconSize, Styles} from '~/Styles'
 import {PageHeader} from '~/Components/Header';
 import CameraIcon from '~/Assets/camera_alt_black_24dp.svg'
 import { InfoModalComponent } from '~/Components/Modal'
@@ -17,9 +17,9 @@ const ManageMyPage=({navigation}:MyPageProps)=>{
     const[infoModal,setInfoModal]=useState<boolean>(false);
 
     return(
-        <View style={{height:'100%'}}>
+        <Container>
             <PageHeader pageName={'개인정보 변경'} onPressClose={()=>navigation.goBack()}/>
-            <Container>
+            <View style={{flex:1, justifyContent:'center'}}>
                 <Box>
                     <ItemText>프로필 변경</ItemText>
                         <TouchableOpacity style={{alignItems:'center'}}>
@@ -44,28 +44,19 @@ const ManageMyPage=({navigation}:MyPageProps)=>{
                     Info={'변경하시겠습니까?'}
                     modalVisible={infoModal}
                 />
-            </Container>
-            <View style={{margin:10}}>
-                <Btn color={Color.p_color} text={'적용하기'} onPress={()=>null} widthPercent={100}/>
             </View>
-        </View>
+            <Btn color={Color.p_color} text={'적용하기'} onPress={()=>null} widthPercent={100}/>
+        </Container>
     )
 }
 
 export default ManageMyPage
-const Container = styled.View`
-    background-color:${Color.background};
-    padding-horizontal:10px;
-    justify-content:center;
-    flex:1
-`
 const Box = styled.View`
     background-color:${Color.artbox};
     border-width:1px;
     border-radius:10px;
     border-color:${Color.border};
     padding:10px;
-    justify-content:center
 `
 const ItemText = styled.Text`
     ${Styles.m_m_font}

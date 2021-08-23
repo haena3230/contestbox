@@ -9,13 +9,12 @@ import {Color,Styles,IconSize} from '~/Styles'
 import styled from 'styled-components/native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Text, View } from 'react-native';
+import { FilterBtn } from '../Btn';
 
 const Header=()=>{
     return(
         <HeaderContainer>
-            <Item>
                 <Flame height={IconSize.icon} width={IconSize.icon} color={Color.p_color} />
-            </Item>
             <Item>
                 <HeaderText>Contest Box</HeaderText>
             </Item>
@@ -29,9 +28,7 @@ interface PageHeaderProps{
 export const PageHeader = ({pageName,onPressClose}:PageHeaderProps)=>{
     return(
         <HeaderContainer>
-            <Item>
-                <BackIcon width={IconSize.sicon} height={IconSize.sicon} color={Color.gray} onPress={onPressClose}/>
-            </Item>
+            <BackIcon width={IconSize.sicon} height={IconSize.sicon} color={Color.gray} onPress={onPressClose}/>
             <Item>
                 <HeaderText>{pageName}</HeaderText>
             </Item>
@@ -64,7 +61,6 @@ export const SubmitHeader = ({pageName,onPressClose,onPressSubmit}:SubmitHeaderP
 }
 
 // 메뉴버튼 있는 header
-// 완료 버튼 있는 header
 interface SubmitHeaderProps{
     pageName:string;
     onPressClose:()=>void;
@@ -74,16 +70,36 @@ export const MenuHeader = ({pageName,onPressClose,onPressSubmit}:SubmitHeaderPro
     return(
         <View style={{flexDirection:'row', justifyContent:'space-between', alignItems:'center', width:'100%', backgroundColor:Color.background}}>
             <SubmitHeaderContainer>
-                <Item>
-                    <BackIcon width={IconSize.sicon} height={IconSize.sicon} color={Color.gray} onPress={onPressClose}/>
-                </Item>
+                <BackIcon width={IconSize.sicon} height={IconSize.sicon} color={Color.gray} onPress={onPressClose}/>
                 <Item>
                     <HeaderText>{pageName}</HeaderText>
                 </Item>
             </SubmitHeaderContainer>
-            <TouchableOpacity onPress={onPressSubmit} style={{marginRight:10}}>
-                <MenuIcon width={IconSize.bicon} height={IconSize.bicon} fill={Color.gray}/>
+            <TouchableOpacity onPress={onPressSubmit}>
+                <MenuIcon width={IconSize.icon} height={IconSize.icon} fill={Color.gray}/>
             </TouchableOpacity>
+        </View>
+    )
+}
+
+// filter btn 있는 header
+interface FilterHeaderProps{
+    pageName:string;
+    onPressClose:()=>void;
+    onPressFilter:()=>void;
+    filterNum:number
+}
+export const FilterHeader = ({pageName,onPressClose,onPressFilter,filterNum}:FilterHeaderProps)=>{
+    return(
+        <View style={{flexDirection:'row', justifyContent:'space-between', alignItems:'center', width:'100%', backgroundColor:Color.background}}>
+            <SubmitHeaderContainer>
+                <BackIcon width={IconSize.sicon} height={IconSize.sicon} color={Color.gray} onPress={onPressClose}/>
+                <Item>
+                    <HeaderText>{pageName}</HeaderText>
+                </Item>
+            </SubmitHeaderContainer>
+            
+            <FilterBtn number={filterNum} onPressFilter={onPressFilter}/>
         </View>
     )
 }
@@ -93,15 +109,17 @@ const HeaderContainer=styled.View`
     flex-direction:row;
     align-items:center;
     background-color:${Color.background}
+    padding-bottom:10px;
 `
 
 const SubmitHeaderContainer=styled.View`
     flex-direction:row;
     align-items:center;
-    background-color:${Color.background}
 `
 const HeaderText=styled.Text`
-    ${Styles.mb_b_font};
+    ${Styles.mb_font};
+    color:${Color.b_color};
+    font-weight:700;
 `
 const Item=styled.View`
     padding-left:10px;

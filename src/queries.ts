@@ -1,6 +1,32 @@
 import { gql } from '@apollo/client';
-export const GET_CATEGORIES=gql`
-  query GetCategories{
+
+// homepage
+export const GET_HOT_CONTESTS = gql`
+  query ($after:ID,$existPoster:Boolean,$sort:ContestsSortType, $first:Int, $applicationStatuses:[ContestApplicationStatus!]){
+    contests(after:$after,existPoster:$existPoster,sort:$sort,first:$first,applicationStatuses:$applicationStatuses){
+      pageInfo{
+        hasNextPage
+        endCursor
+      }
+      edges{
+        node{
+          id
+          title
+          posterURL
+          application{
+            period{
+              endAt
+            }
+            status
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const GET_CATEGORIES = gql`
+  query {
     categories {
       id
       label
@@ -8,46 +34,29 @@ export const GET_CATEGORIES=gql`
     }
   }
 `
-export const GET_HOTS = gql`
-  query ($existPoster:Boolean,$sort:ContestsSortType, $first:Int, $applicationStatuses:[ContestApplicationStatus!]){
-    categories {
-      id
-      label
-      parentID
-    }
-    contests(existPoster:$existPoster,sort:$sort,first:$first,applicationStatuses:$applicationStatuses){
-      edges{
-        node{
-          id
-          hits
-          title
-          posterURL
-          application{
-            period{
-              endAt
-            }
-            status
-          }
-        }
+
+// search page
+export const GET_FILTER=gql`
+    query{
+      types{
+        id
+        label
+      }
+      conditions{
+        id
+        label
       }
     }
-  }
-`;
+`
+
 export const GET_SEARCH_LISTS= gql`
-  query GetLists ($first:Int,$after:ID,$categories:[ID!],$search:String,$sort:ContestsSortType,$conditions:[ID!],$types:[ID!],$place:LatLngBoxInput){
-    types{
-      id
-      label
-    }
-    conditions{
-      id
-      label
-    }
+  query GetLists ($first:Int,$after:ID,$categories:[ID!],$search:String,$sort:ContestsSortType,$conditions:[ID!],$types:[ID!]){
     contests(first:$first,after:$after,categories:$categories,search:$search,sort:$sort,conditions:$conditions,types:$types) {
       pageInfo{
         endCursor
         hasNextPage
       }
+      totalCount
       edges{
         node{
           id
@@ -70,9 +79,31 @@ export const GET_SEARCH_LISTS= gql`
   }
 `;
 
+// search map 
+export const GET_MAP_LISTS = gql`
+  query GetMap ($place:LatLngBoxInput, $types:[ID!], $conditions:[ID!], $categories:[ID!]){
+    contests(place:$place, types:$types, conditions:$conditions, categories:$categories){
+      edges{
+        node{
+          id
+          title
+          hits
+          application{
+            status
+            period{
+              endAt
+            }
+          }
+        }
+      }
+    }
+  }
+`
+
+// category list page
 export const GET_CATEGORY_LIST_HOTS= gql`
-  query GetListHot ($first:Int,$after:ID,$categories:[ID!],$sort:ContestsSortType){
-    contests(first:$first,after:$after,categories:$categories,sort:$sort) {
+  query GetCategotyList ($first:Int, $after:ID,$categories:[ID!]){
+    hotContests : contests(first:$first,after:$after,categories:$categories,sort:HITS) {
       pageInfo{
         endCursor
         hasNextPage
@@ -97,38 +128,9 @@ export const GET_CATEGORY_LIST_HOTS= gql`
     }
   }
 `;
-
 export const GET_CATEGORY_LIST_LATEST= gql`
-  query GetListLatest ($first:Int,$after:ID,$categories:[ID!],$sort:ContestsSortType){
-    contests(first:$first,after:$after,categories:$categories,sort:$sort) {
-      pageInfo{
-        endCursor
-        hasNextPage
-      }
-      edges{
-        node{
-          id
-          title
-          categories{
-            id
-            label
-          }
-          application{
-            status
-            period{
-              endAt
-            }
-          }
-          posterURL
-        }
-      }
-    }
-  }
-`;
-
-export const GET_CATEGORY_LIST_IMM= gql`
-  query GetListImm ($first:Int,$after:ID,$categories:[ID!],$sort:ContestsSortType){
-    contests(first:$first,after:$after,categories:$categories,sort:$sort) {
+  query GetCategotyList ($first:Int, $after:ID,$categories:[ID!]){
+    latestContests : contests(first:$first,after:$after,categories:$categories,sort:LATEST) {
       pageInfo{
         endCursor
         hasNextPage
@@ -155,7 +157,7 @@ export const GET_CATEGORY_LIST_IMM= gql`
 `;
 
 
-
+// detail page
  export const GET_DETAILS= gql`
     query ($id:ID!){
         contest(id: $id) {
@@ -191,15 +193,3 @@ export const GET_CATEGORY_LIST_IMM= gql`
     }
 `;
 
-export const GET_FILTER=gql`
-    query{
-      types{
-        id
-        label
-      }
-      conditions{
-        id
-        label
-      }
-    }
-`

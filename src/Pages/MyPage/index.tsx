@@ -1,5 +1,5 @@
 // my page
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, Text, TouchableOpacity, View } from 'react-native'
 import styled from 'styled-components/native'
 import {Color, IconSize, Styles} from '~/Styles'
@@ -11,16 +11,35 @@ import UserIcon from '~/Assets/assignment_ind_black_24dp.svg'
 import StarIcon from '~/Assets/star_outline_black_24dp.svg'
 import PenIcon from '~/Assets/create_black_24dp.svg';
 import { MyPageProps } from '~/Types'
-
-// test 
+// login
+import LoginPage from '~/Pages/LoginPage'
+import auth from '@react-native-firebase/auth';
 import { SignOut } from '~/Components/Login'; 
 
 
 const MyPage= ({navigation}:MyPageProps)=>{
+    const [initializing, setInitializing] = useState<boolean>(true);
+    const [user, setUser] = useState(); 
+    // 로그인상태 확인
+    function onAuthStateChanged(user) {
+        setUser(user);
+        if (initializing) setInitializing(false);
+    }
+    useEffect(()=>{
+        // login상태 확인
+        const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+        return subscriber; // unsubscribe on unmount
+    },[])
+    if (initializing) return null;
+    if (!user) {
+        return (
+        <LoginPage />
+        );
+    }
     return(
-        <View style={{flex:1}}>
+        <Container>
             <Header />
-            <Container style={{justifyContent:'center'}}>
+            <View style={{flex:1,justifyContent:'center'}}>
                 <BoxContainer onPress={()=>navigation.navigate('ManageMyPage')}>
                     <UserIcon style={{marginRight:10}} height={IconSize.bicon} width={IconSize.bicon} fill={Color.gray} />
                     <Text style={Styles.m_m_font}>개인정보 변경</Text>
@@ -35,11 +54,11 @@ const MyPage= ({navigation}:MyPageProps)=>{
                 </BoxContainer> 
                 <TouchableOpacity onPress={()=>SignOut()} style={{alignItems:'flex-end',margin:10}}>
                     <Text style={{color:Color.r_color, fontSize:13}}>
-                        다른 아이디로 로그인하기
+                        로그아웃
                     </Text>
                 </TouchableOpacity>
-            </Container>    
-        </View>
+            </View>
+        </Container>   
     )
 }
 
